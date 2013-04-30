@@ -248,14 +248,6 @@ public class ModuleBasisFunction extends SeedableModule {
   }
 
   protected void setMagicNumbers(BasisType type) {
-    // This function is a damned hack.
-    /*
-     * The underlying noise functions don't return values in the range [-1,1]
-     * cleanly, and the ranges vary depending on basis type and dimensionality.
-     * There's probably a better way to correct the ranges, but for now I'm just
-     * setting he magic numbers m_scale and m_offset manually to empirically
-     * determined magic numbers.
-     */
     switch (type) {
     case VALUE:
       scale[0] = 1.0;
