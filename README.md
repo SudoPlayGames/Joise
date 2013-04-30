@@ -23,6 +23,9 @@ The repo contains the following packages:
 * `com.sudoplay.joise.noise` contains the core noise functions.
 * `com.sudoplay.util` contains common utility classes.
 
+See also:
+* [JoisePlugin-TMLConverter](https://github.com/codetaylor/JoisePlugin-TMLConverter) converts module chains to and from TML.
+
 ## Examples
 
 ###Chaining Modules
