@@ -142,6 +142,10 @@ public class Joise {
     sm.setSeed(seed);
   }
 
+  public boolean hasSeed(String seedName) {
+    return seedMap.get(seedName) != null;
+  }
+
   /**
    * @return the stored module map for this Joise
    */
@@ -164,7 +168,5 @@ public class Joise {
   public double get(double x, double y, double z, double w, double u, double v) {
     return module.get(x, y, z, w, u, v);
   }
-  
-  
 
 }
