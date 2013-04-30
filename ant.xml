@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="compile" name="Compile Joise" basedir=".">
+
+	<target name="compile">
+
+		<tstamp>
+			<format property="TODAY" pattern="yyyy-MM-dd" />
+		</tstamp>
+
+		<property name="src.dir" value="${basedir}/src" />
+		<property name="build.dir" value="${basedir}/build" />
+		<property name="build.class.dir" value="${build.dir}/class" />
+		<property name="dist.dir" value="${basedir}/dist" />
+		<property name="dist.jarfile" value="${dist.dir}/Joise.${TODAY}.jar" />
+
+		<mkdir dir="${build.class.dir}" />
+		<mkdir dir="${dist.dir}" />
+
+		<javac destdir="${build.class.dir}" includeantruntime="false">
+			<src path="${src.dir}" />
+			<compilerarg value="-Xlint:unchecked" />
+		</javac>
+
+		<jar destfile="${dist.jarfile}" basedir="${build.class.dir}" />
+
+		<delete dir="${build.dir}" />
+
+	</target>
+</project>
