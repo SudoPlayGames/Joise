@@ -24,7 +24,7 @@ The repo contains the following packages:
 * `com.sudoplay.util` contains common utility classes.
 
 See also:
-* [JoisePlugin-TMLConverter](https://github.com/codetaylor/JoisePlugin-TMLConverter) converts module chains to and from TML.
+* [JoisePlugin-TMLConverter](https://github.com/codetaylor/JoisePlugin-TMLConverter) converts module chains to and from TML using [Juple](https://github.com/codetaylor/Juple).
 
 ## Examples
 
