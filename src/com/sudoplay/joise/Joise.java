@@ -48,6 +48,7 @@
 
 package com.sudoplay.joise;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -60,7 +61,7 @@ public class Joise {
 
   private Module module;
   private ModuleMap moduleMap;
-  private HashMap<String, SeedableModule> seedMap = new HashMap<String, SeedableModule>();
+  private HashMap<String, ArrayList<SeedableModule>> seedMap = new HashMap<String, ArrayList<SeedableModule>>();
 
   /**
    * Creates a new instance of Joise with the supplied module chain.
@@ -113,10 +114,13 @@ public class Joise {
             && ((SeedableModule) module).hasSeedName()) {
           SeedableModule sm = (SeedableModule) module;
           String seedName = sm.getSeedName();
-          if (seedMap.containsKey(seedName)) {
-            throw new JoiseException("Duplicate seed name: " + seedName);
+
+          ArrayList<SeedableModule> list = seedMap.get(seedName);
+          if (list == null) {
+            list = new ArrayList<SeedableModule>();
+            seedMap.put(seedName, list);
           }
-          seedMap.put(sm.getSeedName(), sm);
+          list.add(sm);
         }
         im.put(e.getKey(), module);
       }
@@ -135,11 +139,13 @@ public class Joise {
    *           if the seed name is not found in the seed map
    */
   public void setSeed(String seedName, long seed) {
-    SeedableModule sm = seedMap.get(seedName);
-    if (sm == null) {
+    ArrayList<SeedableModule> list = seedMap.get(seedName);
+    if (list == null || list.isEmpty()) {
       throw new IllegalStateException("Seed name not found: " + seedName);
     }
-    sm.setSeed(seed);
+    for (SeedableModule sm : list) {
+      sm.setSeed(seed);
+    }
   }
 
   public boolean hasSeed(String seedName) {
