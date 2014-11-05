@@ -1,0 +1,29 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'idea'
+
+sourceCompatibility = 1.6
+sourceSets.main.java.srcDirs = [ "src/" ]
+sourceSets.test.java.srcDirs = [ "tests/" ]
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	testCompile 'junit:junit:4.11'
+}
+
+group = 'com.sudoplay'
+version = '1.0.0'
+archivesBaseName = 'joise'
+
+idea {
+	project {
+		languageLevel = '1.6'
+	}
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '2.1'
+}
