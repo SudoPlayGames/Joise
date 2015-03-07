@@ -13,3 +13,6 @@ bin
 # Gradle
 /.gradle/
 /build/
+
+# Maven
+/target/

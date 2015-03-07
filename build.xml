@@ -7,12 +7,12 @@
 		<property name="build.dir" value="${basedir}/build" />
 		<property name="build.class.dir" value="${build.dir}/class" />
 		<property name="dist.dir" value="${basedir}/dist" />
-		<property name="dist.jarfile" value="${dist.dir}/Joise-1.0.0.jar" />
+		<property name="dist.jarfile" value="${dist.dir}/joise-1.0.1.jar" />
 
 		<mkdir dir="${build.class.dir}" />
 		<mkdir dir="${dist.dir}" />
 
-		<javac destdir="${build.class.dir}" includeantruntime="false">
+		<javac target="1.6" source="1.6" classpath="." destdir="${build.class.dir}" includeantruntime="false">
 			<src path="${src.dir}" />
 			<compilerarg value="-Xlint:unchecked" />
 		</javac>
