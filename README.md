@@ -4,16 +4,16 @@ Joise is a 2D, 3D, 4D and 6D modular noise library written in Java.
 Joise is derived from Joshua Tippetts' [Accidental Noise Library](http://accidentalnoise.sourceforge.net/index.html) written in C++.
 
 ### Why Joise?
-Joise was created to facilitate the creation of complex noise functions from chained modules, and 
+Joise was created to facilitate the creation of complex noise functions from chained modules, and
 represent the chained modules in a consistent format.
 
-Joise was originally created to power the procedural world-building algorithms behind the PC game, 
-[Lodestar: Stygian Skies](https://lodestargame.com/home). 
+Joise was originally created to power the procedural world-building algorithms behind the PC game,
+[Lodestar: Stygian Skies](https://lodestargame.com/home).
 
 ### What is in this repository?
 Documentation:
 * **README.md** this file
-* **LICENSE** the license  ([link](https://github.com/codetaylor/Juple/blob/master/LICENSE))
+* **LICENSE** the license  ([link](https://github.com/SudoPlayGames/Joise/blob/master/LICENSE))
 
 The repo contains the following packages:
 * `com.sudoplay.joise` contains classes to work with module maps.
