@@ -27,6 +27,16 @@ The following packages are provided separately to reduce dependencies:
 * [JoisePlugin-TMLConverter](https://github.com/codetaylor/JoisePlugin-TMLConverter) converts module chains to and from TML using [Juple](https://github.com/codetaylor/Juple).
 * [JoisePlugin-JSONConverter](https://github.com/codetaylor/JoisePlugin-JSONConverter) converts module chains to and from JSON using [Gson](https://code.google.com/p/google-gson/).
 
+### Where do I get it?
+
+Joise is now available through Maven:
+
+```
+groupId=com.sudoplay.joise
+artifactId=joise
+version=1.0.1
+```
+
 ## Examples
 
 ###Chaining Modules

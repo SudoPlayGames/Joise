@@ -1,6 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'maven'
-apply plugin: 'idea'
+apply plugin: 'signing'
 
 sourceCompatibility = 1.6
 sourceSets.main.java.srcDirs = [ "src/" ]
@@ -14,16 +14,76 @@ dependencies {
 	testCompile 'junit:junit:4.11'
 }
 
-group = 'com.sudoplay'
-version = '1.0.0'
-archivesBaseName = 'joise'
-
-idea {
-	project {
-		languageLevel = '1.6'
-	}
-}
-
 task wrapper(type: Wrapper) {
 	gradleVersion = '2.1'
+}
+
+task javadocJar(type: Jar) {
+	classifier = 'javadoc'
+	from javadoc
+}
+
+task sourcesJar(type: Jar) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+
+artifacts {
+	archives jar
+	archives javadocJar
+	archives sourcesJar
+}
+
+signing {
+	sign configurations.archives
+}
+
+group = 'com.sudoplay.joise'
+version = '1.0.1'
+archivesBaseName = 'joise'
+
+uploadArchives {
+	repositories {
+		mavenDeployer {
+			beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+			repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+				authentication(userName: ossrhUsername, password: ossrhPassword)
+			}
+
+			snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+				authentication(userName: ossrhUsername, password: ossrhPassword)
+			}
+
+			pom.project {
+				name 'Joise'
+				packaging 'jar'
+				// optionally artifactId can be defined here
+				description 'Joise is a 2D, 3D, 4D and 6D modular noise library written in Java.'
+				url 'https://github.com/SudoPlayGames/Joise'
+
+				scm {
+					connection 'scm:git:git@github.com:SudoPlayGames/Joise.git'
+					developerConnection 'scm:git:git@github.com:SudoPlayGames/Joise.git'
+					url 'git@github.com:SudoPlayGames/Joise.git'
+				}
+
+				licenses {
+					license {
+						name 'The Apache License, Version 2.0'
+						url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+					}
+				}
+
+				developers {
+					developer {
+						name 'Jason Taylor'
+						email 'jason@sudoplaygames.com'
+						organization 'SudoPlay Games'
+						organizationUrl 'http://www.sudoplaygames.com'
+					}
+				}
+			}
+		}
+	}
 }
