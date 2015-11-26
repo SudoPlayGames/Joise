@@ -16,7 +16,7 @@ Joise was created to facilitate the creation of complex noise functions from cha
 represent the chained modules in a consistent format.
 
 Joise was originally created to power the procedural world-building algorithms behind the PC game,
-[Lodestar: Stygian Skies](https://lodestargame.com/home).
+[Lodestar: Stygian Skies](http://lodestargame.com).
 
 ### What is in this repository?
 Documentation:
