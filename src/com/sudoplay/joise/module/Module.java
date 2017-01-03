@@ -48,8 +48,6 @@
 
 package com.sudoplay.joise.module;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 import com.sudoplay.joise.JoiseException;
 import com.sudoplay.joise.ModuleInstanceMap;
 import com.sudoplay.joise.ModuleMap;
@@ -71,12 +69,12 @@ public abstract class Module {
   public abstract double get(double x, double y, double z, double w, double u,
       double v);
 
-  protected static AtomicInteger nextId = new AtomicInteger();
+  protected static int nextId = 0;
 
   private String id = setId();
 
   protected String setId() {
-    return "func_" + nextId.incrementAndGet();
+    return "func_" + (++nextId);
   }
 
   public String getId() {
