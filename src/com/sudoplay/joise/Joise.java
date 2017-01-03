@@ -61,7 +61,15 @@ public class Joise {
 
   private Module module;
   private ModuleMap moduleMap;
+  private ModuleFactory moduleFactory;
   private HashMap<String, ArrayList<SeedableModule>> seedMap = new HashMap<String, ArrayList<SeedableModule>>();
+
+  /**
+   * Common initialization.
+   */
+  private Joise() {
+    this.moduleFactory = new ModuleFactory();
+  }
 
   /**
    * Creates a new instance of Joise with the supplied module chain.
@@ -76,9 +84,10 @@ public class Joise {
    * @param module
    */
   public Joise(Module module) {
+    this();
     Assert.notNull(module);
-    moduleMap = module.getModuleMap();
-    this.module = fromModuleMap(moduleMap);
+    this.moduleMap = module.getModuleMap();
+    this.module = fromModuleMap(this.moduleMap);
   }
 
   /**
@@ -94,9 +103,10 @@ public class Joise {
    * @param moduleMap
    */
   public Joise(ModuleMap moduleMap) {
+    this();
     Assert.notNull(moduleMap);
     this.module = fromModuleMap(moduleMap);
-    this.moduleMap = module.getModuleMap();
+    this.moduleMap = this.module.getModuleMap();
   }
 
   private Module fromModuleMap(ModuleMap map) {
@@ -107,8 +117,7 @@ public class Joise {
       while (it.hasNext()) {
         Entry<String, ModulePropertyMap> e = it.next();
         ModulePropertyMap props = e.getValue();
-        String moduleName = "com.sudoplay.joise.module." + props.get("module");
-        module = (Module) Class.forName(moduleName).newInstance();
+        module = this.moduleFactory.create(props.get("module").toString());
         module.buildFromPropertyMap(props, im);
         if (module instanceof SeedableModule
             && ((SeedableModule) module).hasSeedName()) {
