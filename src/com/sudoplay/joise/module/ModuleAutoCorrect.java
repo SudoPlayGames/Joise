@@ -279,11 +279,11 @@ public class ModuleAutoCorrect extends SourcedModule {
   public Module buildFromPropertyMap(ModulePropertyMap props,
       ModuleInstanceMap map) {
 
-    readDouble("low", "setLow", props);
-    readDouble("high", "setHigh", props);
-    readLong("samples", "setSamples", props);
-    readDouble("sampleScale", "setSampleScale", props);
-    readBoolean("locked", "setLocked", props);
+    this.setLow(readDouble("low", props));
+    this.setHigh(readDouble("high", props));
+    this.setSamples(readLong("samples", props));
+    this.setSampleScale(readDouble("sampleScale", props));
+    this.setLocked(readBoolean("locked", props));
 
     if (locked) {
       scale2 = props.getAsDouble("scale2");

@@ -163,8 +163,8 @@ public class ModuleTiers extends SourcedModule {
   public Module buildFromPropertyMap(ModulePropertyMap props,
       ModuleInstanceMap map) {
 
-    readLong("tiers", "setNumTiers", props);
-    readBoolean("smooth", "setSmooth", props);
+    this.setNumTiers(readLong("tiers", props));
+    this.setSmooth(readBoolean("smooth", props));
     readSource(props, map);
 
     return this;

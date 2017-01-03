@@ -75,6 +75,10 @@ public class ModuleGain extends SourcedModule {
     this.gain.set(gain);
   }
 
+  public void setGain(ScalarParameter scalarParameter) {
+    this.gain.set(scalarParameter);
+  }
+
   @Override
   public double get(double x, double y) {
     return Util.gain(gain.get(x, y), source.get(x, y));
@@ -111,7 +115,7 @@ public class ModuleGain extends SourcedModule {
   public Module buildFromPropertyMap(ModulePropertyMap props,
       ModuleInstanceMap map) {
 
-    readScalar("gain", "setGain", props, map);
+    this.setGain(readScalar("gain", props, map));
     readSource(props, map);
 
     return this;

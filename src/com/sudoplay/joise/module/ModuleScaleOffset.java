@@ -61,16 +61,24 @@ public class ModuleScaleOffset extends SourcedModule {
     scale.set(s);
   }
 
-  public void setScale(Module s) {
-    scale.set(s);
-  }
-
   public void setOffset(double o) {
     offset.set(o);
   }
 
+  public void setScale(Module s) {
+    scale.set(s);
+  }
+
   public void setOffset(Module o) {
     offset.set(o);
+  }
+
+  public void setScale(ScalarParameter scalarParameter) {
+    scale.set(scalarParameter);
+  }
+
+  public void setOffset(ScalarParameter scalarParameter) {
+    offset.set(scalarParameter);
   }
 
   @Override
@@ -112,8 +120,8 @@ public class ModuleScaleOffset extends SourcedModule {
   public Module buildFromPropertyMap(ModulePropertyMap props,
       ModuleInstanceMap map) {
 
-    readScalar("offset", "setOffset", props, map);
-    readScalar("scale", "setScale", props, map);
+    this.setOffset(readScalar("offset", props, map));
+    this.setScale(readScalar("scale", props, map));
     readSource(props, map);
 
     return this;

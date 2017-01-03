@@ -62,24 +62,36 @@ public class ModuleBrightContrast extends SourcedModule {
     bright.set(b);
   }
 
-  public void setBrightness(Module source) {
-    bright.set(source);
-  }
-
   public void setContrastThreshold(double t) {
     threshold.set(t);
-  }
-
-  public void setContrastThreshold(Module source) {
-    threshold.set(source);
   }
 
   public void setContrastFactor(double f) {
     factor.set(f);
   }
 
+  public void setBrightness(Module source) {
+    bright.set(source);
+  }
+
+  public void setContrastThreshold(Module source) {
+    threshold.set(source);
+  }
+
   public void setContrastFactor(Module source) {
     factor.set(source);
+  }
+
+  public void setBrightness(ScalarParameter scalarParameter) {
+    bright.set(scalarParameter);
+  }
+
+  public void setContrastThreshold(ScalarParameter scalarParameter) {
+    threshold.set(scalarParameter);
+  }
+
+  public void setContrastFactor(ScalarParameter scalarParameter) {
+    factor.set(scalarParameter);
   }
 
   @Override
@@ -152,9 +164,9 @@ public class ModuleBrightContrast extends SourcedModule {
   public Module buildFromPropertyMap(ModulePropertyMap props,
       ModuleInstanceMap map) {
 
-    readScalar("brightness", "setBrightness", props, map);
-    readScalar("contrastFactor", "setContrastFactor", props, map);
-    readScalar("contrastThreshold", "setContrastThreshold", props, map);
+    this.setBrightness(readScalar("brightness", props, map));
+    this.setContrastFactor(readScalar("contrastFactor", props, map));
+    this.setContrastThreshold(readScalar("contrastThreshold", props, map));
     readSource(props, map);
 
     return this;

@@ -1014,13 +1014,13 @@ public class ModuleFractal extends SeedableModule {
   public Module buildFromPropertyMap(ModulePropertyMap props,
       ModuleInstanceMap map) {
 
-    readEnum("type", "setType", FractalType.class, props);
-    readLong("octaves", "setNumOctaves", props);
-    readDouble("frequency", "setFrequency", props);
-    readDouble("lacunarity", "setLacunarity", props);
-    readDouble("gain", "setGain", props);
-    readDouble("H", "setH", props);
-    readDouble("offset", "setOffset", props);
+    this.setType(readEnum("type", FractalType.class, props));
+    this.setNumOctaves(readLong("octaves", props));
+    this.setFrequency(readDouble("frequency", props));
+    this.setLacunarity(readDouble("lacunarity", props));
+    this.setGain(readDouble("gain", props));
+    this.setH(readDouble("H", props));
+    this.setOffset(readDouble("offset", props));
 
     readSeed(props);
 

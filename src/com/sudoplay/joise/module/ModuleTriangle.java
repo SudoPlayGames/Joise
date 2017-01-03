@@ -77,6 +77,14 @@ public class ModuleTriangle extends SourcedModule {
     offset.set(source);
   }
 
+  public void setPeriod(ScalarParameter scalarParameter) {
+    period.set(scalarParameter);
+  }
+
+  public void setOffset(ScalarParameter scalarParameter) {
+    offset.set(scalarParameter);
+  }
+
   @Override
   public double get(double x, double y) {
     double val = source.get(x, y);
@@ -166,8 +174,8 @@ public class ModuleTriangle extends SourcedModule {
   public Module buildFromPropertyMap(ModulePropertyMap props,
       ModuleInstanceMap map) {
 
-    readScalar("offset", "setOffset", props, map);
-    readScalar("period", "setPeriod", props, map);
+    this.setOffset(readScalar("offset", props, map));
+    this.setPeriod(readScalar("period", props, map));
     readSource(props, map);
 
     return this;

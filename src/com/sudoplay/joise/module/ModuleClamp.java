@@ -117,8 +117,8 @@ public class ModuleClamp extends SourcedModule {
   public Module buildFromPropertyMap(ModulePropertyMap props,
       ModuleInstanceMap map) {
 
-    readDouble("low", "setLow", props);
-    readDouble("high", "setHigh", props);
+    this.setLow(readDouble("low", props));
+    this.setHigh(readDouble("high", props));
     readSource(props, map);
 
     return this;
