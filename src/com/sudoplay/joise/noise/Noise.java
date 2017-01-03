@@ -110,9 +110,9 @@ public class Noise {
   // = Worker noise functions
   // ==========================================================================
 
-  private static interface WorkerNoise2 {
+  private interface WorkerNoise2 {
 
-    public static final WorkerNoise2 VALUE = new WorkerNoise2() {
+    WorkerNoise2 VALUE = new WorkerNoise2() {
       @Override
       public double calculate(double x, double y, int ix, int iy, long seed) {
         int n = (hashCoords2(ix, iy, seed));
@@ -121,7 +121,7 @@ public class Noise {
       }
     };
 
-    public static final WorkerNoise2 GRADIENT = new WorkerNoise2() {
+    WorkerNoise2 GRADIENT = new WorkerNoise2() {
       @Override
       public double calculate(double x, double y, int ix, int iy, long seed) {
         int hash = hashCoords2(ix, iy, seed);
@@ -132,12 +132,12 @@ public class Noise {
       }
     };
 
-    public double calculate(double x, double y, int ix, int iy, long seed);
+    double calculate(double x, double y, int ix, int iy, long seed);
   }
 
-  private static interface WorkerNoise3 {
+  private interface WorkerNoise3 {
 
-    public static final WorkerNoise3 VALUE = new WorkerNoise3() {
+    WorkerNoise3 VALUE = new WorkerNoise3() {
       @Override
       public double calculate(double x, double y, double z, int ix, int iy,
           int iz, long seed) {
@@ -147,7 +147,7 @@ public class Noise {
       }
     };
 
-    public static final WorkerNoise3 GRADIENT = new WorkerNoise3() {
+    WorkerNoise3 GRADIENT = new WorkerNoise3() {
       @Override
       public double calculate(double x, double y, double z, int ix, int iy,
           int iz, long seed) {
@@ -160,13 +160,13 @@ public class Noise {
       }
     };
 
-    public double calculate(double x, double y, double z, int ix, int iy,
-        int iz, long seed);
+    double calculate(double x, double y, double z, int ix, int iy,
+                     int iz, long seed);
   }
 
-  private static interface WorkerNoise4 {
+  private interface WorkerNoise4 {
 
-    public static final WorkerNoise4 VALUE = new WorkerNoise4() {
+    WorkerNoise4 VALUE = new WorkerNoise4() {
       @Override
       public double calculate(double x, double y, double z, double w, int ix,
           int iy, int iz, int iw, long seed) {
@@ -176,7 +176,7 @@ public class Noise {
       }
     };
 
-    public static final WorkerNoise4 GRADIENT = new WorkerNoise4() {
+    WorkerNoise4 GRADIENT = new WorkerNoise4() {
       @Override
       public double calculate(double x, double y, double z, double w, int ix,
           int iy, int iz, int iw, long seed) {
@@ -190,13 +190,13 @@ public class Noise {
       }
     };
 
-    public double calculate(double x, double y, double z, double w, int ix,
-        int iy, int iz, int iw, long seed);
+    double calculate(double x, double y, double z, double w, int ix,
+                     int iy, int iz, int iw, long seed);
   }
 
-  private static interface WorkerNoise6 {
+  private interface WorkerNoise6 {
 
-    public static final WorkerNoise6 VALUE = new WorkerNoise6() {
+    WorkerNoise6 VALUE = new WorkerNoise6() {
       @Override
       public double calculate(double x, double y, double z, double w, double u,
           double v, int ix, int iy, int iz, int iw, int iu, int iv, long seed) {
@@ -206,7 +206,7 @@ public class Noise {
       }
     };
 
-    public static final WorkerNoise6 GRADIENT = new WorkerNoise6() {
+    WorkerNoise6 GRADIENT = new WorkerNoise6() {
       @Override
       public double calculate(double x, double y, double z, double w, double u,
           double v, int ix, int iy, int iz, int iw, int iu, int iv, long seed) {
@@ -225,8 +225,8 @@ public class Noise {
       }
     };
 
-    public double calculate(double x, double y, double z, double w, double u,
-        double v, int ix, int iy, int iz, int iw, int iu, int iv, long seed);
+    double calculate(double x, double y, double z, double w, double u,
+                     double v, int ix, int iy, int iz, int iw, int iu, int iv, long seed);
   }
 
   // ==========================================================================
