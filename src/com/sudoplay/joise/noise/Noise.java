@@ -529,9 +529,9 @@ public class Noise {
   // = 2D noise functions
   // ==========================================================================
 
-  public static interface Function2D {
+  public interface Function2D {
 
-    public static Function2D VALUE = new Function2D() {
+    Function2D VALUE = new Function2D() {
       @Override
       public double get(double x, double y, long seed, Interpolator interpolator) {
         int x0 = fastFloor(x);
@@ -545,7 +545,7 @@ public class Noise {
       }
     };
 
-    public static Function2D GRADIENT = new Function2D() {
+    Function2D GRADIENT = new Function2D() {
       @Override
       public double get(double x, double y, long seed, Interpolator interpolator) {
         int x0 = fastFloor(x);
@@ -559,7 +559,7 @@ public class Noise {
       }
     };
 
-    public static Function2D GRADVAL = new Function2D() {
+    Function2D GRADVAL = new Function2D() {
       @Override
       public double get(double x, double y, long seed, Interpolator interpolator) {
         return Function2D.VALUE.get(x, y, seed, interpolator)
@@ -567,7 +567,7 @@ public class Noise {
       }
     };
 
-    public static Function2D WHITE = new Function2D() {
+    Function2D WHITE = new Function2D() {
       @Override
       public double get(double x, double y, long seed, Interpolator interpolator) {
         int hash = computeHashDouble2(x, y, seed);
@@ -575,7 +575,7 @@ public class Noise {
       }
     };
 
-    public static Function2D SIMPLEX = new Function2D() {
+    Function2D SIMPLEX = new Function2D() {
       @Override
       public double get(double x, double y, long seed, Interpolator interpolator) {
         double s = (x + y) * F2;
@@ -630,16 +630,16 @@ public class Noise {
       }
     };
 
-    public double get(double x, double y, long seed, Interpolator interpolator);
+    double get(double x, double y, long seed, Interpolator interpolator);
   }
 
   // ==========================================================================
   // = 3D noise functions
   // ==========================================================================
 
-  public static interface Function3D {
+  public interface Function3D {
 
-    public static final Function3D VALUE = new Function3D() {
+    Function3D VALUE = new Function3D() {
       @Override
       public double get(double x, double y, double z, long seed,
           Interpolator interpolator) {
@@ -657,7 +657,7 @@ public class Noise {
       }
     };
 
-    public static final Function3D GRADIENT = new Function3D() {
+    Function3D GRADIENT = new Function3D() {
       @Override
       public double get(double x, double y, double z, long seed,
           Interpolator interpolator) {
@@ -675,7 +675,7 @@ public class Noise {
       }
     };
 
-    public static final Function3D GRADVAL = new Function3D() {
+    Function3D GRADVAL = new Function3D() {
       @Override
       public double get(double x, double y, double z, long seed,
           Interpolator interpolator) {
@@ -684,7 +684,7 @@ public class Noise {
       }
     };
 
-    public static final Function3D WHITE = new Function3D() {
+    Function3D WHITE = new Function3D() {
       @Override
       public double get(double x, double y, double z, long seed,
           Interpolator interpolator) {
@@ -693,7 +693,7 @@ public class Noise {
       }
     };
 
-    public static final Function3D SIMPLEX = new Function3D() {
+    Function3D SIMPLEX = new Function3D() {
       @Override
       public double get(double x, double y, double z, long seed,
           Interpolator interpolator) {
@@ -822,17 +822,17 @@ public class Noise {
       }
     };
 
-    public double get(double x, double y, double z, long seed,
-        Interpolator interpolator);
+    double get(double x, double y, double z, long seed,
+               Interpolator interpolator);
   }
 
   // ==========================================================================
   // = 4D noise functions
   // ==========================================================================
 
-  public static interface Function4D {
+  public interface Function4D {
 
-    public static final Function4D VALUE = new Function4D() {
+    Function4D VALUE = new Function4D() {
       @Override
       public double get(double x, double y, double z, double w, long seed,
           Interpolator interpolator) {
@@ -853,7 +853,7 @@ public class Noise {
       }
     };
 
-    public static final Function4D GRADIENT = new Function4D() {
+    Function4D GRADIENT = new Function4D() {
       @Override
       public double get(double x, double y, double z, double w, long seed,
           Interpolator interpolator) {
@@ -874,7 +874,7 @@ public class Noise {
       }
     };
 
-    public static final Function4D GRADVAL = new Function4D() {
+    Function4D GRADVAL = new Function4D() {
       @Override
       public double get(double x, double y, double z, double w, long seed,
           Interpolator interpolator) {
@@ -883,7 +883,7 @@ public class Noise {
       }
     };
 
-    public static final Function4D WHITE = new Function4D() {
+    Function4D WHITE = new Function4D() {
       @Override
       public double get(double x, double y, double z, double w, long seed,
           Interpolator interpolator) {
@@ -892,7 +892,7 @@ public class Noise {
       }
     };
 
-    public static final Function4D SIMPLEX = new Function4D() {
+    Function4D SIMPLEX = new Function4D() {
       @Override
       public double get(double x, double y, double z, double w, long seed,
           Interpolator interpolator) {
@@ -1019,17 +1019,17 @@ public class Noise {
       }
     };
 
-    public double get(double x, double y, double z, double w, long seed,
-        Interpolator interpolator);
+    double get(double x, double y, double z, double w, long seed,
+               Interpolator interpolator);
   }
 
   // ==========================================================================
   // = 6D noise functions
   // ==========================================================================
 
-  public static interface Function6D {
+  public interface Function6D {
 
-    public static final Function6D VALUE = new Function6D() {
+    Function6D VALUE = new Function6D() {
       @Override
       public double get(double x, double y, double z, double w, double u,
           double v, long seed, Interpolator interpolator) {
@@ -1060,7 +1060,7 @@ public class Noise {
       }
     };
 
-    public static final Function6D GRADIENT = new Function6D() {
+    Function6D GRADIENT = new Function6D() {
       @Override
       public double get(double x, double y, double z, double w, double u,
           double v, long seed, Interpolator interpolator) {
@@ -1091,7 +1091,7 @@ public class Noise {
       }
     };
 
-    public static final Function6D GRADVAL = new Function6D() {
+    Function6D GRADVAL = new Function6D() {
       @Override
       public double get(double x, double y, double z, double w, double u,
           double v, long seed, Interpolator interpolator) {
@@ -1100,7 +1100,7 @@ public class Noise {
       }
     };
 
-    public static final Function6D WHITE = new Function6D() {
+    Function6D WHITE = new Function6D() {
       @Override
       public double get(double x, double y, double z, double w, double u,
           double v, long seed, Interpolator interpolator) {
@@ -1109,7 +1109,7 @@ public class Noise {
       }
     };
 
-    public static final Function6D SIMPLEX = new Function6D() {
+    Function6D SIMPLEX = new Function6D() {
       @Override
       public double get(double x, double y, double z, double w, double u,
           double v, long seed, Interpolator interpolator) {
@@ -1189,7 +1189,7 @@ public class Noise {
       }
     };
 
-    public double get(double x, double y, double z, double w, double u,
+    double get(double x, double y, double z, double w, double u,
         double v, long seed, Interpolator interpolator);
   }
 
@@ -1381,7 +1381,7 @@ public class Noise {
   }
 
   public static double valueNoise3D(int x, int y, int z, int seed) {
-    return 1.0 - ((double) intValueNoise3D(x, y, z, seed) / 1073741824.0);
+    return 1.0 - (intValueNoise3D(x, y, z, seed) / 1073741824.0);
   }
 
 }
