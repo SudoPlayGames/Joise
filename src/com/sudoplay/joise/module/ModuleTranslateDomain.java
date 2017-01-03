@@ -109,6 +109,30 @@ public class ModuleTranslateDomain extends SourcedModule {
     av.set(source);
   }
 
+  public void setAxisXSource(ScalarParameter scalarParameter) {
+    ax.set(scalarParameter);
+  }
+
+  public void setAxisYSource(ScalarParameter scalarParameter) {
+    ay.set(scalarParameter);
+  }
+
+  public void setAxisZSource(ScalarParameter scalarParameter) {
+    az.set(scalarParameter);
+  }
+
+  public void setAxisWSource(ScalarParameter scalarParameter) {
+    aw.set(scalarParameter);
+  }
+
+  public void setAxisUSource(ScalarParameter scalarParameter) {
+    au.set(scalarParameter);
+  }
+
+  public void setAxisVSource(ScalarParameter scalarParameter) {
+    av.set(scalarParameter);
+  }
+
   @Override
   public double get(double x, double y) {
     return source.get(x + ax.get(x, y), y + ay.get(x, y));
@@ -155,12 +179,12 @@ public class ModuleTranslateDomain extends SourcedModule {
   public Module buildFromPropertyMap(ModulePropertyMap props,
       ModuleInstanceMap map) {
 
-    readScalar("axisX", "setAxisXSource", props, map);
-    readScalar("axisY", "setAxisYSource", props, map);
-    readScalar("axisZ", "setAxisZSource", props, map);
-    readScalar("axisW", "setAxisWSource", props, map);
-    readScalar("axisU", "setAxisUSource", props, map);
-    readScalar("axisV", "setAxisVSource", props, map);
+    this.setAxisXSource(readScalar("axisX", props, map));
+    this.setAxisYSource(readScalar("axisY", props, map));
+    this.setAxisZSource(readScalar("axisZ", props, map));
+    this.setAxisWSource(readScalar("axisW", props, map));
+    this.setAxisUSource(readScalar("axisU", props, map));
+    this.setAxisVSource(readScalar("axisV", props, map));
     readSource(props, map);
 
     return this;

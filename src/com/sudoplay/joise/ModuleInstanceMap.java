@@ -50,7 +50,6 @@ package com.sudoplay.joise;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map.Entry;
 
 import com.sudoplay.joise.module.Module;
 

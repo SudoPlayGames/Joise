@@ -66,6 +66,10 @@ public class ModulePow extends SourcedModule {
     power.set(source);
   }
 
+  public void setPower(ScalarParameter scalarParameter) {
+    power.set(scalarParameter);
+  }
+
   @Override
   public double get(double x, double y) {
     return Math.pow(source.get(x, y), power.get(x, y));
@@ -102,7 +106,7 @@ public class ModulePow extends SourcedModule {
   public Module buildFromPropertyMap(ModulePropertyMap props,
       ModuleInstanceMap map) {
 
-    readScalar("power", "setPower", props, map);
+    this.setPower(readScalar("power", props, map));
     readSource(props, map);
 
     return this;

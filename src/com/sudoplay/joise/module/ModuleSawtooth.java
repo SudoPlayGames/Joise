@@ -64,6 +64,10 @@ public class ModuleSawtooth extends SourcedModule {
     period.set(p);
   }
 
+  public void setPeriod(ScalarParameter scalarParameter) {
+    period.set(scalarParameter);
+  }
+
   @Override
   public double get(double x, double y) {
     double val = source.get(x, y) / period.get(x, y);
@@ -104,7 +108,7 @@ public class ModuleSawtooth extends SourcedModule {
   public Module buildFromPropertyMap(ModulePropertyMap props,
       ModuleInstanceMap map) {
 
-    readScalar("period", "setPeriod", props, map);
+    this.setPeriod(readScalar("period", props, map));
     readSource(props, map);
 
     return this;

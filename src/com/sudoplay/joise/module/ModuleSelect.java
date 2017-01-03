@@ -101,6 +101,26 @@ public class ModuleSelect extends Module {
     falloff.set(source);
   }
 
+  public void setLowSource(ScalarParameter scalarParameter) {
+    low.set(scalarParameter);
+  }
+
+  public void setHighSource(ScalarParameter scalarParameter) {
+    high.set(scalarParameter);
+  }
+
+  public void setControlSource(ScalarParameter scalarParameter) {
+    control.set(scalarParameter);
+  }
+
+  public void setThreshold(ScalarParameter scalarParameter) {
+    threshold.set(scalarParameter);
+  }
+
+  public void setFalloff(ScalarParameter scalarParameter) {
+    falloff.set(scalarParameter);
+  }
+
   @Override
   public double get(double x, double y) {
     double c = control.get(x, y);
@@ -233,11 +253,11 @@ public class ModuleSelect extends Module {
   public Module buildFromPropertyMap(ModulePropertyMap props,
       ModuleInstanceMap map) {
 
-    readScalar("low", "setLowSource", props, map);
-    readScalar("high", "setHighSource", props, map);
-    readScalar("control", "setControlSource", props, map);
-    readScalar("threshold", "setThreshold", props, map);
-    readScalar("falloff", "setFalloff", props, map);
+    this.setLowSource(readScalar("low", props, map));
+    this.setHighSource(readScalar("high", props, map));
+    this.setControlSource(readScalar("control", props, map));
+    this.setThreshold(readScalar("threshold", props, map));
+    this.setFalloff(readScalar("falloff", props, map));
 
     return this;
   }

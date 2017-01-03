@@ -76,6 +76,10 @@ public class ModuleBias extends SourcedModule {
     this.bias.set(bias);
   }
 
+  public void setBias(ScalarParameter scalarParameter) {
+    this.bias.set(scalarParameter);
+  }
+
   @Override
   public double get(double x, double y) {
     double val = source.get(x, y);
@@ -116,7 +120,7 @@ public class ModuleBias extends SourcedModule {
   public Module buildFromPropertyMap(ModulePropertyMap props,
       ModuleInstanceMap map) {
 
-    readScalar("bias", "setBias", props, map);
+    this.setBias(readScalar("bias", props, map));
     readSource(props, map);
 
     return this;

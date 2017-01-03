@@ -118,6 +118,34 @@ public class ModuleSphere extends Module {
     radius.set(source);
   }
 
+  public void setCenterX(ScalarParameter scalarParameter) {
+    cx.set(scalarParameter);
+  }
+
+  public void setCenterY(ScalarParameter scalarParameter) {
+    cy.set(scalarParameter);
+  }
+
+  public void setCenterZ(ScalarParameter scalarParameter) {
+    cz.set(scalarParameter);
+  }
+
+  public void setCenterW(ScalarParameter scalarParameter) {
+    cw.set(scalarParameter);
+  }
+
+  public void setCenterU(ScalarParameter scalarParameter) {
+    cu.set(scalarParameter);
+  }
+
+  public void setCenterV(ScalarParameter scalarParameter) {
+    cv.set(scalarParameter);
+  }
+
+  public void setRadius(ScalarParameter scalarParameter) {
+    radius.set(scalarParameter);
+  }
+
   @Override
   public double get(double x, double y) {
     double dx = x - cx.get(x, y), dy = y - cy.get(x, y);
@@ -192,13 +220,13 @@ public class ModuleSphere extends Module {
   public Module buildFromPropertyMap(ModulePropertyMap props,
       ModuleInstanceMap map) {
 
-    readScalar("cx", "setCenterX", props, map);
-    readScalar("cy", "setCenterY", props, map);
-    readScalar("cz", "setCenterZ", props, map);
-    readScalar("cw", "setCenterW", props, map);
-    readScalar("cu", "setCenterU", props, map);
-    readScalar("cv", "setCenterV", props, map);
-    readScalar("radius", "setRadius", props, map);
+    this.setCenterX(readScalar("cx", props, map));
+    this.setCenterY(readScalar("cy", props, map));
+    this.setCenterZ(readScalar("cz", props, map));
+    this.setCenterW(readScalar("cw", props, map));
+    this.setCenterU(readScalar("cu", props, map));
+    this.setCenterV(readScalar("cv", props, map));
+    this.setRadius(readScalar("radius", props, map));
 
     return this;
   }

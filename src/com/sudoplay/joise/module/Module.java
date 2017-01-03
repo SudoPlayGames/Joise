@@ -48,9 +48,6 @@
 
 package com.sudoplay.joise.module;
 
-import java.lang.reflect.Method;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import com.sudoplay.joise.JoiseException;
 import com.sudoplay.joise.ModuleInstanceMap;
 import com.sudoplay.joise.ModuleMap;
@@ -72,12 +69,12 @@ public abstract class Module {
   public abstract double get(double x, double y, double z, double w, double u,
       double v);
 
-  protected static AtomicInteger nextId = new AtomicInteger();
+  protected static int nextId = 0;
 
   private String id = setId();
 
   protected String setId() {
-    return "func_" + nextId.incrementAndGet();
+    return "func_" + (++nextId);
   }
 
   public String getId() {
@@ -180,31 +177,22 @@ public abstract class Module {
   }
 
   /**
-   * Read a scalar property from the provided property map and set the property
-   * in this module using reflection to call the supplied method name with the
-   * retrieved property passed as an argument. If the scalar is a module name,
-   * the module is retrieved from the provided {@link ModuleInstanceMap} and set
-   * using the reflected method provided.
+   * Returns a scalar parameter from the provided property map.
    * 
    * @param name
-   * @param methodName
    * @param props
    * @param map
-   * 
+   *
    * @throws JoiseException
-   *           if there is an error with the retrieval or setting of the
-   *           property
+   *           if there is an error with the retrieval
    */
-  protected void readScalar(String name, String methodName,
-      ModulePropertyMap props, ModuleInstanceMap map) {
+  protected ScalarParameter readScalar(String name, ModulePropertyMap props, ModuleInstanceMap map) {
 
     try {
       if (props.isModuleID(name)) {
-        Method method = getClass().getMethod(methodName, Module.class);
-        method.invoke(this, new Object[] { map.get(props.get(name)) });
+        return new ScalarParameter(map.get(props.get(name)));
       } else {
-        Method method = getClass().getMethod(methodName, double.class);
-        method.invoke(this, new Object[] { props.getAsDouble(name) });
+        return new ScalarParameter(props.getAsDouble(name));
       }
     } catch (Exception e) {
       throw new JoiseException(e);
@@ -232,22 +220,16 @@ public abstract class Module {
   }
 
   /**
-   * Read an enum property from the provided property map and set the property
-   * in this module using reflection to call the supplied method name with the
-   * retrieved property passed as an argument.
+   * Returns an enum property from the provided property map.
    * 
    * @param name
-   * @param methodName
    * @param c
    * @param props
    */
-  protected <T extends Enum<T>> void readEnum(String name, String methodName,
-      Class<T> c, ModulePropertyMap props) {
+  protected <T extends Enum<T>> T readEnum(String name, Class<T> c, ModulePropertyMap props) {
 
     try {
-      Method method = getClass().getMethod(methodName, c);
-      T _enum = Enum.valueOf(c, props.get(name).toString().toUpperCase());
-      method.invoke(this, new Object[] { _enum });
+      return Enum.valueOf(c, props.get(name).toString().toUpperCase());
     } catch (Exception e) {
       throw new JoiseException(e);
     }
@@ -269,19 +251,15 @@ public abstract class Module {
   }
 
   /**
-   * Read a long property from the provided property map and set the property in
-   * this module using reflection to call the supplied method name with the
-   * retrieved property passed as an argument.
+   * Returns a long property from the provided property map.
    * 
    * @param key
-   * @param methodName
    * @param props
    */
-  protected void readLong(String key, String methodName, ModulePropertyMap props) {
+  protected long readLong(String key, ModulePropertyMap props) {
 
     try {
-      Method method = getClass().getMethod(methodName, long.class);
-      method.invoke(this, new Object[] { props.getAsLong(key) });
+      return props.getAsLong(key);
     } catch (Exception e) {
       throw new JoiseException(e);
     }
@@ -302,20 +280,15 @@ public abstract class Module {
   }
 
   /**
-   * Read a double property from the provided property map and set the property
-   * in this module using reflection to call the supplied method name with the
-   * retrieved property passed as an argument.
+   * Returns a double property from the provided property map.
    * 
    * @param key
-   * @param methodName
    * @param props
    */
-  protected void readDouble(String key, String methodName,
-      ModulePropertyMap props) {
+  protected double readDouble(String key, ModulePropertyMap props) {
 
     try {
-      Method method = getClass().getMethod(methodName, double.class);
-      method.invoke(this, new Object[] { props.getAsDouble(key) });
+      return props.getAsDouble(key);
     } catch (Exception e) {
       throw new JoiseException(e);
     }
@@ -336,20 +309,15 @@ public abstract class Module {
   }
 
   /**
-   * Read a boolean property from the provided property map and set the property
-   * in this module using reflection to call the supplied method name with the
-   * retrieved property passed as an argument.
+   * Returns a boolean property from the provided property map.
    * 
    * @param key
-   * @param methodName
    * @param props
    */
-  protected void readBoolean(String key, String methodName,
-      ModulePropertyMap props) {
+  protected boolean readBoolean(String key, ModulePropertyMap props) {
 
     try {
-      Method method = getClass().getMethod(methodName, boolean.class);
-      method.invoke(this, new Object[] { props.getAsBoolean(key) });
+      return props.getAsBoolean(key);
     } catch (Exception e) {
       throw new JoiseException(e);
     }

@@ -111,6 +111,30 @@ public class ModuleScaleDomain extends SourcedModule {
     sv.set(v);
   }
 
+  public void setScaleX(ScalarParameter scalarParameter) {
+    sx.set(scalarParameter);
+  }
+
+  public void setScaleY(ScalarParameter scalarParameter) {
+    sy.set(scalarParameter);
+  }
+
+  public void setScaleZ(ScalarParameter scalarParameter) {
+    sz.set(scalarParameter);
+  }
+
+  public void setScaleW(ScalarParameter scalarParameter) {
+    sw.set(scalarParameter);
+  }
+
+  public void setScaleU(ScalarParameter scalarParameter) {
+    su.set(scalarParameter);
+  }
+
+  public void setScaleV(ScalarParameter scalarParameter) {
+    sv.set(scalarParameter);
+  }
+
   @Override
   public double get(double x, double y) {
     return source.get(x * sx.get(x, y), y * sy.get(x, y));
@@ -157,12 +181,12 @@ public class ModuleScaleDomain extends SourcedModule {
   public Module buildFromPropertyMap(ModulePropertyMap props,
       ModuleInstanceMap map) {
 
-    readScalar("x", "setScaleX", props, map);
-    readScalar("y", "setScaleY", props, map);
-    readScalar("z", "setScaleZ", props, map);
-    readScalar("w", "setScaleW", props, map);
-    readScalar("u", "setScaleU", props, map);
-    readScalar("v", "setScaleV", props, map);
+    this.setScaleX(readScalar("x", props, map));
+    this.setScaleY(readScalar("y", props, map));
+    this.setScaleZ(readScalar("z", props, map));
+    this.setScaleW(readScalar("w", props, map));
+    this.setScaleU(readScalar("u", props, map));
+    this.setScaleV(readScalar("v", props, map));
     readSource(props, map);
 
     return this;
