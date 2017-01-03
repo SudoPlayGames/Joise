@@ -196,8 +196,8 @@ public class ModuleFunctionGradient extends SourcedModule {
   public Module buildFromPropertyMap(ModulePropertyMap props,
       ModuleInstanceMap map) {
 
-    readEnum("axis", "setAxis", FunctionGradientAxis.class, props);
-    readDouble("spacing", "setSpacing", props);
+    this.setAxis(readEnum("axis", FunctionGradientAxis.class, props));
+    this.setSpacing(readDouble("spacing", props));
     readSource(props, map);
 
     return this;

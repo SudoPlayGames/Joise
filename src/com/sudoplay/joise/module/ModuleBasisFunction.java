@@ -323,9 +323,8 @@ public class ModuleBasisFunction extends SeedableModule {
   public Module buildFromPropertyMap(ModulePropertyMap props,
       ModuleInstanceMap map) {
 
-    readEnum("basis", "setType", BasisType.class, props);
-    readEnum("interpolation", "setInterpolation", InterpolationType.class,
-        props);
+    this.setType(readEnum("basis", BasisType.class, props));
+    this.setInterpolation(readEnum("interpolation", InterpolationType.class, props));
     readSeed(props);
 
     return this;

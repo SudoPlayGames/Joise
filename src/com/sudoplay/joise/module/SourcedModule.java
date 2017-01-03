@@ -64,6 +64,10 @@ public abstract class SourcedModule extends Module {
     this.source.set(source);
   }
 
+  public void setSource(ScalarParameter scalarParameter) {
+    this.source.set(scalarParameter);
+  }
+
   public ScalarParameter getSource() {
     return source;
   }
@@ -73,7 +77,7 @@ public abstract class SourcedModule extends Module {
   }
 
   protected void readSource(ModulePropertyMap props, ModuleInstanceMap map) {
-    readScalar("source", "setSource", props, map);
+    this.setSource(readScalar("source", props, map));
   }
 
 }

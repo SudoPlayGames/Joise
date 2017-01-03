@@ -471,7 +471,7 @@ public class ModuleCombiner extends Module {
   public Module buildFromPropertyMap(ModulePropertyMap props,
       ModuleInstanceMap map) {
 
-    readEnum("type", "setType", CombinerType.class, props);
+    this.setType(readEnum("type", CombinerType.class, props));
 
     String name;
     Object o;

@@ -70,6 +70,16 @@ public class ScalarParameter {
     value = source;
   }
 
+  public void set(ScalarParameter scalarParameter) {
+
+    if (scalarParameter.isModule()) {
+      this.set(scalarParameter.getModule());
+    } else {
+      this.set(scalarParameter.getValue());
+    }
+
+  }
+
   public boolean isModule() {
     return module != null;
   }

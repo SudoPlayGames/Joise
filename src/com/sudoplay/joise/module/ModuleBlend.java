@@ -60,11 +60,19 @@ public class ModuleBlend extends Module {
   protected ScalarParameter high = new ScalarParameter(1.0);
   protected ScalarParameter control = new ScalarParameter(0.5);
 
-  public void setLowSource(Module source) {
+  public void setLowSource(double source) {
     low.set(source);
   }
 
-  public void setLowSource(double source) {
+  public void setHighSource(double source) {
+    high.set(source);
+  }
+
+  public void setControlSource(double source) {
+    control.set(source);
+  }
+
+  public void setLowSource(Module source) {
     low.set(source);
   }
 
@@ -72,16 +80,20 @@ public class ModuleBlend extends Module {
     high.set(source);
   }
 
-  public void setHighSource(double source) {
-    high.set(source);
-  }
-
   public void setControlSource(Module source) {
     control.set(source);
   }
 
-  public void setControlSource(double source) {
-    control.set(source);
+  public void setLowSource(ScalarParameter scalarParameter) {
+    low.set(scalarParameter);
+  }
+
+  public void setHighSource(ScalarParameter scalarParameter) {
+    high.set(scalarParameter);
+  }
+
+  public void setControlSource(ScalarParameter scalarParameter) {
+    control.set(scalarParameter);
   }
 
   @Override
@@ -134,9 +146,9 @@ public class ModuleBlend extends Module {
   public Module buildFromPropertyMap(ModulePropertyMap props,
       ModuleInstanceMap map) {
 
-    readScalar("high", "setHighSource", props, map);
-    readScalar("low", "setLowSource", props, map);
-    readScalar("control", "setControlSource", props, map);
+    this.setHighSource(readScalar("high", props, map));
+    this.setLowSource(readScalar("low", props, map));
+    this.setControlSource(readScalar("control", props, map));
 
     return this;
   }

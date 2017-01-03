@@ -77,15 +77,7 @@ public class ModuleRotateDomain extends SourcedModule {
     this.ax.set(ax);
   }
 
-  public void setAxisX(Module ax) {
-    this.ax.set(ax);
-  }
-
   public void setAxisY(double ay) {
-    this.ay.set(ay);
-  }
-
-  public void setAxisY(Module ay) {
     this.ay.set(ay);
   }
 
@@ -93,16 +85,40 @@ public class ModuleRotateDomain extends SourcedModule {
     this.az.set(az);
   }
 
-  public void setAxisZ(Module az) {
-    this.az.set(az);
-  }
-
   public void setAngle(double a) {
     this.axisangle.set(a);
   }
 
+  public void setAxisX(Module ax) {
+    this.ax.set(ax);
+  }
+
+  public void setAxisY(Module ay) {
+    this.ay.set(ay);
+  }
+
+  public void setAxisZ(Module az) {
+    this.az.set(az);
+  }
+
   public void setAngle(Module a) {
     this.axisangle.set(a);
+  }
+
+  public void setAxisX(ScalarParameter scalarParameter) {
+    this.ax.set(scalarParameter);
+  }
+
+  public void setAxisY(ScalarParameter scalarParameter) {
+    this.ay.set(scalarParameter);
+  }
+
+  public void setAxisZ(ScalarParameter scalarParameter) {
+    this.az.set(scalarParameter);
+  }
+
+  public void setAngle(ScalarParameter scalarParameter) {
+    this.axisangle.set(scalarParameter);
   }
 
   @Override
@@ -215,10 +231,10 @@ public class ModuleRotateDomain extends SourcedModule {
   public Module buildFromPropertyMap(ModulePropertyMap props,
       ModuleInstanceMap map) {
 
-    readScalar("axisX", "setAxisX", props, map);
-    readScalar("axisY", "setAxisY", props, map);
-    readScalar("axisZ", "setAxisZ", props, map);
-    readScalar("angle", "setAngle", props, map);
+    this.setAxisX(readScalar("axisX", props, map));
+    this.setAxisY(readScalar("axisY", props, map));
+    this.setAxisZ(readScalar("axisZ", props, map));
+    this.setAngle(readScalar("angle", props, map));
     readSource(props, map);
 
     return this;

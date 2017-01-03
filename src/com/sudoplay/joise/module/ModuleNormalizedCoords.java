@@ -74,6 +74,10 @@ public class ModuleNormalizedCoords extends SourcedModule {
     length.set(source);
   }
 
+  public void setLength(ScalarParameter scalarParameter) {
+    length.set(scalarParameter);
+  }
+
   @Override
   public double get(double x, double y) {
     if (x == 0 && y == 0) return source.get(x, y);
@@ -128,7 +132,7 @@ public class ModuleNormalizedCoords extends SourcedModule {
   public Module buildFromPropertyMap(ModulePropertyMap props,
       ModuleInstanceMap map) {
 
-    readScalar("length", "setLength", props, map);
+    this.setLength(readScalar("length", props, map));
     readSource(props, map);
 
     return this;
