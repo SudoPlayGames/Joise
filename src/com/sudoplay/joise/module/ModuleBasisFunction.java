@@ -53,7 +53,11 @@ import com.sudoplay.joise.ModuleMap;
 import com.sudoplay.joise.ModulePropertyMap;
 import com.sudoplay.joise.generator.LCG;
 import com.sudoplay.joise.noise.Interpolator;
-import com.sudoplay.joise.noise.Noise;
+import com.sudoplay.joise.noise.function.*;
+import com.sudoplay.joise.noise.function.spi.Function2D;
+import com.sudoplay.joise.noise.function.spi.Function3D;
+import com.sudoplay.joise.noise.function.spi.Function4D;
+import com.sudoplay.joise.noise.function.spi.Function6D;
 
 public class ModuleBasisFunction extends SeedableModule {
 
@@ -70,10 +74,10 @@ public class ModuleBasisFunction extends SeedableModule {
   protected double[][] rotMatrix = new double[3][3];
   protected double cos2d, sin2d;
 
-  protected Noise.Function2D func2D;
-  protected Noise.Function3D func3D;
-  protected Noise.Function4D func4D;
-  protected Noise.Function6D func6D;
+  protected Function2D func2D;
+  protected Function3D func3D;
+  protected Function4D func4D;
+  protected Function6D func6D;
 
   protected Interpolator interpolator;
 
@@ -103,36 +107,36 @@ public class ModuleBasisFunction extends SeedableModule {
     basisType = type;
     switch (type) {
     case GRADVAL:
-      func2D = Noise.Function2D.GRADVAL;
-      func3D = Noise.Function3D.GRADVAL;
-      func4D = Noise.Function4D.GRADVAL;
-      func6D = Noise.Function6D.GRADVAL;
+      func2D = new Function2DGradVal();
+      func3D = new Function3DGradVal();
+      func4D = new Function4DGradVal();
+      func6D = new Function6DGradVal();
       break;
     case SIMPLEX:
-      func2D = Noise.Function2D.SIMPLEX;
-      func3D = Noise.Function3D.SIMPLEX;
-      func4D = Noise.Function4D.SIMPLEX;
-      func6D = Noise.Function6D.SIMPLEX;
+      func2D = new Function2DSimplex();
+      func3D = new Function3DSimplex();
+      func4D = new Function4DSimplex();
+      func6D = new Function6DSimplex();
       break;
     case VALUE:
-      func2D = Noise.Function2D.VALUE;
-      func3D = Noise.Function3D.VALUE;
-      func4D = Noise.Function4D.VALUE;
-      func6D = Noise.Function6D.VALUE;
+      func2D = new Function2DValue();
+      func3D = new Function3DValue();
+      func4D = new Function4DValue();
+      func6D = new Function6DValue();
       break;
     case WHITE:
-      func2D = Noise.Function2D.WHITE;
-      func3D = Noise.Function3D.WHITE;
-      func4D = Noise.Function4D.WHITE;
-      func6D = Noise.Function6D.WHITE;
+      func2D = new Function2DWhite();
+      func3D = new Function3DWhite();
+      func4D = new Function4DWhite();
+      func6D = new Function6DWhite();
       break;
     case GRADIENT:
       // fallthrough intentional
     default:
-      func2D = Noise.Function2D.GRADIENT;
-      func3D = Noise.Function3D.GRADIENT;
-      func4D = Noise.Function4D.GRADIENT;
-      func6D = Noise.Function6D.GRADIENT;
+      func2D = new Function2DGradient();
+      func3D = new Function3DGradient();
+      func4D = new Function4DGradient();
+      func6D = new Function6DGradient();
       break;
     }
     setMagicNumbers(type);
@@ -166,7 +170,7 @@ public class ModuleBasisFunction extends SeedableModule {
 
   /**
    * Set the rotation axis and angle to use for 3D, 4D and 6D noise.
-   * 
+   *
    * @param x
    * @param y
    * @param z
@@ -192,7 +196,7 @@ public class ModuleBasisFunction extends SeedableModule {
   @Override
   public void setSeed(long seed) {
     super.setSeed(seed);
-    
+
     LCG lcg = new LCG();
     lcg.setSeed(seed);
 
