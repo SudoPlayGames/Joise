@@ -10,7 +10,7 @@ Joise is derived from Joshua Tippetts' [Accidental Noise Library](http://acciden
 ```
 groupId=com.sudoplay.joise
 artifactId=joise
-version=1.0.2
+version=1.0.3
 ```
 
 ### Why Joise?
@@ -36,6 +36,19 @@ The repo contains the following packages:
 The following packages are provided separately to reduce dependencies:
 * [JoisePlugin-TMLConverter](https://github.com/codetaylor/JoisePlugin-TMLConverter) converts module chains to and from TML using [Juple](https://github.com/codetaylor/Juple).
 * [JoisePlugin-JSONConverter](https://github.com/codetaylor/JoisePlugin-JSONConverter) converts module chains to and from JSON using [Gson](https://code.google.com/p/google-gson/).
+
+### Change Log
+
+#### 1.0.3
+
+  * refactored Noise class to remove usage of ByteBuffer and ThreadLocal while retaining thread safety
+  * replaced usage of AtomicInteger in Module class with UUID string generator
+  * eliminated use of reflection in Module class and Joise class
+  * removed unused util methods in Assert class
+
+#### 1.0.2
+
+  * added gradle.properties file with dummy vars to fix #7
 
 ## Examples
 
