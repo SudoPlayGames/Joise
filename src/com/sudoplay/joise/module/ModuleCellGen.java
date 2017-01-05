@@ -60,11 +60,11 @@ import com.sudoplay.joise.noise.worker.spi.WorkerNoise2;
 import com.sudoplay.joise.noise.worker.spi.WorkerNoise3;
 import com.sudoplay.joise.noise.worker.spi.WorkerNoise4;
 import com.sudoplay.joise.noise.worker.spi.WorkerNoise6;
+import com.sudoplay.util.ModuleID;
 
 public class ModuleCellGen extends SeedableModule {
 
-  // TODO: Fix this
-  private int id = Module.nextId;//.incrementAndGet();
+  private final String id;
 
   private WorkerNoise2 workerNoise2;
   private WorkerNoise3 workerNoise3;
@@ -88,11 +88,12 @@ public class ModuleCellGen extends SeedableModule {
     this.workerNoise3 = new WorkerNoise3Value();
     this.workerNoise4 = new WorkerNoise4Value();
     this.workerNoise6 = new WorkerNoise6Value();
+    this.id = ModuleID.create();
   }
 
   @Override
   public String getId() {
-    return "func_" + id;
+    return this.id;
   }
 
   @Override

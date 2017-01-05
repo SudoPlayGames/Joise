@@ -52,6 +52,7 @@ import com.sudoplay.joise.JoiseException;
 import com.sudoplay.joise.ModuleInstanceMap;
 import com.sudoplay.joise.ModuleMap;
 import com.sudoplay.joise.ModulePropertyMap;
+import com.sudoplay.util.ModuleID;
 
 public abstract class Module {
 
@@ -69,16 +70,10 @@ public abstract class Module {
   public abstract double get(double x, double y, double z, double w, double u,
       double v);
 
-  protected static int nextId = 0;
-
-  private String id = setId();
-
-  protected String setId() {
-    return "func_" + (++nextId);
-  }
+  private final String id = ModuleID.create();
 
   public String getId() {
-    return id;
+    return this.id;
   }
 
   public ModuleMap getModuleMap() {
@@ -88,7 +83,7 @@ public abstract class Module {
   }
 
   public void writeToMap(ModuleMap map) {
-    if (map.contains(id)) {
+    if (map.contains(this.id)) {
       return;
     }
     _writeToMap(map);
