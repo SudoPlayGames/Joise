@@ -1,12 +1,12 @@
 /*
- * Copyright (C) 2013 Jason Taylor.
+ * Copyright (C) 2016 Jason Taylor.
  * Released as open-source under the Apache License, Version 2.0.
  *
  * ============================================================================
  * | Joise
  * ============================================================================
  *
- * Copyright (C) 2013 Jason Taylor
+ * Copyright (C) 2016 Jason Taylor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
