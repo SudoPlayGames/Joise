@@ -45,6 +45,7 @@ The following packages are provided separately to reduce dependencies:
   * replaced usage of AtomicInteger in Module class with UUID string generator
   * eliminated use of reflection in Module class and Joise class
   * removed unused util methods in Assert class
+  * added XML file required to build with GWT
 
 #### 1.0.2
 
