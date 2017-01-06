@@ -15,7 +15,7 @@ version=1.0.4
 
 ### Why Joise?
 Joise was created to facilitate the creation of complex noise functions from chained modules, and
-represent the chained modules in a consistent format.
+represent the chained modules in a flat format convenient for text serialization.
 
 Joise was originally created to power the procedural world-building algorithms behind the PC game,
 [Lodestar: Stygian Skies](http://lodestargame.com).
@@ -26,12 +26,12 @@ Documentation:
 * **LICENSE** the license  ([link](https://github.com/SudoPlayGames/Joise/blob/master/LICENSE))
 
 The repo contains the following packages:
-* `com.sudoplay.joise` contains classes to work with module maps.
-* `com.sudoplay.joise.generator` contains classes to generate pseudo-random numbers.
-* `com.sudoplay.joise.mapping` contains classes assist in mapping noise to arrays.
-* `com.sudoplay.joise.module` contains all the noise function modules.
-* `com.sudoplay.joise.noise` contains the core noise functions.
-* `com.sudoplay.util` contains common utility classes.
+* `com.sudoplay.joise` - classes to work with module maps
+* `com.sudoplay.joise.generator` - classes to generate pseudo-random numbers
+* `com.sudoplay.joise.mapping` - classes to assist in mapping noise to arrays
+* `com.sudoplay.joise.module` - all the noise function modules
+* `com.sudoplay.joise.noise` - the core noise functions
+* `com.sudoplay.util` - common utility classes
 
 The following packages are provided separately to reduce dependencies:
 * [JoisePlugin-TMLConverter](https://github.com/codetaylor/JoisePlugin-TMLConverter) converts module chains to and from TML using [Juple](https://github.com/codetaylor/Juple).
@@ -83,7 +83,7 @@ lastModuleInChain.get(x, y, z, w);
 lastModuleInChain.get(x, y, z, w, u, v);
 ```
 ###Exporting a Module Chain
-Module chains can be converted to and from a `ModuleMap`. This is convenient for serializing module chains, as serializers have a consistent format to rely on.
+Module chains can be converted to and from a `ModuleMap`. This is convenient for serializing module chains because converting a chain to a `ModuleMap` will flatten the module chain tree.
 ```java
 // convert to a ModuleMap
 ModuleMap moduleMap = lastModuleInChain.getModuleMap();
