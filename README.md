@@ -10,7 +10,7 @@ Joise is derived from Joshua Tippetts' [Accidental Noise Library](http://acciden
 ```
 groupId=com.sudoplay.joise
 artifactId=joise
-version=1.0.3
+version=1.0.4
 ```
 
 ### Why Joise?

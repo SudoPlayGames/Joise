@@ -39,7 +39,7 @@ signing {
 }
 
 group = 'com.sudoplay.joise'
-version = '1.0.3'
+version = '1.0.4'
 archivesBaseName = 'joise'
 
 uploadArchives {
