@@ -53,6 +53,7 @@ import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
 import com.sudoplay.joise.module.Module;
+import com.sudoplay.util.ModuleID;
 
 @SuppressWarnings("serial")
 public class ModulePropertyMap extends LinkedHashMap<String, Object> {
@@ -123,7 +124,7 @@ public class ModulePropertyMap extends LinkedHashMap<String, Object> {
   }
 
   public boolean isModuleID(String key) {
-    return getAsString(key).startsWith("func_");
+    return getAsString(key).startsWith(ModuleID.MODULE_ID_PREFIX);
   }
 
   public boolean contains(String key) {

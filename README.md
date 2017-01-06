@@ -39,6 +39,11 @@ The following packages are provided separately to reduce dependencies:
 
 ### Change Log
 
+#### 1.0.4
+
+  * fixed scalar modules not being recognized as modules
+  * implemented ModuleFactoryRegistry to allow custom modules
+
 #### 1.0.3
 
   * refactored Noise class to remove usage of ByteBuffer and ThreadLocal while retaining thread safety

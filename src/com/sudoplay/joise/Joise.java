@@ -53,22 +53,238 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-import com.sudoplay.joise.module.Module;
-import com.sudoplay.joise.module.SeedableModule;
+import com.sudoplay.joise.module.*;
 import com.sudoplay.util.Assert;
 
 public class Joise {
 
   private Module module;
   private ModuleMap moduleMap;
-  private ModuleFactory moduleFactory;
+  private ModuleFactoryRegistry moduleFactoryRegistry;
   private HashMap<String, ArrayList<SeedableModule>> seedMap = new HashMap<String, ArrayList<SeedableModule>>();
 
   /**
    * Common initialization.
    */
   private Joise() {
-    this.moduleFactory = new ModuleFactory();
+    this.moduleFactoryRegistry = new ModuleFactoryRegistry();
+
+    this.moduleFactoryRegistry.register(ModuleAbs.class, new IModuleFactory<ModuleAbs>() {
+      @Override
+      public ModuleAbs create() {
+        return new ModuleAbs();
+      }
+    });
+
+    this.moduleFactoryRegistry.register(ModuleAutoCorrect.class, new IModuleFactory<ModuleAutoCorrect>() {
+      @Override
+      public ModuleAutoCorrect create() {
+        return new ModuleAutoCorrect();
+      }
+    });
+
+    this.moduleFactoryRegistry.register(ModuleBasisFunction.class, new IModuleFactory<ModuleBasisFunction>() {
+      @Override
+      public ModuleBasisFunction create() {
+        return new ModuleBasisFunction();
+      }
+    });
+
+    this.moduleFactoryRegistry.register(ModuleBias.class, new IModuleFactory<ModuleBias>() {
+      @Override
+      public ModuleBias create() {
+        return new ModuleBias();
+      }
+    });
+
+    this.moduleFactoryRegistry.register(ModuleBlend.class, new IModuleFactory<ModuleBlend>() {
+      @Override
+      public ModuleBlend create() {
+        return new ModuleBlend();
+      }
+    });
+
+    this.moduleFactoryRegistry.register(ModuleBrightContrast.class, new IModuleFactory<ModuleBrightContrast>() {
+      @Override
+      public ModuleBrightContrast create() {
+        return new ModuleBrightContrast();
+      }
+    });
+
+    this.moduleFactoryRegistry.register(ModuleCache.class, new IModuleFactory<ModuleCache>() {
+      @Override
+      public ModuleCache create() {
+        return new ModuleCache();
+      }
+    });
+
+    this.moduleFactoryRegistry.register(ModuleCellGen.class, new IModuleFactory<ModuleCellGen>() {
+      @Override
+      public ModuleCellGen create() {
+        return new ModuleCellGen();
+      }
+    });
+
+    this.moduleFactoryRegistry.register(ModuleCellular.class, new IModuleFactory<ModuleCellular>() {
+      @Override
+      public ModuleCellular create() {
+        return new ModuleCellular();
+      }
+    });
+
+    this.moduleFactoryRegistry.register(ModuleClamp.class, new IModuleFactory<ModuleClamp>() {
+      @Override
+      public ModuleClamp create() {
+        return new ModuleClamp();
+      }
+    });
+
+    this.moduleFactoryRegistry.register(ModuleCombiner.class, new IModuleFactory<ModuleCombiner>() {
+      @Override
+      public ModuleCombiner create() {
+        return new ModuleCombiner();
+      }
+    });
+
+    this.moduleFactoryRegistry.register(ModuleCos.class, new IModuleFactory<ModuleCos>() {
+      @Override
+      public ModuleCos create() {
+        return new ModuleCos();
+      }
+    });
+
+    this.moduleFactoryRegistry.register(ModuleFloor.class, new IModuleFactory<ModuleFloor>() {
+      @Override
+      public ModuleFloor create() {
+        return new ModuleFloor();
+      }
+    });
+
+    this.moduleFactoryRegistry.register(ModuleFractal.class, new IModuleFactory<ModuleFractal>() {
+      @Override
+      public ModuleFractal create() {
+        return new ModuleFractal();
+      }
+    });
+
+    this.moduleFactoryRegistry.register(ModuleFunctionGradient.class, new IModuleFactory<ModuleFunctionGradient>() {
+      @Override
+      public ModuleFunctionGradient create() {
+        return new ModuleFunctionGradient();
+      }
+    });
+
+    this.moduleFactoryRegistry.register(ModuleGain.class, new IModuleFactory<ModuleGain>() {
+      @Override
+      public ModuleGain create() {
+        return new ModuleGain();
+      }
+    });
+
+    this.moduleFactoryRegistry.register(ModuleGradient.class, new IModuleFactory<ModuleGradient>() {
+      @Override
+      public ModuleGradient create() {
+        return new ModuleGradient();
+      }
+    });
+
+    this.moduleFactoryRegistry.register(ModuleInvert.class, new IModuleFactory<ModuleInvert>() {
+      @Override
+      public ModuleInvert create() {
+        return new ModuleInvert();
+      }
+    });
+
+    this.moduleFactoryRegistry.register(ModuleMagnitude.class, new IModuleFactory<ModuleMagnitude>() {
+      @Override
+      public ModuleMagnitude create() {
+        return new ModuleMagnitude();
+      }
+    });
+
+    this.moduleFactoryRegistry.register(ModuleNormalizedCoords.class, new IModuleFactory<ModuleNormalizedCoords>() {
+      @Override
+      public ModuleNormalizedCoords create() {
+        return new ModuleNormalizedCoords();
+      }
+    });
+
+    this.moduleFactoryRegistry.register(ModulePow.class, new IModuleFactory<ModulePow>() {
+      @Override
+      public ModulePow create() {
+        return new ModulePow();
+      }
+    });
+
+    this.moduleFactoryRegistry.register(ModuleRotateDomain.class, new IModuleFactory<ModuleRotateDomain>() {
+      @Override
+      public ModuleRotateDomain create() {
+        return new ModuleRotateDomain();
+      }
+    });
+
+    this.moduleFactoryRegistry.register(ModuleSawtooth.class, new IModuleFactory<ModuleSawtooth>() {
+      @Override
+      public ModuleSawtooth create() {
+        return new ModuleSawtooth();
+      }
+    });
+
+    this.moduleFactoryRegistry.register(ModuleScaleDomain.class, new IModuleFactory<ModuleScaleDomain>() {
+      @Override
+      public ModuleScaleDomain create() {
+        return new ModuleScaleDomain();
+      }
+    });
+
+    this.moduleFactoryRegistry.register(ModuleScaleOffset.class, new IModuleFactory<ModuleScaleOffset>() {
+      @Override
+      public ModuleScaleOffset create() {
+        return new ModuleScaleOffset();
+      }
+    });
+
+    this.moduleFactoryRegistry.register(ModuleSelect.class, new IModuleFactory<ModuleSelect>() {
+      @Override
+      public ModuleSelect create() {
+        return new ModuleSelect();
+      }
+    });
+
+    this.moduleFactoryRegistry.register(ModuleSin.class, new IModuleFactory<ModuleSin>() {
+      @Override
+      public ModuleSin create() {
+        return new ModuleSin();
+      }
+    });
+
+    this.moduleFactoryRegistry.register(ModuleSphere.class, new IModuleFactory<ModuleSphere>() {
+      @Override
+      public ModuleSphere create() {
+        return new ModuleSphere();
+      }
+    });
+
+    this.moduleFactoryRegistry.register(ModuleTiers.class, new IModuleFactory<ModuleTiers>() {
+      @Override
+      public ModuleTiers create() {
+        return new ModuleTiers();
+      }
+    });
+
+    this.moduleFactoryRegistry.register(ModuleTranslateDomain.class, new IModuleFactory<ModuleTranslateDomain>() {
+      @Override
+      public ModuleTranslateDomain create() {
+        return new ModuleTranslateDomain();
+      }
+    });
+
+    this.moduleFactoryRegistry.register(ModuleTriangle.class, new IModuleFactory<ModuleTriangle>() {
+      @Override
+      public ModuleTriangle create() {
+        return new ModuleTriangle();
+      }
+    });
   }
 
   /**
@@ -80,7 +296,7 @@ public class Joise {
    * <p>
    * Changes made to the original module passed in will not be reflected in this
    * instance of Joise.
-   * 
+   *
    * @param module
    */
   public Joise(Module module) {
@@ -99,7 +315,7 @@ public class Joise {
    * <p>
    * Changes made to the original module map passed in will not be reflected in
    * this instance of Joise.
-   * 
+   *
    * @param moduleMap
    */
   public Joise(ModuleMap moduleMap) {
@@ -117,7 +333,7 @@ public class Joise {
       while (it.hasNext()) {
         Entry<String, ModulePropertyMap> e = it.next();
         ModulePropertyMap props = e.getValue();
-        module = this.moduleFactory.create(props.get("module").toString());
+        module = this.moduleFactoryRegistry.get(props.get("module").toString()).create();
         module.buildFromPropertyMap(props, im);
         if (module instanceof SeedableModule
             && ((SeedableModule) module).hasSeedName()) {
@@ -140,8 +356,21 @@ public class Joise {
   }
 
   /**
+   * Use this to register any custom modules.
+   * <p>
+   * Custom modules must be registered before converting to a {@link ModuleMap}.
+   *
+   * @param moduleClass
+   * @param moduleFactory
+   * @param <M>
+   */
+  public <M extends Module> void registerModuleFactory(Class<M> moduleClass, IModuleFactory<M> moduleFactory) {
+    this.moduleFactoryRegistry.register(moduleClass, moduleFactory);
+  }
+
+  /**
    * Sets the seed of the module linked by seedName.
-   * 
+   *
    * @param seedName
    * @param seed
    * @throws IllegalStateException
