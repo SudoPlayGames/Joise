@@ -52,7 +52,7 @@ public class ModuleID {
 
   private static final char[] CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".toCharArray();
 
-  private static final String MODULE_ID_PREFIX = "FUNC:";
+  public static final String MODULE_ID_PREFIX = "FUNC:";
 
   public static String create() {
     return MODULE_ID_PREFIX + createUUIDString();
