@@ -65,7 +65,7 @@ import java.util.Map;
     String key = moduleClass.getSimpleName().toLowerCase();
 
     if (this.moduleFactoryMap.get(key) != null) {
-      throw new JoiseException(String.format("Duplicate module registration: %s", key));
+      throw new JoiseException("Duplicate module registration: " + key);
     }
 
     this.moduleFactoryMap.put(key, moduleFactory);
@@ -76,7 +76,7 @@ import java.util.Map;
     IModuleFactory<?> moduleFactory = this.moduleFactoryMap.get(key);
 
     if (moduleFactory == null) {
-      throw new JoiseException(String.format("No module factory registered for: %s", key));
+      throw new JoiseException("No module factory registered for: " + key);
     }
 
     return moduleFactory;

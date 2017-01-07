@@ -10,7 +10,7 @@ Joise is derived from Joshua Tippetts' [Accidental Noise Library](http://acciden
 ```
 groupId=com.sudoplay.joise
 artifactId=joise
-version=1.0.4
+version=1.0.5
 ```
 
 ### Why Joise?
@@ -38,6 +38,10 @@ The following packages are provided separately to reduce dependencies:
 * [JoisePlugin-JSONConverter](https://github.com/codetaylor/JoisePlugin-JSONConverter) converts module chains to and from JSON using [Gson](https://code.google.com/p/google-gson/).
 
 ### Change Log
+
+#### 1.0.5
+
+  * fixed: 1.0.4 fails to compile on GWT (#15)
 
 #### 1.0.4
 
