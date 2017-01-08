@@ -3,8 +3,6 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 sourceCompatibility = 1.6
-sourceSets.main.java.srcDirs = [ "src/" ]
-sourceSets.test.java.srcDirs = [ "tests/" ]
 
 repositories {
 	mavenCentral()
