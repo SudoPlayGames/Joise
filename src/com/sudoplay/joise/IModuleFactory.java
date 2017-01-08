@@ -48,9 +48,226 @@
 
 package com.sudoplay.joise;
 
-import com.sudoplay.joise.module.Module;
+import com.sudoplay.joise.module.*;
 
 public interface IModuleFactory<M extends Module> {
 
   M create();
+
+  IModuleFactory<ModuleAbs> MODULE_ABS_FACTORY = new IModuleFactory<ModuleAbs>() {
+    @Override
+    public ModuleAbs create() {
+      return new ModuleAbs();
+    }
+  };
+
+  IModuleFactory<ModuleAutoCorrect> MODULE_AUTO_CORRECT_FACTORY = new IModuleFactory<ModuleAutoCorrect>() {
+    @Override
+    public ModuleAutoCorrect create() {
+      return new ModuleAutoCorrect();
+    }
+  };
+
+  IModuleFactory<ModuleBasisFunction> MODULE_BASIS_FUNCTION_FACTORY = new IModuleFactory<ModuleBasisFunction>() {
+    @Override
+    public ModuleBasisFunction create() {
+      return new ModuleBasisFunction();
+    }
+  };
+
+  IModuleFactory<ModuleBias> MODULE_BIAS_FACTORY = new IModuleFactory<ModuleBias>() {
+    @Override
+    public ModuleBias create() {
+      return new ModuleBias();
+    }
+  };
+
+  IModuleFactory<ModuleBlend> MODULE_BLEND_FACTORY = new IModuleFactory<ModuleBlend>() {
+    @Override
+    public ModuleBlend create() {
+      return new ModuleBlend();
+    }
+  };
+
+  IModuleFactory<ModuleBrightContrast> MODULE_BRIGHT_CONTRAST_FACTORY = new IModuleFactory<ModuleBrightContrast>() {
+    @Override
+    public ModuleBrightContrast create() {
+      return new ModuleBrightContrast();
+    }
+  };
+
+  IModuleFactory<ModuleCache> MODULE_CACHE_FACTORY = new IModuleFactory<ModuleCache>() {
+    @Override
+    public ModuleCache create() {
+      return new ModuleCache();
+    }
+  };
+
+  IModuleFactory<ModuleCellGen> MODULE_CELL_GEN_FACTORY = new IModuleFactory<ModuleCellGen>() {
+    @Override
+    public ModuleCellGen create() {
+      return new ModuleCellGen();
+    }
+  };
+
+  IModuleFactory<ModuleCellular> MODULE_CELLULAR_FACTORY = new IModuleFactory<ModuleCellular>() {
+    @Override
+    public ModuleCellular create() {
+      return new ModuleCellular();
+    }
+  };
+
+  IModuleFactory<ModuleClamp> MODULE_CLAMP_FACTORY = new IModuleFactory<ModuleClamp>() {
+    @Override
+    public ModuleClamp create() {
+      return new ModuleClamp();
+    }
+  };
+
+  IModuleFactory<ModuleCombiner> MODULE_COMBINER_FACTORY = new IModuleFactory<ModuleCombiner>() {
+    @Override
+    public ModuleCombiner create() {
+      return new ModuleCombiner();
+    }
+  };
+
+  IModuleFactory<ModuleCos> MODULE_COS_FACTORY = new IModuleFactory<ModuleCos>() {
+    @Override
+    public ModuleCos create() {
+      return new ModuleCos();
+    }
+  };
+
+  IModuleFactory<ModuleFloor> MODULE_FLOOR_FACTORY = new IModuleFactory<ModuleFloor>() {
+    @Override
+    public ModuleFloor create() {
+      return new ModuleFloor();
+    }
+  };
+
+  IModuleFactory<ModuleFractal> MODULE_FRACTAL_FACTORY = new IModuleFactory<ModuleFractal>() {
+    @Override
+    public ModuleFractal create() {
+      return new ModuleFractal();
+    }
+  };
+
+  IModuleFactory<ModuleFunctionGradient> MODULE_FUNCTION_GRADIENT_FACTORY = new IModuleFactory<ModuleFunctionGradient>() {
+    @Override
+    public ModuleFunctionGradient create() {
+      return new ModuleFunctionGradient();
+    }
+  };
+
+  IModuleFactory<ModuleGain> MODULE_GAIN_FACTORY = new IModuleFactory<ModuleGain>() {
+    @Override
+    public ModuleGain create() {
+      return new ModuleGain();
+    }
+  };
+
+  IModuleFactory<ModuleGradient> MODULE_GRADIENT_FACTORY = new IModuleFactory<ModuleGradient>() {
+    @Override
+    public ModuleGradient create() {
+      return new ModuleGradient();
+    }
+  };
+
+  IModuleFactory<ModuleInvert> MODULE_INVERT_FACTORY = new IModuleFactory<ModuleInvert>() {
+    @Override
+    public ModuleInvert create() {
+      return new ModuleInvert();
+    }
+  };
+
+  IModuleFactory<ModuleMagnitude> MODULE_MAGNITUDE_FACTORY = new IModuleFactory<ModuleMagnitude>() {
+    @Override
+    public ModuleMagnitude create() {
+      return new ModuleMagnitude();
+    }
+  };
+
+  IModuleFactory<ModuleNormalizedCoords> MODULE_NORMALIZED_COORDS_FACTORY = new IModuleFactory<ModuleNormalizedCoords>() {
+    @Override
+    public ModuleNormalizedCoords create() {
+      return new ModuleNormalizedCoords();
+    }
+  };
+
+  IModuleFactory<ModulePow> MODULE_POW_FACTORY = new IModuleFactory<ModulePow>() {
+    @Override
+    public ModulePow create() {
+      return new ModulePow();
+    }
+  };
+
+  IModuleFactory<ModuleRotateDomain> MODULE_ROTATE_DOMAIN_FACTORY = new IModuleFactory<ModuleRotateDomain>() {
+    @Override
+    public ModuleRotateDomain create() {
+      return new ModuleRotateDomain();
+    }
+  };
+
+  IModuleFactory<ModuleSawtooth> MODULE_SAWTOOTH_FACTORY = new IModuleFactory<ModuleSawtooth>() {
+    @Override
+    public ModuleSawtooth create() {
+      return new ModuleSawtooth();
+    }
+  };
+
+  IModuleFactory<ModuleScaleDomain> MODULE_SCALE_DOMAIN_FACTORY = new IModuleFactory<ModuleScaleDomain>() {
+    @Override
+    public ModuleScaleDomain create() {
+      return new ModuleScaleDomain();
+    }
+  };
+
+  IModuleFactory<ModuleScaleOffset> MODULE_SCALE_OFFSET_FACTORY = new IModuleFactory<ModuleScaleOffset>() {
+    @Override
+    public ModuleScaleOffset create() {
+      return new ModuleScaleOffset();
+    }
+  };
+
+  IModuleFactory<ModuleSelect> MODULE_SELECT_FACTORY = new IModuleFactory<ModuleSelect>() {
+    @Override
+    public ModuleSelect create() {
+      return new ModuleSelect();
+    }
+  };
+
+  IModuleFactory<ModuleSin> MODULE_SIN_FACTORY = new IModuleFactory<ModuleSin>() {
+    @Override
+    public ModuleSin create() {
+      return new ModuleSin();
+    }
+  };
+
+  IModuleFactory<ModuleSphere> MODULE_SPHERE_FACTORY = new IModuleFactory<ModuleSphere>() {
+    @Override
+    public ModuleSphere create() {
+      return new ModuleSphere();
+    }
+  };
+
+  IModuleFactory<ModuleTiers> MODULE_TIERS_FACTORY = new IModuleFactory<ModuleTiers>() {
+    @Override
+    public ModuleTiers create() {
+      return new ModuleTiers();
+    }
+  };
+
+  IModuleFactory<ModuleTranslateDomain> MODULE_TRANSLATE_DOMAIN_FACTORY = new IModuleFactory<ModuleTranslateDomain>() {
+    @Override
+    public ModuleTranslateDomain create() {
+      return new ModuleTranslateDomain();
+    }
+  };
+
+  IModuleFactory<ModuleTriangle> MODULE_TRIANGLE_FACTORY = new IModuleFactory<ModuleTriangle>() {
+    @Override
+    public ModuleTriangle create() {
+      return new ModuleTriangle();
+    }
+  };
 }
