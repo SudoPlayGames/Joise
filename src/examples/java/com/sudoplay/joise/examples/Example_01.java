@@ -2,7 +2,7 @@ package com.sudoplay.joise.examples;
 
 import java.awt.Dimension;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
 import com.sudoplay.joise.module.ModuleAutoCorrect;
 import com.sudoplay.joise.module.ModuleBasisFunction.BasisType;
@@ -23,7 +23,7 @@ public class Example_01 {
     frame.add(canvas);
 
     frame.setVisible(true);
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
     // ========================================================================
     // = Joise module chain

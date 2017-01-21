@@ -5,7 +5,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Random;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
 import com.sudoplay.joise.module.ModuleAutoCorrect;
 import com.sudoplay.joise.module.ModuleBasisFunction.BasisType;
@@ -54,7 +54,7 @@ public class Example_02 {
     frame.add(canvas);
 
     frame.setVisible(true);
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
     frame.addMouseListener(new MouseListener() {
 
