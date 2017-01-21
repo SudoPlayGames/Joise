@@ -40,7 +40,8 @@ public class ModuleTriangleExample extends
 
     ModuleTriangle moduleTriangle = new ModuleTriangle();
     moduleTriangle.setSource(moduleAutoCorrect);
-    moduleTriangle.setPeriod(0.5);
+    moduleTriangle.setPeriod(0.5); // width of triangle
+    moduleTriangle.setOffset(0.5); // position of point of triangle
 
     canvas.updateImage(
         "source", moduleAutoCorrect,
