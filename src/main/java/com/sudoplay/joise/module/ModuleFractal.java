@@ -88,9 +88,9 @@ public class ModuleFractal extends SeedableModule {
     for (int i = 0; i < MAX_SOURCES; i++) {
       basis[i] = new ModuleBasisFunction();
     }
-    setNumOctaves(2);
-    setFrequency(1.0);
-    setLacunarity(2.0);
+    setNumOctaves(DEFAULT_OCTAVES);
+    setFrequency(DEFAULT_FREQUENCY);
+    setLacunarity(DEFAULT_LACUNARITY);
     setType(type);
     setAllSourceTypes(basisType, interpolationType);
     resetAllSources();
