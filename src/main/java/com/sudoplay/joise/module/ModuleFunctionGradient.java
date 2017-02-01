@@ -52,21 +52,22 @@ import com.sudoplay.joise.ModuleInstanceMap;
 import com.sudoplay.joise.ModuleMap;
 import com.sudoplay.joise.ModulePropertyMap;
 
-public class ModuleFunctionGradient extends SourcedModule {
+public class ModuleFunctionGradient extends
+    SourcedModule {
 
-  public static final double DEFAULT_SPACING = 0.01;
+  private static final double DEFAULT_SPACING = 0.01;
 
-  public static enum FunctionGradientAxis {
+  public enum FunctionGradientAxis {
     X_AXIS, Y_AXIS, Z_AXIS, W_AXIS, U_AXIS, V_AXIS
   }
 
-  protected FunctionGradientAxis axis;
-  protected double spacing;
-  protected double invSpacing;
+  private FunctionGradientAxis axis;
+  private double spacing;
+  private double invSpacing;
 
   public ModuleFunctionGradient() {
-    setAxis(FunctionGradientAxis.X_AXIS);
-    setSpacing(DEFAULT_SPACING);
+    this.setAxis(FunctionGradientAxis.X_AXIS);
+    this.setSpacing(DEFAULT_SPACING);
   }
 
   public void setAxis(FunctionGradientAxis axis) {
@@ -74,132 +75,133 @@ public class ModuleFunctionGradient extends SourcedModule {
   }
 
   public void setSpacing(double s) {
-    spacing = s;
-    invSpacing = 1.0 / spacing;
+    this.spacing = s;
+    this.invSpacing = 1.0 / this.spacing;
   }
 
   @Override
   public double get(double x, double y) {
-    switch (axis) {
-    case X_AXIS:
-      return (source.get(x - spacing, y) - source.get(x + spacing, y))
-          * invSpacing;
-    case Y_AXIS:
-      return (source.get(x, y - spacing) - source.get(x, y + spacing))
-          * invSpacing;
-    case Z_AXIS:
-      return 0.0;
-    case W_AXIS:
-      return 0.0;
-    case U_AXIS:
-      return 0.0;
-    case V_AXIS:
-      return 0.0;
+
+    switch (this.axis) {
+      case X_AXIS:
+        return (this.source.get(x - this.spacing, y) - this.source.get(x + this.spacing, y)) * this.invSpacing;
+
+      case Y_AXIS:
+        return (this.source.get(x, y - this.spacing) - this.source.get(x, y + this.spacing)) * this.invSpacing;
+
+      case Z_AXIS:
+        return 0.0;
+
+      case W_AXIS:
+        return 0.0;
+
+      case U_AXIS:
+        return 0.0;
+
+      case V_AXIS:
+        return 0.0;
     }
     return 0.0;
   }
 
   @Override
   public double get(double x, double y, double z) {
-    switch (axis) {
-    case X_AXIS:
-      return (source.get(x - spacing, y, z) - source.get(x + spacing, y, z))
-          * invSpacing;
-    case Y_AXIS:
-      return (source.get(x, y - spacing, z) - source.get(x, y + spacing, z))
-          * invSpacing;
-    case Z_AXIS:
-      return (source.get(x, y, z - spacing) - source.get(x, y, z + spacing))
-          * invSpacing;
-    case W_AXIS:
-      return 0.0;
-    case U_AXIS:
-      return 0.0;
-    case V_AXIS:
-      return 0.0;
+    switch (this.axis) {
+      case X_AXIS:
+        return (this.source.get(x - this.spacing, y, z) - this.source.get(x + this.spacing, y, z)) * this.invSpacing;
+
+      case Y_AXIS:
+        return (this.source.get(x, y - this.spacing, z) - this.source.get(x, y + this.spacing, z)) * this.invSpacing;
+
+      case Z_AXIS:
+        return (this.source.get(x, y, z - this.spacing) - this.source.get(x, y, z + this.spacing)) * this.invSpacing;
+
+      case W_AXIS:
+        return 0.0;
+
+      case U_AXIS:
+        return 0.0;
+
+      case V_AXIS:
+        return 0.0;
     }
     return 0.0;
   }
 
   @Override
   public double get(double x, double y, double z, double w) {
-    switch (axis) {
-    case X_AXIS:
-      return (source.get(x - spacing, y, z, w) - source.get(x + spacing, y, z,
-          w)) * invSpacing;
+    switch (this.axis) {
+      case X_AXIS:
+        return (this.source.get(x - this.spacing, y, z, w) - this.source.get(x + this.spacing, y, z, w))
+            * this.invSpacing;
 
-    case Y_AXIS:
-      return (source.get(x, y - spacing, z, w) - source.get(x, y + spacing, z,
-          w)) * invSpacing;
+      case Y_AXIS:
+        return (this.source.get(x, y - this.spacing, z, w) - this.source.get(x, y + this.spacing, z, w))
+            * this.invSpacing;
 
-    case Z_AXIS:
-      return (source.get(x, y, z - spacing, w) - source.get(x, y, z + spacing,
-          w)) * invSpacing;
+      case Z_AXIS:
+        return (this.source.get(x, y, z - this.spacing, w) - this.source.get(x, y, z + this.spacing, w))
+            * this.invSpacing;
 
-    case W_AXIS:
-      return (source.get(x, y, z, w - spacing) - source.get(x, y, z, w
-          + spacing))
-          * invSpacing;
-    case U_AXIS:
-      return 0.0;
-    case V_AXIS:
-      return 0.0;
+      case W_AXIS:
+        return (this.source.get(x, y, z, w - this.spacing) - this.source.get(x, y, z, w + this.spacing))
+            * this.invSpacing;
+
+      case U_AXIS:
+        return 0.0;
+
+      case V_AXIS:
+        return 0.0;
     }
     return 0.0;
   }
 
   @Override
   public double get(double x, double y, double z, double w, double u, double v) {
-    switch (axis) {
-    case X_AXIS:
-      return (source.get(x - spacing, y, z, w, u, v) - source.get(x + spacing,
-          y, z, w, u, v)) * invSpacing;
 
-    case Y_AXIS:
-      return (source.get(x, y - spacing, z, w, u, v) - source.get(x, y
-          + spacing, z, w, u, v))
-          * invSpacing;
-    case Z_AXIS:
-      return (source.get(x, y, z - spacing, w, u, v) - source.get(x, y, z
-          + spacing, w, u, v))
-          * invSpacing;
-    case W_AXIS:
-      return (source.get(x, y, z, w - spacing, u, v) - source.get(x, y, z, w
-          + spacing, u, v))
-          * invSpacing;
-    case U_AXIS:
-      return (source.get(x, y, z, w, u - spacing, v) - source.get(x, y, z, w, u
-          + spacing, v))
-          * invSpacing;
-    case V_AXIS:
-      return (source.get(x, y, z, w, u, v - spacing) - source.get(x, y, z, w,
-          u, v + spacing)) * invSpacing;
+    switch (this.axis) {
+      case X_AXIS:
+        return (this.source.get(x - this.spacing, y, z, w, u, v) - this.source.get(x + this.spacing, y, z, w, u, v))
+            * this.invSpacing;
 
+      case Y_AXIS:
+        return (this.source.get(x, y - this.spacing, z, w, u, v) - this.source.get(x, y + this.spacing, z, w, u, v))
+            * this.invSpacing;
+
+      case Z_AXIS:
+        return (this.source.get(x, y, z - this.spacing, w, u, v) - this.source.get(x, y, z + this.spacing, w, u, v))
+            * this.invSpacing;
+
+      case W_AXIS:
+        return (this.source.get(x, y, z, w - this.spacing, u, v) - this.source.get(x, y, z, w + this.spacing, u, v))
+            * this.invSpacing;
+
+      case U_AXIS:
+        return (this.source.get(x, y, z, w, u - this.spacing, v) - this.source.get(x, y, z, w, u + this.spacing, v))
+            * this.invSpacing;
+
+      case V_AXIS:
+        return (this.source.get(x, y, z, w, u, v - this.spacing) - this.source.get(x, y, z, w, u, v + this.spacing))
+            * this.invSpacing;
     }
     return 0.0;
   }
 
   @Override
-  protected void _writeToMap(ModuleMap map) {
-
-    ModulePropertyMap props = new ModulePropertyMap(this);
-
-    writeEnum("axis", axis, props);
-    writeDouble("spacing", spacing, props);
-    writeSource(props, map);
-
-    map.put(getId(), props);
-
+  public void writeToMap(ModuleMap moduleMap) {
+    ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
+    modulePropertyMap
+        .writeEnum("axis", this.axis)
+        .writeDouble("spacing", this.spacing)
+        .writeScalar("source", this.source, moduleMap);
+    moduleMap.put(this.getId(), modulePropertyMap);
   }
 
   @Override
-  public Module buildFromPropertyMap(ModulePropertyMap props,
-      ModuleInstanceMap map) {
-
-    this.setAxis(readEnum("axis", FunctionGradientAxis.class, props));
-    this.setSpacing(readDouble("spacing", props));
-    readSource(props, map);
-
+  public Module buildFromPropertyMap(ModulePropertyMap modulePropertyMap, ModuleInstanceMap moduleInstanceMap) {
+    this.setAxis(modulePropertyMap.readEnum("axis", FunctionGradientAxis.class));
+    this.setSpacing(modulePropertyMap.readDouble("spacing"));
+    this.setSource(modulePropertyMap.readScalar("source", moduleInstanceMap));
     return this;
   }
 

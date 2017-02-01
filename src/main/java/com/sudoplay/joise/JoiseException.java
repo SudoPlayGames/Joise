@@ -48,8 +48,9 @@
 
 package com.sudoplay.joise;
 
-@SuppressWarnings("serial")
-public class JoiseException extends RuntimeException {
+@SuppressWarnings({"serial", "WeakerAccess"})
+public class JoiseException extends
+    RuntimeException {
 
   public JoiseException(String msg) {
     super(msg);
@@ -59,8 +60,8 @@ public class JoiseException extends RuntimeException {
     super(e);
   }
 
+  @SuppressWarnings("unused")
   public JoiseException(String msg, Exception e) {
     super(msg, e);
   }
-
 }

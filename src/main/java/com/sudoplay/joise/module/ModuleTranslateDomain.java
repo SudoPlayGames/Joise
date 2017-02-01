@@ -52,142 +52,149 @@ import com.sudoplay.joise.ModuleInstanceMap;
 import com.sudoplay.joise.ModuleMap;
 import com.sudoplay.joise.ModulePropertyMap;
 
-public class ModuleTranslateDomain extends SourcedModule {
+public class ModuleTranslateDomain extends
+    SourcedModule {
 
-  protected ScalarParameter ax = new ScalarParameter(0);
-  protected ScalarParameter ay = new ScalarParameter(0);
-  protected ScalarParameter az = new ScalarParameter(0);
-  protected ScalarParameter aw = new ScalarParameter(0);
-  protected ScalarParameter au = new ScalarParameter(0);
-  protected ScalarParameter av = new ScalarParameter(0);
+  private ScalarParameter ax = new ScalarParameter(0);
+  private ScalarParameter ay = new ScalarParameter(0);
+  private ScalarParameter az = new ScalarParameter(0);
+  private ScalarParameter aw = new ScalarParameter(0);
+  private ScalarParameter au = new ScalarParameter(0);
+  private ScalarParameter av = new ScalarParameter(0);
 
   public void setAxisXSource(double source) {
-    ax.set(source);
+    this.ax.set(source);
   }
 
   public void setAxisYSource(double source) {
-    ay.set(source);
+    this.ay.set(source);
   }
 
+  @SuppressWarnings("unused")
   public void setAxisZSource(double source) {
-    az.set(source);
+    this.az.set(source);
   }
 
+  @SuppressWarnings("unused")
   public void setAxisWSource(double source) {
-    aw.set(source);
+    this.aw.set(source);
   }
 
+  @SuppressWarnings("unused")
   public void setAxisUSource(double source) {
-    au.set(source);
+    this.au.set(source);
   }
 
+  @SuppressWarnings("unused")
   public void setAxisVSource(double source) {
-    av.set(source);
+    this.av.set(source);
   }
 
   public void setAxisXSource(Module source) {
-    ax.set(source);
+    this.ax.set(source);
   }
 
   public void setAxisYSource(Module source) {
-    ay.set(source);
+    this.ay.set(source);
   }
 
+  @SuppressWarnings("unused")
   public void setAxisZSource(Module source) {
-    az.set(source);
+    this.az.set(source);
   }
 
+  @SuppressWarnings("unused")
   public void setAxisWSource(Module source) {
-    aw.set(source);
+    this.aw.set(source);
   }
 
+  @SuppressWarnings("unused")
   public void setAxisUSource(Module source) {
-    au.set(source);
+    this.au.set(source);
   }
 
+  @SuppressWarnings("unused")
   public void setAxisVSource(Module source) {
-    av.set(source);
+    this.av.set(source);
   }
 
+  @SuppressWarnings("unused")
   public void setAxisXSource(ScalarParameter scalarParameter) {
-    ax.set(scalarParameter);
+    this.ax.set(scalarParameter);
   }
 
+  @SuppressWarnings("unused")
   public void setAxisYSource(ScalarParameter scalarParameter) {
-    ay.set(scalarParameter);
+    this.ay.set(scalarParameter);
   }
 
+  @SuppressWarnings("unused")
   public void setAxisZSource(ScalarParameter scalarParameter) {
-    az.set(scalarParameter);
+    this.az.set(scalarParameter);
   }
 
+  @SuppressWarnings("unused")
   public void setAxisWSource(ScalarParameter scalarParameter) {
-    aw.set(scalarParameter);
+    this.aw.set(scalarParameter);
   }
 
+  @SuppressWarnings("unused")
   public void setAxisUSource(ScalarParameter scalarParameter) {
-    au.set(scalarParameter);
+    this.au.set(scalarParameter);
   }
 
+  @SuppressWarnings("unused")
   public void setAxisVSource(ScalarParameter scalarParameter) {
-    av.set(scalarParameter);
+    this.av.set(scalarParameter);
   }
 
   @Override
   public double get(double x, double y) {
-    return source.get(x + ax.get(x, y), y + ay.get(x, y));
+    return this.source.get(x + this.ax.get(x, y), y + this.ay.get(x, y));
   }
 
   @Override
   public double get(double x, double y, double z) {
-    return source.get(x + ax.get(x, y, z), y + ay.get(x, y, z),
-        z + az.get(x, y, z));
+    return this.source.get(x + this.ax.get(x, y, z), y + this.ay.get(x, y, z), z + this.az.get(x, y, z));
   }
 
   @Override
   public double get(double x, double y, double z, double w) {
-    return source.get(x + ax.get(x, y, z, w), y + ay.get(x, y, z, w),
-        z + az.get(x, y, z, w), w + aw.get(x, y, z, w));
+    return this.source.get(x + this.ax.get(x, y, z, w), y + this.ay.get(x, y, z, w),
+        z + this.az.get(x, y, z, w), w + this.aw.get(x, y, z, w));
   }
 
   @Override
   public double get(double x, double y, double z, double w, double u, double v) {
-    return source.get(x + ax.get(x, y, z, w, u, v),
-        y + ay.get(x, y, z, w, u, v), z + az.get(x, y, z, w, u, v),
-        w + aw.get(x, y, z, w, u, v), u + au.get(x, y, z, w, u, v),
-        v + av.get(x, y, z, w, u, v));
+    return this.source.get(x + this.ax.get(x, y, z, w, u, v),
+        y + this.ay.get(x, y, z, w, u, v), z + this.az.get(x, y, z, w, u, v),
+        w + this.aw.get(x, y, z, w, u, v), u + this.au.get(x, y, z, w, u, v),
+        v + this.av.get(x, y, z, w, u, v));
   }
 
   @Override
-  protected void _writeToMap(ModuleMap map) {
-
-    ModulePropertyMap props = new ModulePropertyMap(this);
-
-    writeScalar("axisX", ax, props, map);
-    writeScalar("axisY", ay, props, map);
-    writeScalar("axisZ", az, props, map);
-    writeScalar("axisW", aw, props, map);
-    writeScalar("axisU", au, props, map);
-    writeScalar("axisV", av, props, map);
-    writeSource(props, map);
-
-    map.put(getId(), props);
-
+  public void writeToMap(ModuleMap moduleMap) {
+    ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
+    modulePropertyMap
+        .writeScalar("axisX", this.ax, moduleMap)
+        .writeScalar("axisY", this.ay, moduleMap)
+        .writeScalar("axisZ", this.az, moduleMap)
+        .writeScalar("axisW", this.aw, moduleMap)
+        .writeScalar("axisU", this.au, moduleMap)
+        .writeScalar("axisV", this.av, moduleMap)
+        .writeScalar("source", this.source, moduleMap);
+    moduleMap.put(this.getId(), modulePropertyMap);
   }
 
   @Override
-  public Module buildFromPropertyMap(ModulePropertyMap props,
-      ModuleInstanceMap map) {
-
-    this.setAxisXSource(readScalar("axisX", props, map));
-    this.setAxisYSource(readScalar("axisY", props, map));
-    this.setAxisZSource(readScalar("axisZ", props, map));
-    this.setAxisWSource(readScalar("axisW", props, map));
-    this.setAxisUSource(readScalar("axisU", props, map));
-    this.setAxisVSource(readScalar("axisV", props, map));
-    readSource(props, map);
-
+  public Module buildFromPropertyMap(ModulePropertyMap modulePropertyMap, ModuleInstanceMap moduleInstanceMap) {
+    this.setAxisXSource(modulePropertyMap.readScalar("axisX", moduleInstanceMap));
+    this.setAxisYSource(modulePropertyMap.readScalar("axisY", moduleInstanceMap));
+    this.setAxisZSource(modulePropertyMap.readScalar("axisZ", moduleInstanceMap));
+    this.setAxisWSource(modulePropertyMap.readScalar("axisW", moduleInstanceMap));
+    this.setAxisUSource(modulePropertyMap.readScalar("axisU", moduleInstanceMap));
+    this.setAxisVSource(modulePropertyMap.readScalar("axisV", moduleInstanceMap));
+    this.setSource(modulePropertyMap.readScalar("source", moduleInstanceMap));
     return this;
   }
-
 }

@@ -48,34 +48,34 @@
 
 package com.sudoplay.joise.module;
 
-import static com.sudoplay.joise.noise.Util.clamp;
-
 import com.sudoplay.joise.ModuleInstanceMap;
 import com.sudoplay.joise.ModuleMap;
 import com.sudoplay.joise.ModulePropertyMap;
 import com.sudoplay.joise.generator.LCG;
 import com.sudoplay.util.Checked;
 
-public class ModuleAutoCorrect extends SourcedModule {
+import static com.sudoplay.joise.noise.Util.clamp;
 
-  public static final double DEFAULT_LOW = 0.0;
-  public static final double DEFAULT_HIGH = 1.0;
-  public static final int DEFAULT_SAMPLES = 100;
-  public static final double DEFAULT_SAMPLE_SCALE = 1.0;
+public class ModuleAutoCorrect extends
+    SourcedModule {
 
-  protected double low;
-  protected double high;
+  private static final double DEFAULT_LOW = 0.0;
+  private static final double DEFAULT_HIGH = 1.0;
+  private static final int DEFAULT_SAMPLES = 100;
+  private static final double DEFAULT_SAMPLE_SCALE = 1.0;
 
-  protected double sampleScale = DEFAULT_SAMPLE_SCALE;
+  private double low;
+  private double high;
 
-  protected double scale2, offset2;
-  protected double scale3, offset3;
-  protected double scale4, offset4;
-  protected double scale6, offset6;
+  private int samples = DEFAULT_SAMPLES;
+  private double sampleScale = DEFAULT_SAMPLE_SCALE;
 
-  protected boolean locked;
+  private double scale2, offset2;
+  private double scale3, offset3;
+  private double scale4, offset4;
+  private double scale6, offset6;
 
-  protected int samples = DEFAULT_SAMPLES;
+  private boolean locked;
 
   public ModuleAutoCorrect() {
     this(DEFAULT_LOW, DEFAULT_HIGH);
@@ -100,15 +100,15 @@ public class ModuleAutoCorrect extends SourcedModule {
   }
 
   public void setSamples(long s) {
-    samples = Checked.safeLongToInt(s);
+    this.samples = Checked.safeLongToInt(s);
   }
 
   public void setSampleScale(double s) {
-    sampleScale = s;
+    this.sampleScale = s;
   }
 
   public void setLocked(boolean lock) {
-    locked = lock;
+    this.locked = lock;
   }
 
   @Override
@@ -121,8 +121,9 @@ public class ModuleAutoCorrect extends SourcedModule {
     super.setSource(source);
   }
 
+  @SuppressWarnings("WeakerAccess")
   public void calculate2D() {
-    if (!source.isModule() || locked) return;
+    if (!this.source.isModule() || this.locked) return;
 
     double mn, mx;
     LCG lcg = new LCG();
@@ -130,20 +131,21 @@ public class ModuleAutoCorrect extends SourcedModule {
     // Calculate 2D
     mn = 10000.0;
     mx = -10000.0;
-    for (int c = 0; c < samples; c++) {
-      double nx = (lcg.get01() * 4.0 - 2.0) * sampleScale;
-      double ny = (lcg.get01() * 4.0 - 2.0) * sampleScale;
+    for (int c = 0; c < this.samples; c++) {
+      double nx = (lcg.get01() * 4.0 - 2.0) * this.sampleScale;
+      double ny = (lcg.get01() * 4.0 - 2.0) * this.sampleScale;
 
-      double v = source.get(nx, ny);
+      double v = this.source.get(nx, ny);
       if (v < mn) mn = v;
       if (v > mx) mx = v;
     }
-    scale2 = (high - low) / (mx - mn);
-    offset2 = low - mn * scale2;
+    this.scale2 = (this.high - this.low) / (mx - mn);
+    this.offset2 = this.low - mn * this.scale2;
   }
 
+  @SuppressWarnings("WeakerAccess")
   public void calculate3D() {
-    if (!source.isModule() || locked) return;
+    if (!this.source.isModule() || this.locked) return;
 
     double mn, mx;
     LCG lcg = new LCG();
@@ -151,21 +153,22 @@ public class ModuleAutoCorrect extends SourcedModule {
     // Calculate 3D
     mn = 10000.0;
     mx = -10000.0;
-    for (int c = 0; c < samples; c++) {
-      double nx = (lcg.get01() * 4.0 - 2.0) * sampleScale;
-      double ny = (lcg.get01() * 4.0 - 2.0) * sampleScale;
-      double nz = (lcg.get01() * 4.0 - 2.0) * sampleScale;
+    for (int c = 0; c < this.samples; c++) {
+      double nx = (lcg.get01() * 4.0 - 2.0) * this.sampleScale;
+      double ny = (lcg.get01() * 4.0 - 2.0) * this.sampleScale;
+      double nz = (lcg.get01() * 4.0 - 2.0) * this.sampleScale;
 
-      double v = source.get(nx, ny, nz);
+      double v = this.source.get(nx, ny, nz);
       if (v < mn) mn = v;
       if (v > mx) mx = v;
     }
-    scale3 = (high - low) / (mx - mn);
-    offset3 = low - mn * scale3;
+    this.scale3 = (this.high - this.low) / (mx - mn);
+    this.offset3 = this.low - mn * this.scale3;
   }
 
+  @SuppressWarnings("WeakerAccess")
   public void calculate4D() {
-    if (!source.isModule() || locked) return;
+    if (!this.source.isModule() || this.locked) return;
 
     double mn, mx;
     LCG lcg = new LCG();
@@ -173,22 +176,23 @@ public class ModuleAutoCorrect extends SourcedModule {
     // Calculate 4D
     mn = 10000.0;
     mx = -10000.0;
-    for (int c = 0; c < samples; c++) {
-      double nx = (lcg.get01() * 4.0 - 2.0) * sampleScale;
-      double ny = (lcg.get01() * 4.0 - 2.0) * sampleScale;
-      double nz = (lcg.get01() * 4.0 - 2.0) * sampleScale;
-      double nw = (lcg.get01() * 4.0 - 2.0) * sampleScale;
+    for (int c = 0; c < this.samples; c++) {
+      double nx = (lcg.get01() * 4.0 - 2.0) * this.sampleScale;
+      double ny = (lcg.get01() * 4.0 - 2.0) * this.sampleScale;
+      double nz = (lcg.get01() * 4.0 - 2.0) * this.sampleScale;
+      double nw = (lcg.get01() * 4.0 - 2.0) * this.sampleScale;
 
-      double v = source.get(nx, ny, nz, nw);
+      double v = this.source.get(nx, ny, nz, nw);
       if (v < mn) mn = v;
       if (v > mx) mx = v;
     }
-    scale4 = (high - low) / (mx - mn);
-    offset4 = low - mn * scale4;
+    this.scale4 = (this.high - this.low) / (mx - mn);
+    this.offset4 = this.low - mn * this.scale4;
   }
 
+  @SuppressWarnings("WeakerAccess")
   public void calculate6D() {
-    if (!source.isModule() || locked) return;
+    if (!this.source.isModule() || this.locked) return;
 
     double mn, mx;
     LCG lcg = new LCG();
@@ -196,142 +200,152 @@ public class ModuleAutoCorrect extends SourcedModule {
     // Calculate 6D
     mn = 10000.0;
     mx = -10000.0;
-    for (int c = 0; c < samples; c++) {
-      double nx = (lcg.get01() * 4.0 - 2.0) * sampleScale;
-      double ny = (lcg.get01() * 4.0 - 2.0) * sampleScale;
-      double nz = (lcg.get01() * 4.0 - 2.0) * sampleScale;
-      double nw = (lcg.get01() * 4.0 - 2.0) * sampleScale;
-      double nu = (lcg.get01() * 4.0 - 2.0) * sampleScale;
-      double nv = (lcg.get01() * 4.0 - 2.0) * sampleScale;
+    for (int c = 0; c < this.samples; c++) {
+      double nx = (lcg.get01() * 4.0 - 2.0) * this.sampleScale;
+      double ny = (lcg.get01() * 4.0 - 2.0) * this.sampleScale;
+      double nz = (lcg.get01() * 4.0 - 2.0) * this.sampleScale;
+      double nw = (lcg.get01() * 4.0 - 2.0) * this.sampleScale;
+      double nu = (lcg.get01() * 4.0 - 2.0) * this.sampleScale;
+      double nv = (lcg.get01() * 4.0 - 2.0) * this.sampleScale;
 
-      double v = source.get(nx, ny, nz, nw, nu, nv);
+      double v = this.source.get(nx, ny, nz, nw, nu, nv);
       if (v < mn) mn = v;
       if (v > mx) mx = v;
     }
-    scale6 = (high - low) / (mx - mn);
-    offset6 = low - mn * scale6;
+    this.scale6 = (this.high - this.low) / (mx - mn);
+    this.offset6 = this.low - mn * this.scale6;
   }
 
+  @SuppressWarnings("WeakerAccess")
   public void calculateAll() {
-    if (!source.isModule() || locked) return;
+    if (!this.source.isModule() || this.locked) return;
 
-    calculate2D();
-    calculate3D();
-    calculate4D();
-    calculate6D();
+    this.calculate2D();
+    this.calculate3D();
+    this.calculate4D();
+    this.calculate6D();
   }
 
   @Deprecated
   public void calculate() {
-    calculateAll();
+    this.calculateAll();
   }
 
   @Override
   public double get(double x, double y) {
-    double v = source.get(x, y);
-    return clamp(v * scale2 + offset2, low, high);
+    double v = this.source.get(x, y);
+    return clamp(v * this.scale2 + this.offset2, this.low, this.high);
   }
 
   @Override
   public double get(double x, double y, double z) {
-    double v = source.get(x, y, z);
-    return clamp(v * scale3 + offset3, low, high);
+    double v = this.source.get(x, y, z);
+    return clamp(v * this.scale3 + this.offset3, this.low, this.high);
   }
 
   @Override
   public double get(double x, double y, double z, double w) {
-    double v = source.get(x, y, z, w);
-    return clamp(v * scale4 + offset4, low, high);
+    double v = this.source.get(x, y, z, w);
+    return clamp(v * this.scale4 + this.offset4, this.low, this.high);
   }
 
   @Override
   public double get(double x, double y, double z, double w, double u, double v) {
-    double val = source.get(x, y, z, w, u, v);
-    return clamp(val * scale6 + offset6, low, high);
+    double val = this.source.get(x, y, z, w, u, v);
+    return clamp(val * this.scale6 + this.offset6, this.low, this.high);
   }
 
+  @SuppressWarnings("unused")
   public double getOffset2D() {
-    return offset2;
+    return this.offset2;
   }
 
+  @SuppressWarnings("unused")
   public double getOffset3D() {
-    return offset3;
+    return this.offset3;
   }
 
+  @SuppressWarnings("unused")
   public double getOffset4D() {
-    return offset4;
+    return this.offset4;
   }
 
+  @SuppressWarnings("unused")
   public double getOffset6D() {
-    return offset6;
+    return this.offset6;
   }
 
+  @SuppressWarnings("unused")
   public double getScale2D() {
-    return scale2;
+    return this.scale2;
   }
 
+  @SuppressWarnings("unused")
   public double getScale3D() {
-    return scale3;
+    return this.scale3;
   }
 
+  @SuppressWarnings("unused")
   public double getScale4D() {
-    return scale4;
+    return this.scale4;
   }
 
+  @SuppressWarnings("unused")
   public double getScale6D() {
-    return scale6;
+    return this.scale6;
   }
 
   @Override
-  protected void _writeToMap(ModuleMap map) {
+  public void writeToMap(ModuleMap moduleMap) {
+    ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
+    modulePropertyMap
+        .writeDouble("low", this.low)
+        .writeDouble("high", this.high)
+        .writeLong("samples", this.samples)
+        .writeDouble("sampleScale", this.sampleScale)
+        .writeBoolean("locked", this.locked);
 
-    ModulePropertyMap props = new ModulePropertyMap(this);
-
-    writeDouble("low", low, props);
-    writeDouble("high", high, props);
-    writeLong("samples", samples, props);
-    writeDouble("sampleScale", sampleScale, props);
-    writeBoolean("locked", locked, props);
-
-    if (locked) {
-      writeDouble("scale2", scale2, props);
-      writeDouble("offset2", offset2, props);
-      writeDouble("scale3", scale3, props);
-      writeDouble("offset3", offset3, props);
-      writeDouble("scale4", scale4, props);
-      writeDouble("offset4", offset4, props);
-      writeDouble("scale6", scale6, props);
-      writeDouble("offset6", offset6, props);
+    if (this.locked) {
+      modulePropertyMap
+          .writeDouble("scale2", this.scale2)
+          .writeDouble("offset2", this.offset2)
+          .writeDouble("scale3", this.scale3)
+          .writeDouble("offset3", this.offset3)
+          .writeDouble("scale4", this.scale4)
+          .writeDouble("offset4", this.offset4)
+          .writeDouble("scale6", this.scale6)
+          .writeDouble("offset6", this.offset6);
     }
 
-    writeSource(props, map);
+    modulePropertyMap.writeScalar("source", this.source, moduleMap);
 
-    map.put(getId(), props);
+    moduleMap.put(this.getId(), modulePropertyMap);
   }
 
   @Override
-  public Module buildFromPropertyMap(ModulePropertyMap props,
-      ModuleInstanceMap map) {
+  public Module buildFromPropertyMap(ModulePropertyMap modulePropertyMap, ModuleInstanceMap moduleInstanceMap) {
+    this.setLow(modulePropertyMap.readDouble("low"));
+    this.setHigh(modulePropertyMap.readDouble("high"));
+    this.setSamples(modulePropertyMap.readLong("samples"));
+    this.setSampleScale(modulePropertyMap.readDouble("sampleScale"));
+    this.setLocked(modulePropertyMap.readBoolean("locked"));
 
-    this.setLow(readDouble("low", props));
-    this.setHigh(readDouble("high", props));
-    this.setSamples(readLong("samples", props));
-    this.setSampleScale(readDouble("sampleScale", props));
-    this.setLocked(readBoolean("locked", props));
-
-    if (locked) {
-      scale2 = props.getAsDouble("scale2");
-      offset2 = props.getAsDouble("offset2");
-      scale3 = props.getAsDouble("scale3");
-      offset3 = props.getAsDouble("offset3");
-      scale4 = props.getAsDouble("scale4");
-      offset4 = props.getAsDouble("offset4");
-      scale6 = props.getAsDouble("scale6");
-      offset6 = props.getAsDouble("offset6");
+    if (this.locked) {
+      this.scale2 = modulePropertyMap.readDouble("scale2");
+      this.offset2 = modulePropertyMap.readDouble("offset2");
+      this.scale3 = modulePropertyMap.readDouble("scale3");
+      this.offset3 = modulePropertyMap.readDouble("offset3");
+      this.scale4 = modulePropertyMap.readDouble("scale4");
+      this.offset4 = modulePropertyMap.readDouble("offset4");
+      this.scale6 = modulePropertyMap.readDouble("scale6");
+      this.offset6 = modulePropertyMap.readDouble("offset6");
     }
 
-    readSource(props, map);
-    calculate();
+    this.setSource(modulePropertyMap.readScalar("source", moduleInstanceMap));
+
+    if (!this.locked) {
+      this.calculateAll();
+    }
 
     return this;
   }

@@ -50,45 +50,49 @@ package com.sudoplay.joise.module;
 
 import com.sudoplay.joise.ModulePropertyMap;
 
-public abstract class SeedableModule extends Module {
+public abstract class SeededModule extends
+    Module {
 
-  protected long seed = DEFAULT_SEED;
-
-  protected String seedName;
+  protected long seed = Module.DEFAULT_SEED;
+  private String seedName;
 
   public void setSeed(long seed) {
     this.seed = seed;
   }
 
   public long getSeed() {
-    return seed;
+    return this.seed;
   }
 
   public void setSeedName(String name) {
-    seedName = name;
+    this.seedName = name;
   }
 
   public String getSeedName() {
-    return seedName;
+    return this.seedName;
   }
 
   public boolean hasSeedName() {
-    return seedName != null;
+    return this.seedName != null;
   }
 
+  @SuppressWarnings("WeakerAccess")
   protected void readSeed(ModulePropertyMap props) {
     String sn = (String) props.get("seedName");
+
     if (sn != null) {
-      seedName = sn;
+      this.seedName = sn;
     }
-    setSeed(props.getAsLong("seed"));
+    this.setSeed(props.getAsLong("seed"));
   }
 
+  @SuppressWarnings("WeakerAccess")
   protected void writeSeed(ModulePropertyMap props) {
-    if (seedName != null) {
-      props.put("seedName", seedName);
+
+    if (this.seedName != null) {
+      props.put("seedName", this.seedName);
     }
-    props.put("seed", seed);
+    props.put("seed", this.seed);
   }
 
 }

@@ -53,132 +53,134 @@ import com.sudoplay.joise.ModuleMap;
 import com.sudoplay.joise.ModulePropertyMap;
 import com.sudoplay.joise.noise.Util;
 
-public class ModuleTriangle extends SourcedModule {
+public class ModuleTriangle extends
+    SourcedModule {
 
-  public static final double DEFAULT_PERIOD = 0;
-  public static final double DEFAULT_OFFSET = 0;
+  private static final double DEFAULT_PERIOD = 0;
+  private static final double DEFAULT_OFFSET = 0;
 
-  protected ScalarParameter period = new ScalarParameter(DEFAULT_PERIOD);
-  protected ScalarParameter offset = new ScalarParameter(DEFAULT_OFFSET);
+  private ScalarParameter period = new ScalarParameter(DEFAULT_PERIOD);
+  private ScalarParameter offset = new ScalarParameter(DEFAULT_OFFSET);
 
   public void setPeriod(double source) {
-    period.set(source);
+    this.period.set(source);
   }
 
   public void setOffset(double source) {
-    offset.set(source);
+    this.offset.set(source);
   }
 
+  @SuppressWarnings("unused")
   public void setPeriod(Module source) {
-    period.set(source);
+    this.period.set(source);
   }
 
+  @SuppressWarnings("unused")
   public void setOffset(Module source) {
-    offset.set(source);
+    this.offset.set(source);
   }
 
+  @SuppressWarnings("unused")
   public void setPeriod(ScalarParameter scalarParameter) {
-    period.set(scalarParameter);
+    this.period.set(scalarParameter);
   }
 
+  @SuppressWarnings("unused")
   public void setOffset(ScalarParameter scalarParameter) {
-    offset.set(scalarParameter);
+    this.offset.set(scalarParameter);
   }
 
   @Override
   public double get(double x, double y) {
-    double val = source.get(x, y);
-    double p = period.get(x, y);
-    double o = offset.get(x, y);
+    double val = this.source.get(x, y);
+    double p = this.period.get(x, y);
+    double o = this.offset.get(x, y);
 
-    if (o >= 1)
+    if (o >= 1) {
       return Util.sawtooth(val, p);
-    else if (o <= 0)
+
+    } else if (o <= 0) {
       return 1.0 - Util.sawtooth(val, p);
-    else {
+
+    } else {
       double s1 = (o - Util.sawtooth(val, p)) >= 0 ? 1.0 : 0.0;
       double s2 = ((1.0 - o) - (Util.sawtooth(-val, p))) >= 0 ? 1.0 : 0.0;
-      return Util.sawtooth(val, p) * s1 / o + Util.sawtooth(-val, p) * s2
-          / (1.0 - o);
+      return Util.sawtooth(val, p) * s1 / o + Util.sawtooth(-val, p) * s2 / (1.0 - o);
     }
   }
 
   @Override
   public double get(double x, double y, double z) {
-    double val = source.get(x, y, z);
-    double p = period.get(x, y, z);
-    double o = offset.get(x, y, z);
+    double val = this.source.get(x, y, z);
+    double p = this.period.get(x, y, z);
+    double o = this.offset.get(x, y, z);
 
-    if (o >= 1)
+    if (o >= 1) {
       return Util.sawtooth(val, p);
-    else if (o <= 0)
+
+    } else if (o <= 0) {
       return 1.0 - Util.sawtooth(val, p);
-    else {
+
+    } else {
       double s1 = (o - Util.sawtooth(val, p)) >= 0 ? 1.0 : 0.0;
       double s2 = ((1.0 - o) - (Util.sawtooth(-val, p))) >= 0 ? 1.0 : 0.0;
-      return Util.sawtooth(val, p) * s1 / o + Util.sawtooth(-val, p) * s2
-          / (1.0 - o);
+      return Util.sawtooth(val, p) * s1 / o + Util.sawtooth(-val, p) * s2 / (1.0 - o);
     }
   }
 
   @Override
   public double get(double x, double y, double z, double w) {
-    double val = source.get(x, y, z, w);
-    double p = period.get(x, y, z, w);
-    double o = offset.get(x, y, z, w);
+    double val = this.source.get(x, y, z, w);
+    double p = this.period.get(x, y, z, w);
+    double o = this.offset.get(x, y, z, w);
 
-    if (o >= 1)
+    if (o >= 1) {
       return Util.sawtooth(val, p);
-    else if (o <= 0)
+
+    } else if (o <= 0) {
       return 1.0 - Util.sawtooth(val, p);
-    else {
+
+    } else {
       double s1 = (o - Util.sawtooth(val, p)) >= 0 ? 1.0 : 0.0;
       double s2 = ((1.0 - o) - (Util.sawtooth(-val, p))) >= 0 ? 1.0 : 0.0;
-      return Util.sawtooth(val, p) * s1 / o + Util.sawtooth(-val, p) * s2
-          / (1.0 - o);
+      return Util.sawtooth(val, p) * s1 / o + Util.sawtooth(-val, p) * s2 / (1.0 - o);
     }
   }
 
   @Override
   public double get(double x, double y, double z, double w, double u, double v) {
-    double val = source.get(x, y, z, w, u, v);
-    double p = period.get(x, y, z, w, u, v);
-    double o = offset.get(x, y, z, w, u, v);
+    double val = this.source.get(x, y, z, w, u, v);
+    double p = this.period.get(x, y, z, w, u, v);
+    double o = this.offset.get(x, y, z, w, u, v);
 
-    if (o >= 1)
+    if (o >= 1) {
       return Util.sawtooth(val, p);
-    else if (o <= 0)
+
+    } else if (o <= 0) {
       return 1.0 - Util.sawtooth(val, p);
-    else {
+
+    } else {
       double s1 = (o - Util.sawtooth(val, p)) >= 0 ? 1.0 : 0.0;
       double s2 = ((1.0 - o) - (Util.sawtooth(-val, p))) >= 0 ? 1.0 : 0.0;
-      return Util.sawtooth(val, p) * s1 / o + Util.sawtooth(-val, p) * s2
-          / (1.0 - o);
+      return Util.sawtooth(val, p) * s1 / o + Util.sawtooth(-val, p) * s2 / (1.0 - o);
     }
   }
 
   @Override
-  protected void _writeToMap(ModuleMap map) {
-
-    ModulePropertyMap props = new ModulePropertyMap(this);
-
-    writeScalar("offset", offset, props, map);
-    writeScalar("period", period, props, map);
-    writeSource(props, map);
-
-    map.put(getId(), props);
-
+  public void writeToMap(ModuleMap moduleMap) {
+    ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
+    modulePropertyMap
+        .writeScalar("offset", this.offset, moduleMap)
+        .writeScalar("period", this.period, moduleMap)
+        .writeScalar("source", this.source, moduleMap);
+    moduleMap.put(this.getId(), modulePropertyMap);
   }
 
   @Override
-  public Module buildFromPropertyMap(ModulePropertyMap props,
-      ModuleInstanceMap map) {
-
-    this.setOffset(readScalar("offset", props, map));
-    this.setPeriod(readScalar("period", props, map));
-    readSource(props, map);
-
+  public Module buildFromPropertyMap(ModulePropertyMap modulePropertyMap, ModuleInstanceMap moduleInstanceMap) {
+    this.setOffset(modulePropertyMap.readScalar("offset", moduleInstanceMap));
+    this.setPeriod(modulePropertyMap.readScalar("period", moduleInstanceMap));
+    this.setSource(modulePropertyMap.readScalar("source", moduleInstanceMap));
     return this;
   }
-
 }

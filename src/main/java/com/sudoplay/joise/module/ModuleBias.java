@@ -48,22 +48,24 @@
 
 package com.sudoplay.joise.module;
 
-import static com.sudoplay.joise.noise.Util.bias;
-
 import com.sudoplay.joise.ModuleInstanceMap;
 import com.sudoplay.joise.ModuleMap;
 import com.sudoplay.joise.ModulePropertyMap;
+import com.sudoplay.joise.noise.Util;
 
-public class ModuleBias extends SourcedModule {
+public class ModuleBias extends
+    SourcedModule {
 
-  protected ScalarParameter bias = new ScalarParameter(0.5);
+  private ScalarParameter bias = new ScalarParameter(0.5);
 
-  public ModuleBias() {}
+  public ModuleBias() {
+  }
 
   public ModuleBias(double bias) {
     this.bias.set(bias);
   }
 
+  @SuppressWarnings("unused")
   public ModuleBias(Module bias) {
     this.bias.set(bias);
   }
@@ -76,53 +78,48 @@ public class ModuleBias extends SourcedModule {
     this.bias.set(bias);
   }
 
+  @SuppressWarnings("unused")
   public void setBias(ScalarParameter scalarParameter) {
     this.bias.set(scalarParameter);
   }
 
   @Override
   public double get(double x, double y) {
-    double val = source.get(x, y);
-    return bias(bias.get(x, y), val);
+    double val = this.source.get(x, y);
+    return Util.bias(this.bias.get(x, y), val);
   }
 
   @Override
   public double get(double x, double y, double z) {
-    double val = source.get(x, y, z);
-    return bias(bias.get(x, y, z), val);
+    double val = this.source.get(x, y, z);
+    return Util.bias(this.bias.get(x, y, z), val);
   }
 
   @Override
   public double get(double x, double y, double z, double w) {
-    double val = source.get(x, y, z, w);
-    return bias(bias.get(x, y, z, w), val);
+    double val = this.source.get(x, y, z, w);
+    return Util.bias(this.bias.get(x, y, z, w), val);
   }
 
   @Override
   public double get(double x, double y, double z, double w, double u, double v) {
-    double val = source.get(x, y, z, w, u, v);
-    return bias(bias.get(x, y, z, w, u, v), val);
+    double val = this.source.get(x, y, z, w, u, v);
+    return Util.bias(this.bias.get(x, y, z, w, u, v), val);
   }
 
   @Override
-  protected void _writeToMap(ModuleMap map) {
-
-    ModulePropertyMap props = new ModulePropertyMap(this);
-
-    writeScalar("bias", bias, props, map);
-    writeSource(props, map);
-
-    map.put(getId(), props);
-
+  public void writeToMap(ModuleMap moduleMap) {
+    ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
+    modulePropertyMap
+        .writeScalar("source", this.source, moduleMap)
+        .writeScalar("bias", this.bias, moduleMap);
+    moduleMap.put(this.getId(), modulePropertyMap);
   }
 
   @Override
-  public Module buildFromPropertyMap(ModulePropertyMap props,
-      ModuleInstanceMap map) {
-
-    this.setBias(readScalar("bias", props, map));
-    readSource(props, map);
-
+  public Module buildFromPropertyMap(ModulePropertyMap modulePropertyMap, ModuleInstanceMap moduleInstanceMap) {
+    this.setBias(modulePropertyMap.readScalar("bias", moduleInstanceMap));
+    this.setSource(modulePropertyMap.readScalar("source", moduleInstanceMap));
     return this;
   }
 

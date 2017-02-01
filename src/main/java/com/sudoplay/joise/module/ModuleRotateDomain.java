@@ -53,13 +53,14 @@ import com.sudoplay.joise.ModuleMap;
 import com.sudoplay.joise.ModulePropertyMap;
 import com.sudoplay.joise.noise.Util;
 
-public class ModuleRotateDomain extends SourcedModule {
+public class ModuleRotateDomain extends
+    SourcedModule {
 
-  protected double[][] rotmatrix = new double[3][3];
-  protected ScalarParameter ax = new ScalarParameter(0);
-  protected ScalarParameter ay = new ScalarParameter(0);
-  protected ScalarParameter az = new ScalarParameter(0);
-  protected ScalarParameter axisangle = new ScalarParameter(0);
+  private double[][] rotmatrix = new double[3][3];
+  private ScalarParameter ax = new ScalarParameter(0);
+  private ScalarParameter ay = new ScalarParameter(0);
+  private ScalarParameter az = new ScalarParameter(0);
+  private ScalarParameter axisangle = new ScalarParameter(0);
 
   public void setAxis(double ax, double ay, double az) {
     this.ax.set(ax);
@@ -67,20 +68,24 @@ public class ModuleRotateDomain extends SourcedModule {
     this.az.set(az);
   }
 
+  @SuppressWarnings("unused")
   public void setAxis(Module ax, Module ay, Module az) {
     this.ax.set(ax);
     this.ay.set(ay);
     this.az.set(az);
   }
 
+  @SuppressWarnings("unused")
   public void setAxisX(double ax) {
     this.ax.set(ax);
   }
 
+  @SuppressWarnings("unused")
   public void setAxisY(double ay) {
     this.ay.set(ay);
   }
 
+  @SuppressWarnings("unused")
   public void setAxisZ(double az) {
     this.az.set(az);
   }
@@ -89,34 +94,42 @@ public class ModuleRotateDomain extends SourcedModule {
     this.axisangle.set(a);
   }
 
+  @SuppressWarnings("unused")
   public void setAxisX(Module ax) {
     this.ax.set(ax);
   }
 
+  @SuppressWarnings("unused")
   public void setAxisY(Module ay) {
     this.ay.set(ay);
   }
 
+  @SuppressWarnings("unused")
   public void setAxisZ(Module az) {
     this.az.set(az);
   }
 
+  @SuppressWarnings("unused")
   public void setAngle(Module a) {
     this.axisangle.set(a);
   }
 
+  @SuppressWarnings("unused")
   public void setAxisX(ScalarParameter scalarParameter) {
     this.ax.set(scalarParameter);
   }
 
+  @SuppressWarnings("unused")
   public void setAxisY(ScalarParameter scalarParameter) {
     this.ay.set(scalarParameter);
   }
 
+  @SuppressWarnings("unused")
   public void setAxisZ(ScalarParameter scalarParameter) {
     this.az.set(scalarParameter);
   }
 
+  @SuppressWarnings("unused")
   public void setAngle(ScalarParameter scalarParameter) {
     this.axisangle.set(scalarParameter);
   }
@@ -124,120 +137,104 @@ public class ModuleRotateDomain extends SourcedModule {
   @Override
   public double get(double x, double y) {
     double nx, ny;
-    double angle = axisangle.get(x, y) * Util.TWO_PI;
+    double angle = this.axisangle.get(x, y) * Util.TWO_PI;
     double cos2d = Math.cos(angle);
     double sin2d = Math.sin(angle);
     nx = x * cos2d - y * sin2d;
     ny = y * cos2d + x * sin2d;
-    return source.get(nx, ny);
+    return this.source.get(nx, ny);
   }
 
   @Override
   public double get(double x, double y, double z) {
-    calculateRotMatrix(x, y, z);
+    this.calculateRotMatrix(x, y, z);
     double nx, ny, nz;
-    nx = (rotmatrix[0][0] * x) + (rotmatrix[1][0] * y) + (rotmatrix[2][0] * z);
-    ny = (rotmatrix[0][1] * x) + (rotmatrix[1][1] * y) + (rotmatrix[2][1] * z);
-    nz = (rotmatrix[0][2] * x) + (rotmatrix[1][2] * y) + (rotmatrix[2][2] * z);
-    return source.get(nx, ny, nz);
+    nx = (this.rotmatrix[0][0] * x) + (this.rotmatrix[1][0] * y) + (this.rotmatrix[2][0] * z);
+    ny = (this.rotmatrix[0][1] * x) + (this.rotmatrix[1][1] * y) + (this.rotmatrix[2][1] * z);
+    nz = (this.rotmatrix[0][2] * x) + (this.rotmatrix[1][2] * y) + (this.rotmatrix[2][2] * z);
+    return this.source.get(nx, ny, nz);
   }
 
   @Override
   public double get(double x, double y, double z, double w) {
-    calculateRotMatrix(x, y, z, w);
+    this.calculateRotMatrix(x, y, z, w);
     double nx, ny, nz;
-    nx = (rotmatrix[0][0] * x) + (rotmatrix[1][0] * y) + (rotmatrix[2][0] * z);
-    ny = (rotmatrix[0][1] * x) + (rotmatrix[1][1] * y) + (rotmatrix[2][1] * z);
-    nz = (rotmatrix[0][2] * x) + (rotmatrix[1][2] * y) + (rotmatrix[2][2] * z);
-    return source.get(nx, ny, nz, w);
+    nx = (this.rotmatrix[0][0] * x) + (this.rotmatrix[1][0] * y) + (this.rotmatrix[2][0] * z);
+    ny = (this.rotmatrix[0][1] * x) + (this.rotmatrix[1][1] * y) + (this.rotmatrix[2][1] * z);
+    nz = (this.rotmatrix[0][2] * x) + (this.rotmatrix[1][2] * y) + (this.rotmatrix[2][2] * z);
+    return this.source.get(nx, ny, nz, w);
   }
 
   @Override
   public double get(double x, double y, double z, double w, double u, double v) {
-    calculateRotMatrix(x, y, z, w, u, v);
+    this.calculateRotMatrix(x, y, z, w, u, v);
     double nx, ny, nz;
-    nx = (rotmatrix[0][0] * x) + (rotmatrix[1][0] * y) + (rotmatrix[2][0] * z);
-    ny = (rotmatrix[0][1] * x) + (rotmatrix[1][1] * y) + (rotmatrix[2][1] * z);
-    nz = (rotmatrix[0][2] * x) + (rotmatrix[1][2] * y) + (rotmatrix[2][2] * z);
-    return source.get(nx, ny, nz, w, u, v);
+    nx = (this.rotmatrix[0][0] * x) + (this.rotmatrix[1][0] * y) + (this.rotmatrix[2][0] * z);
+    ny = (this.rotmatrix[0][1] * x) + (this.rotmatrix[1][1] * y) + (this.rotmatrix[2][1] * z);
+    nz = (this.rotmatrix[0][2] * x) + (this.rotmatrix[1][2] * y) + (this.rotmatrix[2][2] * z);
+    return this.source.get(nx, ny, nz, w, u, v);
   }
 
-  protected void calculateRotMatrix(double x, double y) {
-    double angle = axisangle.get(x, y) * Util.TWO_PI;
-    double ax = this.ax.get(x, y);
-    double ay = this.ay.get(x, y);
-    double az = this.az.get(x, y);
-    calc(angle, ax, ay, az);
-  }
-
-  protected void calculateRotMatrix(double x, double y, double z) {
-    double angle = axisangle.get(x, y, z) * Util.TWO_PI;
+  private void calculateRotMatrix(double x, double y, double z) {
+    double angle = this.axisangle.get(x, y, z) * Util.TWO_PI;
     double ax = this.ax.get(x, y, z);
     double ay = this.ay.get(x, y, z);
     double az = this.az.get(x, y, z);
-    calc(angle, ax, ay, az);
+    this.calc(angle, ax, ay, az);
   }
 
-  protected void calculateRotMatrix(double x, double y, double z, double w) {
-    double angle = axisangle.get(x, y, z, w) * Util.TWO_PI;
+  private void calculateRotMatrix(double x, double y, double z, double w) {
+    double angle = this.axisangle.get(x, y, z, w) * Util.TWO_PI;
     double ax = this.ax.get(x, y, z, w);
     double ay = this.ay.get(x, y, z, w);
     double az = this.az.get(x, y, z, w);
-    calc(angle, ax, ay, az);
+    this.calc(angle, ax, ay, az);
   }
 
-  protected void calculateRotMatrix(double x, double y, double z, double w,
-      double u, double v) {
-    double angle = axisangle.get(x, y, z, w, u, v) * Util.TWO_PI;
+  private void calculateRotMatrix(double x, double y, double z, double w, double u, double v) {
+    double angle = this.axisangle.get(x, y, z, w, u, v) * Util.TWO_PI;
     double ax = this.ax.get(x, y, z, w, u, v);
     double ay = this.ay.get(x, y, z, w, u, v);
     double az = this.az.get(x, y, z, w, u, v);
-    calc(angle, ax, ay, az);
+    this.calc(angle, ax, ay, az);
   }
 
-  protected void calc(double angle, double ax, double ay, double az) {
+  private void calc(double angle, double ax, double ay, double az) {
     double cosangle = Math.cos(angle);
     double sinangle = Math.sin(angle);
 
-    rotmatrix[0][0] = 1.0 + (1.0 - cosangle) * (ax * ax - 1.0);
-    rotmatrix[1][0] = -az * sinangle + (1.0 - cosangle) * ax * ay;
-    rotmatrix[2][0] = ay * sinangle + (1.0 - cosangle) * ax * az;
+    this.rotmatrix[0][0] = 1.0 + (1.0 - cosangle) * (ax * ax - 1.0);
+    this.rotmatrix[1][0] = -az * sinangle + (1.0 - cosangle) * ax * ay;
+    this.rotmatrix[2][0] = ay * sinangle + (1.0 - cosangle) * ax * az;
 
-    rotmatrix[0][1] = az * sinangle + (1.0 - cosangle) * ax * ay;
-    rotmatrix[1][1] = 1.0 + (1.0 - cosangle) * (ay * ay - 1.0);
-    rotmatrix[2][1] = -ax * sinangle + (1.0 - cosangle) * ay * az;
+    this.rotmatrix[0][1] = az * sinangle + (1.0 - cosangle) * ax * ay;
+    this.rotmatrix[1][1] = 1.0 + (1.0 - cosangle) * (ay * ay - 1.0);
+    this.rotmatrix[2][1] = -ax * sinangle + (1.0 - cosangle) * ay * az;
 
-    rotmatrix[0][2] = -ay * sinangle + (1.0 - cosangle) * ax * az;
-    rotmatrix[1][2] = ax * sinangle + (1.0 - cosangle) * ay * az;
-    rotmatrix[2][2] = 1.0 + (1.0 - cosangle) * (az * az - 1.0);
+    this.rotmatrix[0][2] = -ay * sinangle + (1.0 - cosangle) * ax * az;
+    this.rotmatrix[1][2] = ax * sinangle + (1.0 - cosangle) * ay * az;
+    this.rotmatrix[2][2] = 1.0 + (1.0 - cosangle) * (az * az - 1.0);
   }
 
   @Override
-  protected void _writeToMap(ModuleMap map) {
-
-    ModulePropertyMap props = new ModulePropertyMap(this);
-
-    writeScalar("axisX", ax, props, map);
-    writeScalar("axisY", ay, props, map);
-    writeScalar("axisZ", az, props, map);
-    writeScalar("angle", axisangle, props, map);
-    writeSource(props, map);
-
-    map.put(getId(), props);
-
+  public void writeToMap(ModuleMap moduleMap) {
+    ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
+    modulePropertyMap
+        .writeScalar("axisX", this.ax, moduleMap)
+        .writeScalar("axisY", this.ay, moduleMap)
+        .writeScalar("axisZ", this.az, moduleMap)
+        .writeScalar("angle", this.axisangle, moduleMap)
+        .writeScalar("source", this.source, moduleMap);
+    moduleMap.put(this.getId(), modulePropertyMap);
   }
 
   @Override
-  public Module buildFromPropertyMap(ModulePropertyMap props,
-      ModuleInstanceMap map) {
-
-    this.setAxisX(readScalar("axisX", props, map));
-    this.setAxisY(readScalar("axisY", props, map));
-    this.setAxisZ(readScalar("axisZ", props, map));
-    this.setAngle(readScalar("angle", props, map));
-    readSource(props, map);
-
+  public Module buildFromPropertyMap(ModulePropertyMap modulePropertyMap, ModuleInstanceMap moduleInstanceMap) {
+    this.setAxisX(modulePropertyMap.readScalar("axisX", moduleInstanceMap));
+    this.setAxisY(modulePropertyMap.readScalar("axisY", moduleInstanceMap));
+    this.setAxisZ(modulePropertyMap.readScalar("axisZ", moduleInstanceMap));
+    this.setAngle(modulePropertyMap.readScalar("angle", moduleInstanceMap));
+    this.setSource(modulePropertyMap.readScalar("source", moduleInstanceMap));
     return this;
   }
-
 }

@@ -52,149 +52,144 @@ import com.sudoplay.joise.ModuleInstanceMap;
 import com.sudoplay.joise.ModuleMap;
 import com.sudoplay.joise.ModulePropertyMap;
 
-public class ModuleMagnitude extends Module {
+public class ModuleMagnitude extends
+    Module {
 
-  protected ScalarParameter sX = new ScalarParameter(0);
-  protected ScalarParameter sY = new ScalarParameter(0);
-  protected ScalarParameter sZ = new ScalarParameter(0);
-  protected ScalarParameter sW = new ScalarParameter(0);
-  protected ScalarParameter sU = new ScalarParameter(0);
-  protected ScalarParameter sV = new ScalarParameter(0);
+  private ScalarParameter sX = new ScalarParameter(0);
+  private ScalarParameter sY = new ScalarParameter(0);
+  private ScalarParameter sZ = new ScalarParameter(0);
+  private ScalarParameter sW = new ScalarParameter(0);
+  private ScalarParameter sU = new ScalarParameter(0);
+  private ScalarParameter sV = new ScalarParameter(0);
 
   public void setX(double source) {
-    sX.set(source);
+    this.sX.set(source);
   }
 
   public void setY(double source) {
-    sY.set(source);
+    this.sY.set(source);
   }
 
   public void setZ(double source) {
-    sZ.set(source);
+    this.sZ.set(source);
   }
 
   public void setW(double source) {
-    sW.set(source);
+    this.sW.set(source);
   }
 
   public void setU(double source) {
-    sU.set(source);
+    this.sU.set(source);
   }
 
   public void setV(double source) {
-    sV.set(source);
+    this.sV.set(source);
   }
 
   public void setX(Module source) {
-    sX.set(source);
+    this.sX.set(source);
   }
 
   public void setY(Module source) {
-    sY.set(source);
+    this.sY.set(source);
   }
 
   public void setZ(Module source) {
-    sZ.set(source);
+    this.sZ.set(source);
   }
 
   public void setW(Module source) {
-    sW.set(source);
+    this.sW.set(source);
   }
 
   public void setU(Module source) {
-    sU.set(source);
+    this.sU.set(source);
   }
 
   public void setV(Module source) {
-    sV.set(source);
+    this.sV.set(source);
   }
 
   public void setX(ScalarParameter scalarParameter) {
-    sX.set(scalarParameter);
+    this.sX.set(scalarParameter);
   }
 
   public void setY(ScalarParameter scalarParameter) {
-    sY.set(scalarParameter);
+    this.sY.set(scalarParameter);
   }
 
   public void setZ(ScalarParameter scalarParameter) {
-    sZ.set(scalarParameter);
+    this.sZ.set(scalarParameter);
   }
 
   public void setW(ScalarParameter scalarParameter) {
-    sW.set(scalarParameter);
+    this.sW.set(scalarParameter);
   }
 
   public void setU(ScalarParameter scalarParameter) {
-    sU.set(scalarParameter);
+    this.sU.set(scalarParameter);
   }
 
   public void setV(ScalarParameter scalarParameter) {
-    sV.set(scalarParameter);
+    this.sV.set(scalarParameter);
   }
 
   @Override
   public double get(double x, double y) {
-    double xx = sX.get(x, y);
-    double yy = sY.get(x, y);
+    double xx = this.sX.get(x, y);
+    double yy = this.sY.get(x, y);
     return Math.sqrt(xx * xx + yy * yy);
   }
 
   @Override
   public double get(double x, double y, double z) {
-    double xx = sX.get(x, y, z);
-    double yy = sY.get(x, y, z);
-    double zz = sZ.get(x, y, z);
+    double xx = this.sX.get(x, y, z);
+    double yy = this.sY.get(x, y, z);
+    double zz = this.sZ.get(x, y, z);
     return Math.sqrt(xx * xx + yy * yy + zz * zz);
   }
 
   @Override
   public double get(double x, double y, double z, double w) {
-    double xx = sX.get(x, y, z, w);
-    double yy = sY.get(x, y, z, w);
-    double zz = sZ.get(x, y, z, w);
-    double ww = sW.get(x, y, z, w);
+    double xx = this.sX.get(x, y, z, w);
+    double yy = this.sY.get(x, y, z, w);
+    double zz = this.sZ.get(x, y, z, w);
+    double ww = this.sW.get(x, y, z, w);
     return Math.sqrt(xx * xx + yy * yy + zz * zz + ww * ww);
   }
 
   @Override
   public double get(double x, double y, double z, double w, double u, double v) {
-    double xx = sX.get(x, y, z, w, u, v);
-    double yy = sY.get(x, y, z, w, u, v);
-    double zz = sZ.get(x, y, z, w, u, v);
-    double ww = sW.get(x, y, z, w, u, v);
-    double uu = sU.get(x, y, z, w, u, v);
-    double vv = sV.get(x, y, z, w, u, v);
+    double xx = this.sX.get(x, y, z, w, u, v);
+    double yy = this.sY.get(x, y, z, w, u, v);
+    double zz = this.sZ.get(x, y, z, w, u, v);
+    double ww = this.sW.get(x, y, z, w, u, v);
+    double uu = this.sU.get(x, y, z, w, u, v);
+    double vv = this.sV.get(x, y, z, w, u, v);
     return Math.sqrt(xx * xx + yy * yy + zz * zz + ww * ww + uu * uu + vv * vv);
   }
 
   @Override
-  protected void _writeToMap(ModuleMap map) {
-
-    ModulePropertyMap props = new ModulePropertyMap(this);
-
-    writeScalar("X", sX, props, map);
-    writeScalar("Y", sY, props, map);
-    writeScalar("Z", sZ, props, map);
-    writeScalar("W", sW, props, map);
-    writeScalar("U", sU, props, map);
-    writeScalar("V", sV, props, map);
-
-    map.put(getId(), props);
-
+  public void writeToMap(ModuleMap moduleMap) {
+    ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
+    modulePropertyMap
+        .writeScalar("X", this.sX, moduleMap)
+        .writeScalar("Y", this.sY, moduleMap)
+        .writeScalar("Z", this.sZ, moduleMap)
+        .writeScalar("W", this.sW, moduleMap)
+        .writeScalar("U", this.sU, moduleMap)
+        .writeScalar("V", this.sV, moduleMap);
+    moduleMap.put(this.getId(), modulePropertyMap);
   }
 
   @Override
-  public Module buildFromPropertyMap(ModulePropertyMap props,
-      ModuleInstanceMap map) {
-
-    this.setX(readScalar("X", props, map));
-    this.setY(readScalar("Y", props, map));
-    this.setZ(readScalar("Z", props, map));
-    this.setW(readScalar("W", props, map));
-    this.setU(readScalar("U", props, map));
-    this.setV(readScalar("V", props, map));
-
+  public Module buildFromPropertyMap(ModulePropertyMap modulePropertyMap, ModuleInstanceMap moduleInstanceMap) {
+    this.setX(modulePropertyMap.readScalar("X", moduleInstanceMap));
+    this.setY(modulePropertyMap.readScalar("Y", moduleInstanceMap));
+    this.setZ(modulePropertyMap.readScalar("Z", moduleInstanceMap));
+    this.setW(modulePropertyMap.readScalar("W", moduleInstanceMap));
+    this.setU(modulePropertyMap.readScalar("U", moduleInstanceMap));
+    this.setV(modulePropertyMap.readScalar("V", moduleInstanceMap));
     return this;
   }
 

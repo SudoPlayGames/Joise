@@ -52,124 +52,122 @@ import com.sudoplay.joise.ModuleInstanceMap;
 import com.sudoplay.joise.ModuleMap;
 import com.sudoplay.joise.ModulePropertyMap;
 
-public class ModuleBrightContrast extends SourcedModule {
+public class ModuleBrightContrast extends
+    SourcedModule {
 
-  protected ScalarParameter bright = new ScalarParameter(0.0);
-  protected ScalarParameter threshold = new ScalarParameter(0.0);
-  protected ScalarParameter factor = new ScalarParameter(1.0);
+  private ScalarParameter bright = new ScalarParameter(0.0);
+  private ScalarParameter threshold = new ScalarParameter(0.0);
+  private ScalarParameter factor = new ScalarParameter(1.0);
 
   public void setBrightness(double b) {
-    bright.set(b);
+    this.bright.set(b);
   }
 
   public void setContrastThreshold(double t) {
-    threshold.set(t);
+    this.threshold.set(t);
   }
 
   public void setContrastFactor(double f) {
-    factor.set(f);
+    this.factor.set(f);
   }
 
+  @SuppressWarnings("unused")
   public void setBrightness(Module source) {
-    bright.set(source);
+    this.bright.set(source);
   }
 
   public void setContrastThreshold(Module source) {
-    threshold.set(source);
+    this.threshold.set(source);
   }
 
   public void setContrastFactor(Module source) {
-    factor.set(source);
+    this.factor.set(source);
   }
 
+  @SuppressWarnings("unused")
   public void setBrightness(ScalarParameter scalarParameter) {
-    bright.set(scalarParameter);
+    this.bright.set(scalarParameter);
   }
 
+  @SuppressWarnings("unused")
   public void setContrastThreshold(ScalarParameter scalarParameter) {
-    threshold.set(scalarParameter);
+    this.threshold.set(scalarParameter);
   }
 
+  @SuppressWarnings("unused")
   public void setContrastFactor(ScalarParameter scalarParameter) {
-    factor.set(scalarParameter);
+    this.factor.set(scalarParameter);
   }
 
   @Override
   public double get(double x, double y) {
-    double val = source.get(x, y);
+    double val = this.source.get(x, y);
     // apply brightness
-    val += bright.get(x, y);
+    val += this.bright.get(x, y);
     // subtract threshold, scale by factor, add threshold
-    double t = threshold.get(x, y);
+    double t = this.threshold.get(x, y);
     val -= t;
-    val *= factor.get(x, y);
+    val *= this.factor.get(x, y);
     val += t;
     return val;
   }
 
   @Override
   public double get(double x, double y, double z) {
-    double val = source.get(x, y, z);
+    double val = this.source.get(x, y, z);
     // apply brightness
-    val += bright.get(x, y, z);
+    val += this.bright.get(x, y, z);
     // subtract threshold, scale by factor, add threshold
-    double t = threshold.get(x, y, z);
+    double t = this.threshold.get(x, y, z);
     val -= t;
-    val *= factor.get(x, y, z);
+    val *= this.factor.get(x, y, z);
     val += t;
     return val;
   }
 
   @Override
   public double get(double x, double y, double z, double w) {
-    double val = source.get(x, y, z, w);
+    double val = this.source.get(x, y, z, w);
     // apply brightness
-    val += bright.get(x, y, z, w);
+    val += this.bright.get(x, y, z, w);
     // subtract threshold, scale by factor, add threshold
-    double t = threshold.get(x, y, z, w);
+    double t = this.threshold.get(x, y, z, w);
     val -= t;
-    val *= factor.get(x, y, z, w);
+    val *= this.factor.get(x, y, z, w);
     val += t;
     return val;
   }
 
   @Override
   public double get(double x, double y, double z, double w, double u, double v) {
-    double val = source.get(x, y, z, w, u, v);
+    double val = this.source.get(x, y, z, w, u, v);
     // apply brightness
-    val += bright.get(x, y, z, w, u, v);
+    val += this.bright.get(x, y, z, w, u, v);
     // subtract threshold, scale by factor, add threshold
-    double t = threshold.get(x, y, z, w, u, v);
+    double t = this.threshold.get(x, y, z, w, u, v);
     val -= t;
-    val *= factor.get(x, y, z, w, u, v);
+    val *= this.factor.get(x, y, z, w, u, v);
     val += t;
     return val;
   }
 
   @Override
-  protected void _writeToMap(ModuleMap map) {
-
-    ModulePropertyMap props = new ModulePropertyMap(this);
-
-    writeScalar("brightness", bright, props, map);
-    writeScalar("contrastFactor", factor, props, map);
-    writeScalar("contrastThreshold", threshold, props, map);
-    writeSource(props, map);
-
-    map.put(getId(), props);
-
+  public void writeToMap(ModuleMap moduleMap) {
+    ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
+    modulePropertyMap
+        .writeScalar("brightness", this.bright, moduleMap)
+        .writeScalar("contrastFactor", this.factor, moduleMap)
+        .writeScalar("contrastThreshold", this.threshold, moduleMap)
+        .writeScalar("source", this.source, moduleMap);
+    moduleMap.put(this.getId(), modulePropertyMap);
   }
 
   @Override
-  public Module buildFromPropertyMap(ModulePropertyMap props,
-      ModuleInstanceMap map) {
-
-    this.setBrightness(readScalar("brightness", props, map));
-    this.setContrastFactor(readScalar("contrastFactor", props, map));
-    this.setContrastThreshold(readScalar("contrastThreshold", props, map));
-    readSource(props, map);
-
+  public Module buildFromPropertyMap(ModulePropertyMap modulePropertyMap, ModuleInstanceMap moduleInstanceMap) {
+    this.setBrightness(modulePropertyMap.readScalar("brightness", moduleInstanceMap));
+    this.setContrastFactor(modulePropertyMap.readScalar("contrastFactor", moduleInstanceMap));
+    this.setContrastThreshold(modulePropertyMap.readScalar("contrastThreshold", moduleInstanceMap));
+    this.setSource(modulePropertyMap.readScalar("source", moduleInstanceMap));
     return this;
   }
-
 }

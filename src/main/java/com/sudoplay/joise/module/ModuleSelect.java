@@ -55,211 +55,225 @@ import com.sudoplay.joise.noise.Util;
 
 public class ModuleSelect extends Module {
 
-  protected ScalarParameter low = new ScalarParameter(0);
-  protected ScalarParameter high = new ScalarParameter(0);
-  protected ScalarParameter control = new ScalarParameter(0);
-  protected ScalarParameter threshold = new ScalarParameter(0);
-  protected ScalarParameter falloff = new ScalarParameter(0);
+  private ScalarParameter low = new ScalarParameter(0);
+  private ScalarParameter high = new ScalarParameter(0);
+  private ScalarParameter control = new ScalarParameter(0);
+  private ScalarParameter threshold = new ScalarParameter(0);
+  private ScalarParameter falloff = new ScalarParameter(0);
 
   public void setLowSource(double source) {
-    low.set(source);
+    this.low.set(source);
   }
 
   public void setHighSource(double source) {
-    high.set(source);
+    this.high.set(source);
   }
 
   public void setControlSource(double source) {
-    control.set(source);
+    this.control.set(source);
   }
 
   public void setThreshold(double source) {
-    threshold.set(source);
+    this.threshold.set(source);
   }
 
   public void setFalloff(double source) {
-    falloff.set(source);
+    this.falloff.set(source);
   }
 
   public void setLowSource(Module source) {
-    low.set(source);
+    this.low.set(source);
   }
 
   public void setHighSource(Module source) {
-    high.set(source);
+    this.high.set(source);
   }
 
   public void setControlSource(Module source) {
-    control.set(source);
+    this.control.set(source);
   }
 
   public void setThreshold(Module source) {
-    threshold.set(source);
+    this.threshold.set(source);
   }
 
+  @SuppressWarnings("unused")
   public void setFalloff(Module source) {
-    falloff.set(source);
+    this.falloff.set(source);
   }
 
+  @SuppressWarnings({"unused", "WeakerAccess"})
   public void setLowSource(ScalarParameter scalarParameter) {
-    low.set(scalarParameter);
+    this.low.set(scalarParameter);
   }
 
+  @SuppressWarnings({"unused", "WeakerAccess"})
   public void setHighSource(ScalarParameter scalarParameter) {
-    high.set(scalarParameter);
+    this.high.set(scalarParameter);
   }
 
+  @SuppressWarnings({"unused", "WeakerAccess"})
   public void setControlSource(ScalarParameter scalarParameter) {
-    control.set(scalarParameter);
+    this.control.set(scalarParameter);
   }
 
+  @SuppressWarnings({"unused", "WeakerAccess"})
   public void setThreshold(ScalarParameter scalarParameter) {
-    threshold.set(scalarParameter);
+    this.threshold.set(scalarParameter);
   }
 
+  @SuppressWarnings({"unused", "WeakerAccess"})
   public void setFalloff(ScalarParameter scalarParameter) {
-    falloff.set(scalarParameter);
+    this.falloff.set(scalarParameter);
   }
 
   @Override
   public double get(double x, double y) {
-    double c = control.get(x, y);
-    double f = falloff.get(x, y);
-    double t = threshold.get(x, y);
+    double c = this.control.get(x, y);
+    double f = this.falloff.get(x, y);
+    double t = this.threshold.get(x, y);
 
     if (f > 0.0) {
 
       if (c < (t - f)) {
-        return low.get(x, y);
+        return this.low.get(x, y);
+
       } else if (c > (t + f)) {
-        return high.get(x, y);
+        return this.high.get(x, y);
+
       } else {
         double lower = t - f;
         double upper = t + f;
         double blend = Util.quinticBlend((c - lower) / (upper - lower));
-        return Util.lerp(blend, low.get(x, y), high.get(x, y));
+        return Util.lerp(blend, this.low.get(x, y), this.high.get(x, y));
       }
 
     } else {
+
       if (c < t) {
-        return low.get(x, y);
+        return this.low.get(x, y);
+
       } else {
-        return high.get(x, y);
+        return this.high.get(x, y);
       }
     }
   }
 
   @Override
   public double get(double x, double y, double z) {
-    double c = control.get(x, y, z);
-    double f = falloff.get(x, y, z);
-    double t = threshold.get(x, y, z);
+    double c = this.control.get(x, y, z);
+    double f = this.falloff.get(x, y, z);
+    double t = this.threshold.get(x, y, z);
 
     if (f > 0.0) {
 
       if (c < (t - f)) {
-        return low.get(x, y, z);
+        return this.low.get(x, y, z);
+
       } else if (c > (t + f)) {
-        return high.get(x, y, z);
+        return this.high.get(x, y, z);
+
       } else {
         double lower = t - f;
         double upper = t + f;
         double blend = Util.quinticBlend((c - lower) / (upper - lower));
-        return Util.lerp(blend, low.get(x, y, z), high.get(x, y, z));
+        return Util.lerp(blend, this.low.get(x, y, z), this.high.get(x, y, z));
       }
 
     } else {
+
       if (c < t) {
-        return low.get(x, y, z);
+        return this.low.get(x, y, z);
+
       } else {
-        return high.get(x, y, z);
+        return this.high.get(x, y, z);
       }
     }
   }
 
   @Override
   public double get(double x, double y, double z, double w) {
-    double c = control.get(x, y, z, w);
-    double f = falloff.get(x, y, z, w);
-    double t = threshold.get(x, y, z, w);
+    double c = this.control.get(x, y, z, w);
+    double f = this.falloff.get(x, y, z, w);
+    double t = this.threshold.get(x, y, z, w);
 
     if (f > 0.0) {
 
       if (c < (t - f)) {
-        return low.get(x, y, z, w);
+        return this.low.get(x, y, z, w);
+
       } else if (c > (t + f)) {
-        return high.get(x, y, z, w);
+        return this.high.get(x, y, z, w);
+
       } else {
         double lower = t - f;
         double upper = t + f;
         double blend = Util.quinticBlend((c - lower) / (upper - lower));
-        return Util.lerp(blend, low.get(x, y, z, w), high.get(x, y, z, w));
+        return Util.lerp(blend, this.low.get(x, y, z, w), this.high.get(x, y, z, w));
       }
 
     } else {
+
       if (c < t) {
-        return low.get(x, y, z, w);
+        return this.low.get(x, y, z, w);
+
       } else {
-        return high.get(x, y, z, w);
+        return this.high.get(x, y, z, w);
       }
     }
   }
 
   @Override
   public double get(double x, double y, double z, double w, double u, double v) {
-    double c = control.get(x, y, z, w, u, v);
-    double f = falloff.get(x, y, z, w, u, v);
-    double t = threshold.get(x, y, z, w, u, v);
+    double c = this.control.get(x, y, z, w, u, v);
+    double f = this.falloff.get(x, y, z, w, u, v);
+    double t = this.threshold.get(x, y, z, w, u, v);
 
     if (f > 0.0) {
 
       if (c < (t - f)) {
-        return low.get(x, y, z, w, u, v);
+        return this.low.get(x, y, z, w, u, v);
+
       } else if (c > (t + f)) {
-        return high.get(x, y, z, w, u, v);
+        return this.high.get(x, y, z, w, u, v);
+
       } else {
         double lower = t - f;
         double upper = t + f;
         double blend = Util.quinticBlend((c - lower) / (upper - lower));
-        return Util.lerp(blend, low.get(x, y, z, w, u, v),
-            high.get(x, y, z, w, u, v));
+        return Util.lerp(blend, this.low.get(x, y, z, w, u, v), this.high.get(x, y, z, w, u, v));
       }
 
     } else {
+
       if (c < t) {
-        return low.get(x, y, z, w, u, v);
+        return this.low.get(x, y, z, w, u, v);
+
       } else {
-        return high.get(x, y, z, w, u, v);
+        return this.high.get(x, y, z, w, u, v);
       }
     }
   }
 
   @Override
-  protected void _writeToMap(ModuleMap map) {
-
-    ModulePropertyMap props = new ModulePropertyMap(this);
-
-    writeScalar("low", low, props, map);
-    writeScalar("high", high, props, map);
-    writeScalar("control", control, props, map);
-    writeScalar("threshold", threshold, props, map);
-    writeScalar("falloff", falloff, props, map);
-
-    map.put(getId(), props);
-
+  public void writeToMap(ModuleMap moduleMap) {
+    ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
+    modulePropertyMap
+        .writeScalar("low", this.low, moduleMap)
+        .writeScalar("high", this.high, moduleMap)
+        .writeScalar("control", this.control, moduleMap)
+        .writeScalar("threshold", this.threshold, moduleMap)
+        .writeScalar("falloff", this.falloff, moduleMap);
+    moduleMap.put(this.getId(), modulePropertyMap);
   }
 
   @Override
-  public Module buildFromPropertyMap(ModulePropertyMap props,
-      ModuleInstanceMap map) {
-
-    this.setLowSource(readScalar("low", props, map));
-    this.setHighSource(readScalar("high", props, map));
-    this.setControlSource(readScalar("control", props, map));
-    this.setThreshold(readScalar("threshold", props, map));
-    this.setFalloff(readScalar("falloff", props, map));
-
+  public Module buildFromPropertyMap(ModulePropertyMap modulePropertyMap, ModuleInstanceMap moduleInstanceMap) {
+    this.setLowSource(modulePropertyMap.readScalar("low", moduleInstanceMap));
+    this.setHighSource(modulePropertyMap.readScalar("high", moduleInstanceMap));
+    this.setControlSource(modulePropertyMap.readScalar("control", moduleInstanceMap));
+    this.setThreshold(modulePropertyMap.readScalar("threshold", moduleInstanceMap));
+    this.setFalloff(modulePropertyMap.readScalar("falloff", moduleInstanceMap));
     return this;
   }
-
 }

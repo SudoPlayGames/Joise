@@ -93,7 +93,7 @@ import com.sudoplay.joise.module.ModuleSphere;
 import com.sudoplay.joise.module.ModuleTiers;
 import com.sudoplay.joise.module.ModuleTranslateDomain;
 import com.sudoplay.joise.module.ModuleTriangle;
-import com.sudoplay.joise.module.SeedableModule;
+import com.sudoplay.joise.module.SeededModule;
 
 public class MapTest {
 
@@ -123,7 +123,7 @@ public class MapTest {
   public void testModuleAbs() {
     ModuleAbs mod = new ModuleAbs();
     mod.setSource(func2);
-    test(mod);
+    this.test(mod);
   }
 
   @Test
@@ -134,14 +134,14 @@ public class MapTest {
     mod.setSamples(1000);
     mod.setSampleScale(5.0);
     mod.setSource(func2);
-    mod.calculate();
+    mod.calculateAll();
     mod.setLocked(true);
-    test(mod);
+    this.test(mod);
   }
 
   @Test
   public void testModuleBasisFunction() {
-    test(func1);
+    this.test(func1);
   }
 
   @Test
@@ -149,9 +149,9 @@ public class MapTest {
     ModuleBias bias = new ModuleBias();
     bias.setBias(0.6554);
     bias.setSource(func1);
-    test(bias);
+    this.test(bias);
     bias.setBias(func2);
-    test(bias);
+    this.test(bias);
   }
 
   @Test
@@ -160,9 +160,9 @@ public class MapTest {
     blend.setHighSource(func1);
     blend.setLowSource(func2);
     blend.setControlSource(0.23);
-    test(blend);
+    this.test(blend);
     blend.setControlSource(func3);
-    test(blend);
+    this.test(blend);
   }
 
   @Test
@@ -172,14 +172,14 @@ public class MapTest {
     mod.setContrastFactor(func2);
     mod.setContrastThreshold(func3);
     mod.setSource(func1);
-    test(mod);
+    this.test(mod);
   }
 
   @Test
   public void testModuleCache() {
     ModuleCache mod = new ModuleCache();
     mod.setSource(func2);
-    test(mod);
+    this.test(mod);
   }
 
   @Test
@@ -189,7 +189,7 @@ public class MapTest {
     ModuleCellular mod = new ModuleCellular();
     mod.setCellularSource(gen);
     mod.setCoefficients(0.2, 0.9, 3.6, 1.7);
-    test(mod);
+    this.test(mod);
   }
 
   @Test
@@ -197,7 +197,7 @@ public class MapTest {
     ModuleClamp mod = new ModuleClamp();
     mod.setRange(0.5, 1.5);
     mod.setSource(func3);
-    test(mod);
+    this.test(mod);
   }
 
   @Test
@@ -206,23 +206,23 @@ public class MapTest {
     mod.setType(CombinerType.ADD);
     mod.setSource(0, func1);
     mod.setSource(1, func2);
-    test(mod);
+    this.test(mod);
     mod.setSource(5, func3);
-    test(mod);
+    this.test(mod);
   }
 
   @Test
   public void testModuleCos() {
     ModuleCos mod = new ModuleCos();
     mod.setSource(func2);
-    test(mod);
+    this.test(mod);
   }
 
   @Test
   public void testModuleFloor() {
     ModuleFloor mod = new ModuleFloor();
     mod.setSource(func3);
-    test(mod);
+    this.test(mod);
   }
 
   @Test
@@ -234,7 +234,7 @@ public class MapTest {
     mod.setFrequency(2.34);
     mod.setType(FractalType.RIDGEMULTI);
     mod.setSeed(898456);
-    test(mod);
+    this.test(mod);
   }
 
   @Test
@@ -247,7 +247,7 @@ public class MapTest {
     mod.setType(FractalType.RIDGEMULTI);
     mod.setSeed(898456);
     mod.overrideSource(2, func2);
-    test(mod);
+    this.test(mod);
   }
 
   @Test
@@ -255,7 +255,7 @@ public class MapTest {
     ModuleFunctionGradient mod = new ModuleFunctionGradient();
     mod.setAxis(FunctionGradientAxis.X_AXIS);
     mod.setSpacing(0.365458556);
-    test(mod);
+    this.test(mod);
   }
 
   @Test
@@ -263,9 +263,9 @@ public class MapTest {
     ModuleGain mod = new ModuleGain();
     mod.setSource(func2);
     mod.setGain(0.76);
-    test(mod);
+    this.test(mod);
     mod.setGain(func1);
-    test(mod);
+    this.test(mod);
   }
 
   @Test
@@ -273,23 +273,23 @@ public class MapTest {
     ModuleNormalizedCoords mod = new ModuleNormalizedCoords();
     mod.setSource(func2);
     mod.setLength(0.36);
-    test(mod);
+    this.test(mod);
     mod.setLength(func3);
-    test(mod);
+    this.test(mod);
   }
 
   @Test
   public void testModuleGradient() {
     ModuleGradient mod = new ModuleGradient();
     mod.setGradient(0.0, 0.0, 0.0, 1.0);
-    test(mod);
+    this.test(mod);
   }
 
   @Test
   public void testModuleInvert() {
     ModuleInvert mod = new ModuleInvert();
     mod.setSource(func3);
-    test(mod);
+    this.test(mod);
   }
 
   @Test
@@ -297,7 +297,7 @@ public class MapTest {
     ModuleMagnitude mod = new ModuleMagnitude();
     mod.setX(func3);
     mod.setY(2.156);
-    test(mod);
+    this.test(mod);
   }
 
   @Test
@@ -305,9 +305,9 @@ public class MapTest {
     ModulePow mod = new ModulePow();
     mod.setSource(func1);
     mod.setPower(6.245);
-    test(mod);
+    this.test(mod);
     mod.setPower(func2);
-    test(mod);
+    this.test(mod);
   }
 
   @Test
@@ -316,7 +316,7 @@ public class MapTest {
     mod.setAxis(0.36, 1.25, 0.45);
     mod.setAngle(2.556);
     mod.setSource(func3);
-    test(mod);
+    this.test(mod);
   }
 
   @Test
@@ -324,7 +324,7 @@ public class MapTest {
     ModuleSawtooth mod = new ModuleSawtooth();
     mod.setSource(func2);
     mod.setPeriod(23.56);
-    test(mod);
+    this.test(mod);
   }
 
   @Test
@@ -333,7 +333,7 @@ public class MapTest {
     mod.setScaleX(23.54);
     mod.setScaleY(func1);
     mod.setSource(func3);
-    test(mod);
+    this.test(mod);
   }
 
   @Test
@@ -342,7 +342,7 @@ public class MapTest {
     mod.setSource(func1);
     mod.setScale(648.231);
     mod.setOffset(func2);
-    test(mod);
+    this.test(mod);
   }
 
   @Test
@@ -353,14 +353,14 @@ public class MapTest {
     mod.setLowSource(func3);
     mod.setFalloff(0.5);
     mod.setThreshold(func2);
-    test(mod);
+    this.test(mod);
   }
 
   @Test
   public void testModuleSin() {
     ModuleSin mod = new ModuleSin();
     mod.setSource(func2);
-    test(mod);
+    this.test(mod);
   }
 
   @Test
@@ -370,7 +370,7 @@ public class MapTest {
     mod.setCenterY(0.6);
     mod.setCenterZ(func2);
     mod.setRadius(0.9);
-    test(mod);
+    this.test(mod);
   }
 
   @Test
@@ -379,10 +379,10 @@ public class MapTest {
     mod.setNumTiers(5);
     mod.setSmooth(false);
     mod.setSource(func2);
-    test(mod);
+    this.test(mod);
     mod.setSource(func1);
     mod.setSmooth(true);
-    test(mod);
+    this.test(mod);
   }
 
   @Test
@@ -391,7 +391,7 @@ public class MapTest {
     mod.setAxisXSource(2.6);
     mod.setAxisYSource(84.23);
     mod.setSource(func3);
-    test(mod);
+    this.test(mod);
   }
 
   @Test
@@ -400,12 +400,12 @@ public class MapTest {
     mod.setOffset(0.23);
     mod.setPeriod(4.89);
     mod.setSource(func1);
-    test(mod);
+    this.test(mod);
   }
 
   @Test
   public void testSeedName() {
-    testWithSeedName(func2);
+    this.testWithSeedName(func2);
   }
 
   private void test(Module module) {
@@ -422,7 +422,7 @@ public class MapTest {
     }
   }
 
-  private void testWithSeedName(SeedableModule module) {
+  private void testWithSeedName(SeededModule module) {
     module.setSeedName("externalSeed");
 
     ModuleMap map = module.getModuleMap();

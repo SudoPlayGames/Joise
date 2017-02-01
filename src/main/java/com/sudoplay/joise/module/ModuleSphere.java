@@ -52,183 +52,212 @@ import com.sudoplay.joise.ModuleInstanceMap;
 import com.sudoplay.joise.ModuleMap;
 import com.sudoplay.joise.ModulePropertyMap;
 
-public class ModuleSphere extends Module {
+public class ModuleSphere extends
+    Module {
 
-  protected ScalarParameter cx = new ScalarParameter(0);
-  protected ScalarParameter cy = new ScalarParameter(0);
-  protected ScalarParameter cz = new ScalarParameter(0);
-  protected ScalarParameter cw = new ScalarParameter(0);
-  protected ScalarParameter cu = new ScalarParameter(0);
-  protected ScalarParameter cv = new ScalarParameter(0);
-  protected ScalarParameter radius = new ScalarParameter(1);
+  private ScalarParameter cx = new ScalarParameter(0);
+  private ScalarParameter cy = new ScalarParameter(0);
+  private ScalarParameter cz = new ScalarParameter(0);
+  private ScalarParameter cw = new ScalarParameter(0);
+  private ScalarParameter cu = new ScalarParameter(0);
+  private ScalarParameter cv = new ScalarParameter(0);
+  private ScalarParameter radius = new ScalarParameter(1);
 
   public void setCenterX(double source) {
-    cx.set(source);
+    this.cx.set(source);
   }
 
   public void setCenterY(double source) {
-    cy.set(source);
+    this.cy.set(source);
   }
 
+  @SuppressWarnings("unused")
   public void setCenterZ(double source) {
-    cz.set(source);
+    this.cz.set(source);
   }
 
+  @SuppressWarnings("unused")
   public void setCenterW(double source) {
-    cw.set(source);
+    this.cw.set(source);
   }
 
+  @SuppressWarnings("unused")
   public void setCenterU(double source) {
-    cu.set(source);
+    this.cu.set(source);
   }
 
+  @SuppressWarnings("unused")
   public void setCenterV(double source) {
-    cv.set(source);
+    this.cv.set(source);
   }
 
   public void setRadius(double source) {
-    radius.set(source);
+    this.radius.set(source);
   }
 
+  @SuppressWarnings("unused")
   public void setCenterX(Module source) {
-    cx.set(source);
+    this.cx.set(source);
   }
 
+  @SuppressWarnings("unused")
   public void setCenterY(Module source) {
-    cy.set(source);
+    this.cy.set(source);
   }
 
   public void setCenterZ(Module source) {
-    cz.set(source);
+    this.cz.set(source);
   }
 
+  @SuppressWarnings("unused")
   public void setCenterW(Module source) {
-    cw.set(source);
+    this.cw.set(source);
   }
 
+  @SuppressWarnings("unused")
   public void setCenterU(Module source) {
-    cu.set(source);
+    this.cu.set(source);
   }
 
+  @SuppressWarnings("unused")
   public void setCenterV(Module source) {
-    cv.set(source);
+    this.cv.set(source);
   }
 
+  @SuppressWarnings("unused")
   public void setRadius(Module source) {
-    radius.set(source);
+    this.radius.set(source);
   }
 
+  @SuppressWarnings({"unused", "WeakerAccess"})
   public void setCenterX(ScalarParameter scalarParameter) {
-    cx.set(scalarParameter);
+    this.cx.set(scalarParameter);
   }
 
+  @SuppressWarnings({"unused", "WeakerAccess"})
   public void setCenterY(ScalarParameter scalarParameter) {
-    cy.set(scalarParameter);
+    this.cy.set(scalarParameter);
   }
 
+  @SuppressWarnings({"unused", "WeakerAccess"})
   public void setCenterZ(ScalarParameter scalarParameter) {
-    cz.set(scalarParameter);
+    this.cz.set(scalarParameter);
   }
 
+  @SuppressWarnings({"unused", "WeakerAccess"})
   public void setCenterW(ScalarParameter scalarParameter) {
-    cw.set(scalarParameter);
+    this.cw.set(scalarParameter);
   }
 
+  @SuppressWarnings({"unused", "WeakerAccess"})
   public void setCenterU(ScalarParameter scalarParameter) {
-    cu.set(scalarParameter);
+    this.cu.set(scalarParameter);
   }
 
+  @SuppressWarnings({"unused", "WeakerAccess"})
   public void setCenterV(ScalarParameter scalarParameter) {
-    cv.set(scalarParameter);
+    this.cv.set(scalarParameter);
   }
 
+  @SuppressWarnings({"unused", "WeakerAccess"})
   public void setRadius(ScalarParameter scalarParameter) {
-    radius.set(scalarParameter);
+    this.radius.set(scalarParameter);
   }
 
   @Override
   public double get(double x, double y) {
-    double dx = x - cx.get(x, y), dy = y - cy.get(x, y);
+    double dx = x - this.cx.get(x, y), dy = y - this.cy.get(x, y);
     double len = Math.sqrt(dx * dx + dy * dy);
-    double r = radius.get(x, y);
+    double r = this.radius.get(x, y);
     double i = (r - len) / r;
-    if (i < 0) i = 0;
-    if (i > 1) i = 1;
 
+    if (i < 0) {
+      i = 0;
+    }
+
+    if (i > 1) {
+      i = 1;
+    }
     return i;
   }
 
   @Override
   public double get(double x, double y, double z) {
-    double dx = x - cx.get(x, y, z), dy = y - cy.get(x, y, z), dz = z
-        - cz.get(x, y, z);
+    double dx = x - this.cx.get(x, y, z), dy = y - this.cy.get(x, y, z), dz = z - this.cz.get(x, y, z);
     double len = Math.sqrt(dx * dx + dy * dy + dz * dz);
-    double r = radius.get(x, y, z);
+    double r = this.radius.get(x, y, z);
     double i = (r - len) / r;
-    if (i < 0) i = 0;
-    if (i > 1) i = 1;
 
+    if (i < 0) {
+      i = 0;
+    }
+
+    if (i > 1) {
+      i = 1;
+    }
     return i;
   }
 
   @Override
   public double get(double x, double y, double z, double w) {
-    double dx = x - cx.get(x, y, z, w), dy = y - cy.get(x, y, z, w), dz = z
-        - cz.get(x, y, z, w), dw = w - cw.get(x, y, z, w);
+    double dx = x - this.cx.get(x, y, z, w), dy = y - this.cy.get(x, y, z, w), dz = z
+        - this.cz.get(x, y, z, w), dw = w - this.cw.get(x, y, z, w);
     double len = Math.sqrt(dx * dx + dy * dy + dz * dz + dw * dw);
-    double r = radius.get(x, y, z, w);
+    double r = this.radius.get(x, y, z, w);
     double i = (r - len) / r;
-    if (i < 0) i = 0;
-    if (i > 1) i = 1;
 
+    if (i < 0) {
+      i = 0;
+    }
+
+    if (i > 1) {
+      i = 1;
+    }
     return i;
   }
 
   @Override
   public double get(double x, double y, double z, double w, double u, double v) {
-    double dx = x - cx.get(x, y, z, w, u, v), dy = y - cy.get(x, y, z, w, u, v), dz = z
-        - cz.get(x, y, z, w, u, v), dw = w - cw.get(x, y, z, w, u, v), du = u
-        - cu.get(x, y, z, w, u, v), dv = v - cv.get(x, y, z, w, u, v);
-    double len = Math.sqrt(dx * dx + dy * dy + dz * dz + dw * dw + du * du + dv
-        * dv);
-    double r = radius.get(x, y, z, w, u, v);
+    double dx = x - this.cx.get(x, y, z, w, u, v), dy = y - this.cy.get(x, y, z, w, u, v), dz = z
+        - this.cz.get(x, y, z, w, u, v), dw = w - this.cw.get(x, y, z, w, u, v), du = u
+        - this.cu.get(x, y, z, w, u, v), dv = v - this.cv.get(x, y, z, w, u, v);
+    double len = Math.sqrt(dx * dx + dy * dy + dz * dz + dw * dw + du * du + dv * dv);
+    double r = this.radius.get(x, y, z, w, u, v);
     double i = (r - len) / r;
-    if (i < 0) i = 0;
-    if (i > 1) i = 1;
 
+    if (i < 0) {
+      i = 0;
+    }
+
+    if (i > 1) {
+      i = 1;
+    }
     return i;
   }
 
   @Override
-  protected void _writeToMap(ModuleMap map) {
-
-    ModulePropertyMap props = new ModulePropertyMap(this);
-
-    writeScalar("cx", cx, props, map);
-    writeScalar("cy", cy, props, map);
-    writeScalar("cz", cz, props, map);
-    writeScalar("cw", cw, props, map);
-    writeScalar("cu", cu, props, map);
-    writeScalar("cv", cv, props, map);
-    writeScalar("radius", radius, props, map);
-
-    map.put(getId(), props);
-
+  public void writeToMap(ModuleMap moduleMap) {
+    ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
+    modulePropertyMap
+        .writeScalar("cx", this.cx, moduleMap)
+        .writeScalar("cy", this.cy, moduleMap)
+        .writeScalar("cz", this.cz, moduleMap)
+        .writeScalar("cw", this.cw, moduleMap)
+        .writeScalar("cu", this.cu, moduleMap)
+        .writeScalar("cv", this.cv, moduleMap)
+        .writeScalar("radius", this.radius, moduleMap);
+    moduleMap.put(this.getId(), modulePropertyMap);
   }
 
   @Override
-  public Module buildFromPropertyMap(ModulePropertyMap props,
-      ModuleInstanceMap map) {
-
-    this.setCenterX(readScalar("cx", props, map));
-    this.setCenterY(readScalar("cy", props, map));
-    this.setCenterZ(readScalar("cz", props, map));
-    this.setCenterW(readScalar("cw", props, map));
-    this.setCenterU(readScalar("cu", props, map));
-    this.setCenterV(readScalar("cv", props, map));
-    this.setRadius(readScalar("radius", props, map));
-
+  public Module buildFromPropertyMap(ModulePropertyMap modulePropertyMap, ModuleInstanceMap moduleInstanceMap) {
+    this.setCenterX(modulePropertyMap.readScalar("cx", moduleInstanceMap));
+    this.setCenterY(modulePropertyMap.readScalar("cy", moduleInstanceMap));
+    this.setCenterZ(modulePropertyMap.readScalar("cz", moduleInstanceMap));
+    this.setCenterW(modulePropertyMap.readScalar("cw", moduleInstanceMap));
+    this.setCenterU(modulePropertyMap.readScalar("cu", moduleInstanceMap));
+    this.setCenterV(modulePropertyMap.readScalar("cv", moduleInstanceMap));
+    this.setRadius(modulePropertyMap.readScalar("radius", moduleInstanceMap));
     return this;
   }
-
 }

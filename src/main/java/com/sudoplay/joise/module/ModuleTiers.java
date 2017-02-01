@@ -54,120 +54,139 @@ import com.sudoplay.joise.ModulePropertyMap;
 import com.sudoplay.joise.noise.Util;
 import com.sudoplay.util.Checked;
 
-public class ModuleTiers extends SourcedModule {
+public class ModuleTiers extends
+    SourcedModule {
 
-  public static final int DEFAULT_NUM_TIERS = 0;
-  public static final boolean DEFAULT_SMOOTH = true;
+  private static final int DEFAULT_NUM_TIERS = 0;
+  private static final boolean DEFAULT_SMOOTH = true;
 
-  protected int numTiers = DEFAULT_NUM_TIERS;
-  protected boolean smooth = DEFAULT_SMOOTH;
+  private int numTiers = DEFAULT_NUM_TIERS;
+  private boolean smooth = DEFAULT_SMOOTH;
 
+  @SuppressWarnings("unused")
   public void setNumTiers(long n) {
-    numTiers = Checked.safeLongToInt(n);
+    this.numTiers = Checked.safeLongToInt(n);
   }
 
   public void setNumTiers(int n) {
-    numTiers = n;
+    this.numTiers = n;
   }
 
   public void setSmooth(boolean b) {
-    smooth = b;
+    this.smooth = b;
   }
 
   @Override
   public double get(double x, double y) {
-    int numsteps = numTiers;
-    if (smooth) --numsteps;
-    double val = source.get(x, y);
+    int numsteps = this.numTiers;
+
+    if (this.smooth) {
+      --numsteps;
+    }
+    double val = this.source.get(x, y);
     double Tb = Math.floor(val * (double) (numsteps));
     double Tt = Tb + 1.0;
     double t = val * (double) (numsteps) - Tb;
     Tb /= (double) (numsteps);
     Tt /= (double) (numsteps);
     double u;
-    if (smooth)
+
+    if (this.smooth) {
       u = Util.quinticBlend(t);
-    else
+
+    } else {
       u = 0.0;
+    }
     return Tb + u * (Tt - Tb);
   }
 
   @Override
   public double get(double x, double y, double z) {
-    int numsteps = numTiers;
-    if (smooth) --numsteps;
-    double val = source.get(x, y, z);
+    int numsteps = this.numTiers;
+
+    if (this.smooth) {
+      --numsteps;
+    }
+    double val = this.source.get(x, y, z);
     double Tb = Math.floor(val * (double) (numsteps));
     double Tt = Tb + 1.0;
     double t = val * (double) (numsteps) - Tb;
     Tb /= (double) (numsteps);
     Tt /= (double) (numsteps);
     double u;
-    if (smooth)
+
+    if (this.smooth) {
       u = Util.quinticBlend(t);
-    else
+
+    } else {
       u = 0.0;
+    }
     return Tb + u * (Tt - Tb);
   }
 
   @Override
   public double get(double x, double y, double z, double w) {
-    int numsteps = numTiers;
-    if (smooth) --numsteps;
-    double val = source.get(x, y, z, w);
+    int numsteps = this.numTiers;
+
+    if (this.smooth) {
+      --numsteps;
+    }
+    double val = this.source.get(x, y, z, w);
     double Tb = Math.floor(val * (double) (numsteps));
     double Tt = Tb + 1.0;
     double t = val * (double) (numsteps) - Tb;
     Tb /= (double) (numsteps);
     Tt /= (double) (numsteps);
     double u;
-    if (smooth)
+
+    if (this.smooth) {
       u = Util.quinticBlend(t);
-    else
+
+    } else {
       u = 0.0;
+    }
     return Tb + u * (Tt - Tb);
   }
 
   @Override
   public double get(double x, double y, double z, double w, double u, double v) {
-    int numsteps = numTiers;
-    if (smooth) --numsteps;
-    double val = source.get(x, y, z, w, u, v);
+    int numsteps = this.numTiers;
+
+    if (this.smooth) {
+      --numsteps;
+    }
+    double val = this.source.get(x, y, z, w, u, v);
     double Tb = Math.floor(val * (double) (numsteps));
     double Tt = Tb + 1.0;
     double t = val * (double) (numsteps) - Tb;
     Tb /= (double) (numsteps);
     Tt /= (double) (numsteps);
     double s;
-    if (smooth)
+
+    if (this.smooth) {
       s = Util.quinticBlend(t);
-    else
+
+    } else {
       s = 0.0;
+    }
     return Tb + s * (Tt - Tb);
   }
 
   @Override
-  protected void _writeToMap(ModuleMap map) {
-
-    ModulePropertyMap props = new ModulePropertyMap(this);
-
-    writeLong("tiers", numTiers, props);
-    writeBoolean("smooth", smooth, props);
-    writeSource(props, map);
-
-    map.put(getId(), props);
-
+  public void writeToMap(ModuleMap moduleMap) {
+    ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
+    modulePropertyMap
+        .writeLong("tiers", this.numTiers)
+        .writeBoolean("smooth", this.smooth)
+        .writeScalar("source", this.source, moduleMap);
+    moduleMap.put(this.getId(), modulePropertyMap);
   }
 
   @Override
-  public Module buildFromPropertyMap(ModulePropertyMap props,
-      ModuleInstanceMap map) {
-
-    this.setNumTiers(readLong("tiers", props));
-    this.setSmooth(readBoolean("smooth", props));
-    readSource(props, map);
-
+  public Module buildFromPropertyMap(ModulePropertyMap modulePropertyMap, ModuleInstanceMap moduleInstanceMap) {
+    this.setNumTiers(modulePropertyMap.readLong("tiers"));
+    this.setSmooth(modulePropertyMap.readBoolean("smooth"));
+    this.setSource(modulePropertyMap.readScalar("source", moduleInstanceMap));
     return this;
   }
-
 }

@@ -52,64 +52,58 @@ import com.sudoplay.joise.ModuleInstanceMap;
 import com.sudoplay.joise.ModuleMap;
 import com.sudoplay.joise.ModulePropertyMap;
 
-public class ModulePow extends SourcedModule {
+public class ModulePow extends
+    SourcedModule {
 
-  public static final double DEFAULT_POWER = 1.0;
+  private static final double DEFAULT_POWER = 1.0;
 
-  protected ScalarParameter power = new ScalarParameter(DEFAULT_POWER);
+  private ScalarParameter power = new ScalarParameter(DEFAULT_POWER);
 
   public void setPower(double v) {
-    power.set(v);
+    this.power.set(v);
   }
 
   public void setPower(Module source) {
-    power.set(source);
+    this.power.set(source);
   }
 
   public void setPower(ScalarParameter scalarParameter) {
-    power.set(scalarParameter);
+    this.power.set(scalarParameter);
   }
 
   @Override
   public double get(double x, double y) {
-    return Math.pow(source.get(x, y), power.get(x, y));
+    return Math.pow(this.source.get(x, y), this.power.get(x, y));
   }
 
   @Override
   public double get(double x, double y, double z) {
-    return Math.pow(source.get(x, y, z), power.get(x, y, z));
+    return Math.pow(this.source.get(x, y, z), this.power.get(x, y, z));
   }
 
   @Override
   public double get(double x, double y, double z, double w) {
-    return Math.pow(source.get(x, y, z, w), power.get(x, y, z, w));
+    return Math.pow(this.source.get(x, y, z, w), this.power.get(x, y, z, w));
   }
 
   @Override
   public double get(double x, double y, double z, double w, double u, double v) {
-    return Math.pow(source.get(x, y, z, w, u, v), power.get(x, y, z, w, u, v));
+    return Math.pow(this.source.get(x, y, z, w, u, v), this.power.get(x, y, z, w, u, v));
   }
 
   @Override
-  protected void _writeToMap(ModuleMap map) {
-
-    ModulePropertyMap props = new ModulePropertyMap(this);
-
-    writeScalar("power", power, props, map);
-    writeSource(props, map);
-
-    map.put(getId(), props);
-
+  public void writeToMap(ModuleMap moduleMap) {
+    ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
+    modulePropertyMap
+        .writeScalar("power", this.power, moduleMap)
+        .writeScalar("source", this.source, moduleMap);
+    moduleMap.put(this.getId(), modulePropertyMap);
   }
 
   @Override
-  public Module buildFromPropertyMap(ModulePropertyMap props,
-      ModuleInstanceMap map) {
-
-    this.setPower(readScalar("power", props, map));
-    readSource(props, map);
-
+  public Module buildFromPropertyMap(ModulePropertyMap modulePropertyMap, ModuleInstanceMap moduleInstanceMap) {
+    this.setPower(modulePropertyMap.readScalar("power", moduleInstanceMap));
+    this.setSource(modulePropertyMap.readScalar("source", moduleInstanceMap));
     return this;
   }
-
 }

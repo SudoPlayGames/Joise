@@ -55,11 +55,11 @@ import com.sudoplay.joise.module.ModuleCellGen.CellularCache;
 
 public class ModuleCellular extends Module {
 
-  protected double[] coefficients = new double[4];
-  protected ModuleCellGen generator;
+  private double[] coefficients = new double[4];
+  private ModuleCellGen generator;
 
   public ModuleCellular() {
-    setCoefficients(1, 0, 0, 0);
+    this.setCoefficients(1, 0, 0, 0);
   }
 
   public void setCellularSource(ModuleCellGen generator) {
@@ -67,94 +67,99 @@ public class ModuleCellular extends Module {
   }
 
   public void setCoefficients(double a, double b, double c, double d) {
-    coefficients[0] = a;
-    coefficients[1] = b;
-    coefficients[2] = c;
-    coefficients[3] = d;
+    this.coefficients[0] = a;
+    this.coefficients[1] = b;
+    this.coefficients[2] = c;
+    this.coefficients[3] = d;
   }
 
+  @SuppressWarnings("unused")
   public void setCoefficient(int index, double val) {
+
     if (index > 3 || index < 0) {
       throw new IllegalArgumentException();
     }
-    coefficients[index] = val;
+    this.coefficients[index] = val;
   }
 
   @Override
   public double get(double x, double y) {
-    if (generator == null) {
+
+    if (this.generator == null) {
       return 0.0;
     }
-    CellularCache c = generator.getCache(x, y);
-    return c.f[0] * coefficients[0] + c.f[1] * coefficients[1] + c.f[2]
-        * coefficients[2] + c.f[3] * coefficients[3];
+    CellularCache c = this.generator.getCache(x, y);
+    return c.f[0] * this.coefficients[0] + c.f[1] * this.coefficients[1] + c.f[2]
+        * this.coefficients[2] + c.f[3] * this.coefficients[3];
   }
 
   @Override
   public double get(double x, double y, double z) {
-    if (generator == null) {
+
+    if (this.generator == null) {
       return 0.0;
     }
-    CellularCache c = generator.getCache(x, y, z);
-    return c.f[0] * coefficients[0] + c.f[1] * coefficients[1] + c.f[2]
-        * coefficients[2] + c.f[3] * coefficients[3];
+    CellularCache c = this.generator.getCache(x, y, z);
+    return c.f[0] * this.coefficients[0] + c.f[1] * this.coefficients[1] + c.f[2]
+        * this.coefficients[2] + c.f[3] * this.coefficients[3];
   }
 
   @Override
   public double get(double x, double y, double z, double w) {
-    if (generator == null) {
+
+    if (this.generator == null) {
       return 0.0;
     }
-    CellularCache c = generator.getCache(x, y, z, w);
-    return c.f[0] * coefficients[0] + c.f[1] * coefficients[1] + c.f[2]
-        * coefficients[2] + c.f[3] * coefficients[3];
+    CellularCache c = this.generator.getCache(x, y, z, w);
+    return c.f[0] * this.coefficients[0] + c.f[1] * this.coefficients[1] + c.f[2]
+        * this.coefficients[2] + c.f[3] * this.coefficients[3];
   }
 
   @Override
   public double get(double x, double y, double z, double w, double u, double v) {
-    if (generator == null) {
+
+    if (this.generator == null) {
       return 0.0;
     }
-    CellularCache c = generator.getCache(x, y, z, w, u, v);
-    return c.f[0] * coefficients[0] + c.f[1] * coefficients[1] + c.f[2]
-        * coefficients[2] + c.f[3] * coefficients[3];
+    CellularCache c = this.generator.getCache(x, y, z, w, u, v);
+    return c.f[0] * this.coefficients[0] + c.f[1] * this.coefficients[1] + c.f[2]
+        * this.coefficients[2] + c.f[3] * this.coefficients[3];
   }
 
   @Override
-  protected void _writeToMap(ModuleMap map) {
+  public void writeToMap(ModuleMap moduleMap) {
+    ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
 
-    ModulePropertyMap props = new ModulePropertyMap(this);
+    if (this.generator != null) {
+      modulePropertyMap.put("generator", this.generator.getId());
+      this.generator.writeToMap(moduleMap);
 
-    if (generator != null) {
-      props.put("generator", generator.getId());
-      generator._writeToMap(map);
     } else {
-      props.put("generator", 0);
+      modulePropertyMap.put("generator", 0);
     }
 
     StringBuilder sb = new StringBuilder();
-    for (double d : coefficients) {
+
+    for (double d : this.coefficients) {
       sb.append(String.valueOf(d)).append(" ");
     }
-    props.put("coefficients", sb.toString().trim());
+    modulePropertyMap.put("coefficients", sb.toString().trim());
 
-    map.put(getId(), props);
+    moduleMap.put(this.getId(), modulePropertyMap);
 
   }
 
   @Override
-  public Module buildFromPropertyMap(ModulePropertyMap props,
-      ModuleInstanceMap map) {
-
-    String coeff = props.getAsString("coefficients");
+  public Module buildFromPropertyMap(ModulePropertyMap modulePropertyMap, ModuleInstanceMap moduleInstanceMap) {
+    String coeff = modulePropertyMap.getAsString("coefficients");
     String[] arr = coeff.split(" ");
+
     for (int i = 0; i < 4; i++) {
-      coefficients[i] = Double.parseDouble(arr[i]);
+      this.coefficients[i] = Double.parseDouble(arr[i]);
     }
 
-    String gen = props.getAsString("generator");
-    setCellularSource((ModuleCellGen) map.get(gen));
-
+    String gen = modulePropertyMap.getAsString("generator");
+    this.setCellularSource((ModuleCellGen) moduleInstanceMap.get(gen));
     return this;
   }
 

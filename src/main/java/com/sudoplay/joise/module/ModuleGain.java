@@ -53,18 +53,20 @@ import com.sudoplay.joise.ModuleMap;
 import com.sudoplay.joise.ModulePropertyMap;
 import com.sudoplay.joise.noise.Util;
 
-public class ModuleGain extends SourcedModule {
+public class ModuleGain extends
+    SourcedModule {
 
-  public static final double DEFAULT_GAIN = 0.5;
+  private static final double DEFAULT_GAIN = 0.5;
 
-  protected ScalarParameter gain = new ScalarParameter(DEFAULT_GAIN);
+  private ScalarParameter gain = new ScalarParameter(DEFAULT_GAIN);
 
   public ModuleGain() {
-    setGain(DEFAULT_GAIN);
+    this.setGain(DEFAULT_GAIN);
   }
 
+  @SuppressWarnings("unused")
   public ModuleGain(double gain) {
-    setGain(gain);
+    this.setGain(gain);
   }
 
   public void setGain(double gain) {
@@ -75,49 +77,44 @@ public class ModuleGain extends SourcedModule {
     this.gain.set(gain);
   }
 
+  @SuppressWarnings({"unused", "WeakerAccess"})
   public void setGain(ScalarParameter scalarParameter) {
     this.gain.set(scalarParameter);
   }
 
   @Override
   public double get(double x, double y) {
-    return Util.gain(gain.get(x, y), source.get(x, y));
+    return Util.gain(this.gain.get(x, y), this.source.get(x, y));
   }
 
   @Override
   public double get(double x, double y, double z) {
-    return Util.gain(gain.get(x, y, z), source.get(x, y, z));
+    return Util.gain(this.gain.get(x, y, z), this.source.get(x, y, z));
   }
 
   @Override
   public double get(double x, double y, double z, double w) {
-    return Util.gain(gain.get(x, y, z, w), source.get(x, y, z, w));
+    return Util.gain(this.gain.get(x, y, z, w), this.source.get(x, y, z, w));
   }
 
   @Override
   public double get(double x, double y, double z, double w, double u, double v) {
-    return Util.gain(gain.get(x, y, z, w, u, v), source.get(x, y, z, w, u, v));
+    return Util.gain(this.gain.get(x, y, z, w, u, v), this.source.get(x, y, z, w, u, v));
   }
 
   @Override
-  protected void _writeToMap(ModuleMap map) {
-
-    ModulePropertyMap props = new ModulePropertyMap(this);
-
-    writeScalar("gain", gain, props, map);
-    writeSource(props, map);
-
-    map.put(getId(), props);
-
+  public void writeToMap(ModuleMap moduleMap) {
+    ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
+    modulePropertyMap
+        .writeScalar("gain", this.gain, moduleMap)
+        .writeScalar("source", this.source, moduleMap);
+    moduleMap.put(this.getId(), modulePropertyMap);
   }
 
   @Override
-  public Module buildFromPropertyMap(ModulePropertyMap props,
-      ModuleInstanceMap map) {
-
-    this.setGain(readScalar("gain", props, map));
-    readSource(props, map);
-
+  public Module buildFromPropertyMap(ModulePropertyMap modulePropertyMap, ModuleInstanceMap moduleInstanceMap) {
+    this.setGain(modulePropertyMap.readScalar("gain", moduleInstanceMap));
+    this.setSource(modulePropertyMap.readScalar("source", moduleInstanceMap));
     return this;
   }
 

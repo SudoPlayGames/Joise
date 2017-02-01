@@ -59,7 +59,8 @@ import com.sudoplay.joise.noise.function.spi.Function3D;
 import com.sudoplay.joise.noise.function.spi.Function4D;
 import com.sudoplay.joise.noise.function.spi.Function6D;
 
-public class ModuleBasisFunction extends SeedableModule {
+public class ModuleBasisFunction extends
+    SeededModule {
 
   public enum BasisType {
     VALUE, GRADIENT, GRADVAL, SIMPLEX, WHITE
@@ -69,20 +70,19 @@ public class ModuleBasisFunction extends SeedableModule {
     NONE, LINEAR, CUBIC, QUINTIC
   }
 
-  protected double[] scale = new double[4];
-  protected double[] offset = new double[4];
-  protected double[][] rotMatrix = new double[3][3];
-  protected double cos2d, sin2d;
+  private double[] scale = new double[4];
+  private double[] offset = new double[4];
+  private double[][] rotMatrix = new double[3][3];
+  private double cos2d, sin2d;
 
-  protected Function2D func2D;
-  protected Function3D func3D;
-  protected Function4D func4D;
-  protected Function6D func6D;
+  private Function2D func2D;
+  private Function3D func3D;
+  private Function4D func4D;
+  private Function6D func6D;
 
-  protected Interpolator interpolator;
-
-  protected BasisType basisType;
-  protected InterpolationType interpolationType;
+  private Interpolator interpolator;
+  private BasisType basisType;
+  private InterpolationType interpolationType;
 
   public ModuleBasisFunction() {
     this(BasisType.GRADIENT, InterpolationType.QUINTIC, 10000);
@@ -96,101 +96,111 @@ public class ModuleBasisFunction extends SeedableModule {
     this(type, interpolationType, 10000);
   }
 
-  public ModuleBasisFunction(BasisType type,
-      InterpolationType interpolationType, long seed) {
-    setType(type);
-    setInterpolation(interpolationType);
-    setSeed(seed);
+  public ModuleBasisFunction(BasisType type, InterpolationType interpolationType, long seed) {
+    this.setType(type);
+    this.setInterpolation(interpolationType);
+    this.setSeed(seed);
   }
 
   public void setType(BasisType type) {
-    basisType = type;
+    this.basisType = type;
+
     switch (type) {
-    case GRADVAL:
-      func2D = new Function2DGradVal();
-      func3D = new Function3DGradVal();
-      func4D = new Function4DGradVal();
-      func6D = new Function6DGradVal();
-      break;
-    case SIMPLEX:
-      func2D = new Function2DSimplex();
-      func3D = new Function3DSimplex();
-      func4D = new Function4DSimplex();
-      func6D = new Function6DSimplex();
-      break;
-    case VALUE:
-      func2D = new Function2DValue();
-      func3D = new Function3DValue();
-      func4D = new Function4DValue();
-      func6D = new Function6DValue();
-      break;
-    case WHITE:
-      func2D = new Function2DWhite();
-      func3D = new Function3DWhite();
-      func4D = new Function4DWhite();
-      func6D = new Function6DWhite();
-      break;
-    case GRADIENT:
-      // fallthrough intentional
-    default:
-      func2D = new Function2DGradient();
-      func3D = new Function3DGradient();
-      func4D = new Function4DGradient();
-      func6D = new Function6DGradient();
-      break;
+      case GRADVAL:
+        this.func2D = new Function2DGradVal();
+        this.func3D = new Function3DGradVal();
+        this.func4D = new Function4DGradVal();
+        this.func6D = new Function6DGradVal();
+        break;
+
+      case SIMPLEX:
+        this.func2D = new Function2DSimplex();
+        this.func3D = new Function3DSimplex();
+        this.func4D = new Function4DSimplex();
+        this.func6D = new Function6DSimplex();
+        break;
+
+      case VALUE:
+        this.func2D = new Function2DValue();
+        this.func3D = new Function3DValue();
+        this.func4D = new Function4DValue();
+        this.func6D = new Function6DValue();
+        break;
+
+      case WHITE:
+        this.func2D = new Function2DWhite();
+        this.func3D = new Function3DWhite();
+        this.func4D = new Function4DWhite();
+        this.func6D = new Function6DWhite();
+        break;
+
+      case GRADIENT:
+        // fallthrough intentional
+
+      default:
+        this.func2D = new Function2DGradient();
+        this.func3D = new Function3DGradient();
+        this.func4D = new Function4DGradient();
+        this.func6D = new Function6DGradient();
+        break;
     }
-    setMagicNumbers(type);
+    this.setMagicNumbers(type);
   }
 
   public BasisType getBasisType() {
-    return basisType;
+    return this.basisType;
   }
 
   public void setInterpolation(InterpolationType type) {
-    interpolationType = type;
+    this.interpolationType = type;
+
     switch (type) {
-    case CUBIC:
-      this.interpolator = Interpolator.HERMITE;
-      break;
-    case LINEAR:
-      this.interpolator = Interpolator.LINEAR;
-      break;
-    case NONE:
-      this.interpolator = Interpolator.NONE;
-      break;
-    default:
-      this.interpolator = Interpolator.QUINTIC;
-      break;
+      case CUBIC:
+        this.interpolator = Interpolator.HERMITE;
+        break;
+
+      case LINEAR:
+        this.interpolator = Interpolator.LINEAR;
+        break;
+
+      case NONE:
+        this.interpolator = Interpolator.NONE;
+        break;
+
+      default:
+        this.interpolator = Interpolator.QUINTIC;
+        break;
     }
   }
 
   public InterpolationType getInterpolationType() {
-    return interpolationType;
+    return this.interpolationType;
   }
 
   /**
    * Set the rotation axis and angle to use for 3D, 4D and 6D noise.
    *
-   * @param x
-   * @param y
-   * @param z
-   * @param angle
+   * @param x     x value of axis vector
+   * @param y     y value of axis vector
+   * @param z     z value of axis vector
+   * @param angle angle in radians
    */
+  @SuppressWarnings("WeakerAccess")
   public void setRotationAngle(double x, double y, double z, double angle) {
     double sin = Math.sin(angle);
     double cos = Math.cos(angle);
 
-    rotMatrix[0][0] = 1 + (1 - cos) * (x * x - 1);
-    rotMatrix[1][0] = -z * sin + (1 - cos) * x * y;
-    rotMatrix[2][0] = y * sin + (1 - cos) * x * z;
+    this.rotMatrix[0][0] = 1 + (1 - cos) * (x * x - 1);
+    this.rotMatrix[1][0] = -z * sin + (1 - cos) * x * y;
+    this.rotMatrix[2][0] = y * sin + (1 - cos) * x * z;
 
-    rotMatrix[0][1] = z * sin + (1 - cos) * x * y;
-    rotMatrix[1][1] = 1 + (1 - cos) * (y * y - 1);
-    rotMatrix[2][1] = -x * sin + (1 - cos) * y * z;
+    this.rotMatrix[0][1] = z * sin + (1 - cos) * x * y;
+    this.rotMatrix[1][1] = 1 + (1 - cos) * (y * y - 1);
+    this.rotMatrix[2][1] = -x * sin + (1 - cos) * y * z;
 
-    rotMatrix[0][2] = -y * sin + (1 - cos) * x * z;
-    rotMatrix[1][2] = x * sin + (1 - cos) * y * z;
-    rotMatrix[2][2] = 1 + (1 - cos) * (z * z - 1);
+    this.rotMatrix[0][2] = -y * sin + (1 - cos) * x * z;
+    this.rotMatrix[1][2] = x * sin + (1 - cos) * y * z;
+    this.rotMatrix[2][2] = 1 + (1 - cos) * (z * z - 1);
   }
 
   @Override
@@ -210,127 +220,123 @@ public class ModuleBasisFunction extends SeedableModule {
     ax /= len;
     ay /= len;
     az /= len;
-    setRotationAngle(ax, ay, az, lcg.get01() * 3.141592 * 2.0);
+    this.setRotationAngle(ax, ay, az, lcg.get01() * 3.141592 * 2.0);
     double angle = lcg.get01() * 3.141592 * 2.0;
-    cos2d = Math.cos(angle);
-    sin2d = Math.sin(angle);
+    this.cos2d = Math.cos(angle);
+    this.sin2d = Math.sin(angle);
   }
 
   @Override
   public double get(double x, double y) {
     double nx, ny;
-    nx = x * cos2d - y * sin2d;
-    ny = y * cos2d + x * sin2d;
-    return func2D.get(nx, ny, seed, interpolator);
+    nx = x * this.cos2d - y * this.sin2d;
+    ny = y * this.cos2d + x * this.sin2d;
+    return this.func2D.get(nx, ny, this.seed, this.interpolator);
   }
 
   @Override
   public double get(double x, double y, double z) {
     double nx, ny, nz;
-    nx = (rotMatrix[0][0] * x) + (rotMatrix[1][0] * y) + (rotMatrix[2][0] * z);
-    ny = (rotMatrix[0][1] * x) + (rotMatrix[1][1] * y) + (rotMatrix[2][1] * z);
-    nz = (rotMatrix[0][2] * x) + (rotMatrix[1][2] * y) + (rotMatrix[2][2] * z);
-    return func3D.get(nx, ny, nz, seed, interpolator);
+    nx = (this.rotMatrix[0][0] * x) + (this.rotMatrix[1][0] * y) + (this.rotMatrix[2][0] * z);
+    ny = (this.rotMatrix[0][1] * x) + (this.rotMatrix[1][1] * y) + (this.rotMatrix[2][1] * z);
+    nz = (this.rotMatrix[0][2] * x) + (this.rotMatrix[1][2] * y) + (this.rotMatrix[2][2] * z);
+    return this.func3D.get(nx, ny, nz, this.seed, this.interpolator);
   }
 
   @Override
   public double get(double x, double y, double z, double w) {
     double nx, ny, nz;
-    nx = (rotMatrix[0][0] * x) + (rotMatrix[1][0] * y) + (rotMatrix[2][0] * z);
-    ny = (rotMatrix[0][1] * x) + (rotMatrix[1][1] * y) + (rotMatrix[2][1] * z);
-    nz = (rotMatrix[0][2] * x) + (rotMatrix[1][2] * y) + (rotMatrix[2][2] * z);
-    return func4D.get(nx, ny, nz, w, seed, interpolator);
+    nx = (this.rotMatrix[0][0] * x) + (this.rotMatrix[1][0] * y) + (this.rotMatrix[2][0] * z);
+    ny = (this.rotMatrix[0][1] * x) + (this.rotMatrix[1][1] * y) + (this.rotMatrix[2][1] * z);
+    nz = (this.rotMatrix[0][2] * x) + (this.rotMatrix[1][2] * y) + (this.rotMatrix[2][2] * z);
+    return this.func4D.get(nx, ny, nz, w, this.seed, this.interpolator);
   }
 
   @Override
   public double get(double x, double y, double z, double w, double u, double v) {
     double nx, ny, nz;
-    nx = (rotMatrix[0][0] * x) + (rotMatrix[1][0] * y) + (rotMatrix[2][0] * z);
-    ny = (rotMatrix[0][1] * x) + (rotMatrix[1][1] * y) + (rotMatrix[2][1] * z);
-    nz = (rotMatrix[0][2] * x) + (rotMatrix[1][2] * y) + (rotMatrix[2][2] * z);
-    return func6D.get(nx, ny, nz, w, u, v, seed, interpolator);
+    nx = (this.rotMatrix[0][0] * x) + (this.rotMatrix[1][0] * y) + (this.rotMatrix[2][0] * z);
+    ny = (this.rotMatrix[0][1] * x) + (this.rotMatrix[1][1] * y) + (this.rotMatrix[2][1] * z);
+    nz = (this.rotMatrix[0][2] * x) + (this.rotMatrix[1][2] * y) + (this.rotMatrix[2][2] * z);
+    return this.func6D.get(nx, ny, nz, w, u, v, this.seed, this.interpolator);
   }
 
-  protected void setMagicNumbers(BasisType type) {
+  private void setMagicNumbers(BasisType type) {
+
     switch (type) {
-    case VALUE:
-      scale[0] = 1.0;
-      offset[0] = 0.0;
-      scale[1] = 1.0;
-      offset[1] = 0.0;
-      scale[2] = 1.0;
-      offset[2] = 0.0;
-      scale[3] = 1.0;
-      offset[3] = 0.0;
-      break;
+      case VALUE:
+        this.scale[0] = 1.0;
+        this.offset[0] = 0.0;
+        this.scale[1] = 1.0;
+        this.offset[1] = 0.0;
+        this.scale[2] = 1.0;
+        this.offset[2] = 0.0;
+        this.scale[3] = 1.0;
+        this.offset[3] = 0.0;
+        break;
 
-    case GRADIENT:
-      scale[0] = 1.86848;
-      offset[0] = -0.000118;
-      scale[1] = 1.85148;
-      offset[1] = -0.008272;
-      scale[2] = 1.64127;
-      offset[2] = -0.01527;
-      scale[3] = 1.92517;
-      offset[3] = 0.03393;
-      break;
+      case GRADIENT:
+        this.scale[0] = 1.86848;
+        this.offset[0] = -0.000118;
+        this.scale[1] = 1.85148;
+        this.offset[1] = -0.008272;
+        this.scale[2] = 1.64127;
+        this.offset[2] = -0.01527;
+        this.scale[3] = 1.92517;
+        this.offset[3] = 0.03393;
+        break;
 
-    case GRADVAL:
-      scale[0] = 0.6769;
-      offset[0] = -0.00151;
-      scale[1] = 0.6957;
-      offset[1] = -0.133;
-      scale[2] = 0.74622;
-      offset[2] = 0.01916;
-      scale[3] = 0.7961;
-      offset[3] = -0.0352;
-      break;
+      case GRADVAL:
+        this.scale[0] = 0.6769;
+        this.offset[0] = -0.00151;
+        this.scale[1] = 0.6957;
+        this.offset[1] = -0.133;
+        this.scale[2] = 0.74622;
+        this.offset[2] = 0.01916;
+        this.scale[3] = 0.7961;
+        this.offset[3] = -0.0352;
+        break;
 
-    case WHITE:
-      scale[0] = 1.0;
-      offset[0] = 0.0;
-      scale[1] = 1.0;
-      offset[1] = 0.0;
-      scale[2] = 1.0;
-      offset[2] = 0.0;
-      scale[3] = 1.0;
-      offset[3] = 0.0;
-      break;
+      case WHITE:
+        this.scale[0] = 1.0;
+        this.offset[0] = 0.0;
+        this.scale[1] = 1.0;
+        this.offset[1] = 0.0;
+        this.scale[2] = 1.0;
+        this.offset[2] = 0.0;
+        this.scale[3] = 1.0;
+        this.offset[3] = 0.0;
+        break;
 
-    default:
-      scale[0] = 1.0;
-      offset[0] = 0.0;
-      scale[1] = 1.0;
-      offset[1] = 0.0;
-      scale[2] = 1.0;
-      offset[2] = 0.0;
-      scale[3] = 1.0;
-      offset[3] = 0.0;
-      break;
+      default:
+        this.scale[0] = 1.0;
+        this.offset[0] = 0.0;
+        this.scale[1] = 1.0;
+        this.offset[1] = 0.0;
+        this.scale[2] = 1.0;
+        this.offset[2] = 0.0;
+        this.scale[3] = 1.0;
+        this.offset[3] = 0.0;
+        break;
     }
   }
 
   @Override
-  protected void _writeToMap(ModuleMap map) {
+  public void writeToMap(ModuleMap moduleMap) {
+    ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
+    modulePropertyMap
+        .writeEnum("basis", this.getBasisType())
+        .writeEnum("interpolation", this.getInterpolationType());
 
-    ModulePropertyMap props = new ModulePropertyMap(this);
-
-    writeEnum("basis", getBasisType(), props);
-    writeEnum("interpolation", getInterpolationType(), props);
-    writeSeed(props);
-
-    map.put(getId(), props);
-
+    this.writeSeed(modulePropertyMap);
+    moduleMap.put(this.getId(), modulePropertyMap);
   }
 
   @Override
-  public Module buildFromPropertyMap(ModulePropertyMap props,
-      ModuleInstanceMap map) {
-
-    this.setType(readEnum("basis", BasisType.class, props));
-    this.setInterpolation(readEnum("interpolation", InterpolationType.class, props));
-    readSeed(props);
-
+  public Module buildFromPropertyMap(ModulePropertyMap modulePropertyMap, ModuleInstanceMap moduleInstanceMap) {
+    this.setType(modulePropertyMap.readEnum("basis", BasisType.class));
+    this.setInterpolation(modulePropertyMap.readEnum("interpolation", InterpolationType.class));
+    this.readSeed(modulePropertyMap);
     return this;
   }
 

@@ -52,65 +52,62 @@ import com.sudoplay.joise.ModuleInstanceMap;
 import com.sudoplay.joise.ModuleMap;
 import com.sudoplay.joise.ModulePropertyMap;
 
-public class ModuleSawtooth extends SourcedModule {
+public class ModuleSawtooth extends
+    SourcedModule {
 
-  protected ScalarParameter period = new ScalarParameter(0);
+  private ScalarParameter period = new ScalarParameter(0);
 
   public void setPeriod(double p) {
-    period.set(p);
+    this.period.set(p);
   }
 
+  @SuppressWarnings("unused")
   public void setPeriod(Module p) {
-    period.set(p);
+    this.period.set(p);
   }
 
+  @SuppressWarnings("unused")
   public void setPeriod(ScalarParameter scalarParameter) {
-    period.set(scalarParameter);
+    this.period.set(scalarParameter);
   }
 
   @Override
   public double get(double x, double y) {
-    double val = source.get(x, y) / period.get(x, y);
+    double val = this.source.get(x, y) / this.period.get(x, y);
     return 2.0 * (val - Math.floor(0.5 + val));
   }
 
   @Override
   public double get(double x, double y, double z) {
-    double val = source.get(x, y, z) / period.get(x, y, z);
+    double val = this.source.get(x, y, z) / this.period.get(x, y, z);
     return 2.0 * (val - Math.floor(0.5 + val));
   }
 
   @Override
   public double get(double x, double y, double z, double w) {
-    double val = source.get(x, y, z, w) / period.get(x, y, z, w);
+    double val = this.source.get(x, y, z, w) / this.period.get(x, y, z, w);
     return 2.0 * (val - Math.floor(0.5 + val));
   }
 
   @Override
   public double get(double x, double y, double z, double w, double u, double v) {
-    double val = source.get(x, y, z, w, u, v) / period.get(x, y, z, w, u, v);
+    double val = this.source.get(x, y, z, w, u, v) / this.period.get(x, y, z, w, u, v);
     return 2.0 * (val - Math.floor(0.5 + val));
   }
 
   @Override
-  protected void _writeToMap(ModuleMap map) {
-
-    ModulePropertyMap props = new ModulePropertyMap(this);
-
-    writeScalar("period", period, props, map);
-    writeSource(props, map);
-
-    map.put(getId(), props);
-
+  public void writeToMap(ModuleMap moduleMap) {
+    ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
+    modulePropertyMap
+        .writeScalar("period", this.period, moduleMap)
+        .writeScalar("source", this.source, moduleMap);
+    moduleMap.put(this.getId(), modulePropertyMap);
   }
 
   @Override
-  public Module buildFromPropertyMap(ModulePropertyMap props,
-      ModuleInstanceMap map) {
-
-    this.setPeriod(readScalar("period", props, map));
-    readSource(props, map);
-
+  public Module buildFromPropertyMap(ModulePropertyMap modulePropertyMap, ModuleInstanceMap moduleInstanceMap) {
+    this.setPeriod(modulePropertyMap.readScalar("period", moduleInstanceMap));
+    this.setSource(modulePropertyMap.readScalar("source", moduleInstanceMap));
     return this;
   }
 

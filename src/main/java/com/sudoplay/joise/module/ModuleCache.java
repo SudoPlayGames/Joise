@@ -52,88 +52,86 @@ import com.sudoplay.joise.ModuleInstanceMap;
 import com.sudoplay.joise.ModuleMap;
 import com.sudoplay.joise.ModulePropertyMap;
 
-public class ModuleCache extends SourcedModule {
+public class ModuleCache extends
+    SourcedModule {
 
-  class Cache {
+  private class Cache {
     double x, y, z, w, u, v;
     double val;
     boolean valid = false;
   }
 
-  protected Cache c2 = new Cache();
-  protected Cache c3 = new Cache();
-  protected Cache c4 = new Cache();
-  protected Cache c6 = new Cache();
+  private Cache c2 = new Cache();
+  private Cache c3 = new Cache();
+  private Cache c4 = new Cache();
+  private Cache c6 = new Cache();
 
   @Override
   public double get(double x, double y) {
-    if (!c2.valid || c2.x != x || c2.y != y) {
-      c2.x = x;
-      c2.y = y;
-      c2.valid = true;
-      c2.val = source.get(x, y);
+
+    if (!this.c2.valid || this.c2.x != x || this.c2.y != y) {
+      this.c2.x = x;
+      this.c2.y = y;
+      this.c2.valid = true;
+      this.c2.val = this.source.get(x, y);
     }
-    return c2.val;
+    return this.c2.val;
   }
 
   @Override
   public double get(double x, double y, double z) {
-    if (!c3.valid || c3.x != x || c3.y != y || c3.z != z) {
-      c3.x = x;
-      c3.y = y;
-      c3.z = z;
-      c3.valid = true;
-      c3.val = source.get(x, y, z);
+
+    if (!this.c3.valid || this.c3.x != x || this.c3.y != y || this.c3.z != z) {
+      this.c3.x = x;
+      this.c3.y = y;
+      this.c3.z = z;
+      this.c3.valid = true;
+      this.c3.val = this.source.get(x, y, z);
     }
-    return c3.val;
+    return this.c3.val;
   }
 
   @Override
   public double get(double x, double y, double z, double w) {
-    if (!c4.valid || c4.x != x || c4.y != y || c4.z != z || c4.w != w) {
-      c4.x = x;
-      c4.y = y;
-      c4.z = z;
-      c4.w = w;
-      c4.valid = true;
-      c4.val = source.get(x, y, z, w);
+
+    if (!this.c4.valid || this.c4.x != x || this.c4.y != y || this.c4.z != z || this.c4.w != w) {
+      this.c4.x = x;
+      this.c4.y = y;
+      this.c4.z = z;
+      this.c4.w = w;
+      this.c4.valid = true;
+      this.c4.val = this.source.get(x, y, z, w);
     }
-    return c4.val;
+    return this.c4.val;
   }
 
   @Override
   public double get(double x, double y, double z, double w, double u, double v) {
-    if (!c6.valid || c6.x != x || c6.y != y || c6.z != z || c6.w != w
-        || c6.u != u || c6.v != v) {
-      c6.x = x;
-      c6.y = y;
-      c6.z = z;
-      c6.w = w;
-      c6.u = u;
-      c6.v = v;
-      c6.valid = true;
-      c6.val = source.get(x, y, z, w, u, v);
+
+    if (!this.c6.valid || this.c6.x != x || this.c6.y != y || this.c6.z != z || this.c6.w != w
+        || this.c6.u != u || this.c6.v != v) {
+      this.c6.x = x;
+      this.c6.y = y;
+      this.c6.z = z;
+      this.c6.w = w;
+      this.c6.u = u;
+      this.c6.v = v;
+      this.c6.valid = true;
+      this.c6.val = this.source.get(x, y, z, w, u, v);
     }
-    return c6.val;
+    return this.c6.val;
   }
 
   @Override
-  protected void _writeToMap(ModuleMap map) {
-
-    ModulePropertyMap props = new ModulePropertyMap(this);
-
-    writeSource(props, map);
-
-    map.put(getId(), props);
-
+  public void writeToMap(ModuleMap moduleMap) {
+    ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
+    modulePropertyMap.writeScalar("source", this.source, moduleMap);
+    moduleMap.put(this.getId(), modulePropertyMap);
   }
 
   @Override
-  public Module buildFromPropertyMap(ModulePropertyMap props,
-      ModuleInstanceMap map) {
-
-    readSource(props, map);
-
+  public Module buildFromPropertyMap(ModulePropertyMap modulePropertyMap, ModuleInstanceMap moduleInstanceMap) {
+    this.setSource(modulePropertyMap.readScalar("source", moduleInstanceMap));
     return this;
   }
 

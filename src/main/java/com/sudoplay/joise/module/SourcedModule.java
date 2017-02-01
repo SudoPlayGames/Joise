@@ -48,10 +48,6 @@
 
 package com.sudoplay.joise.module;
 
-import com.sudoplay.joise.ModuleInstanceMap;
-import com.sudoplay.joise.ModuleMap;
-import com.sudoplay.joise.ModulePropertyMap;
-
 public abstract class SourcedModule extends Module {
 
   protected ScalarParameter source = new ScalarParameter(0.0);
@@ -69,15 +65,6 @@ public abstract class SourcedModule extends Module {
   }
 
   public ScalarParameter getSource() {
-    return source;
+    return this.source;
   }
-
-  protected void writeSource(ModulePropertyMap props, ModuleMap map) {
-    writeScalar("source", source, props, map);
-  }
-
-  protected void readSource(ModulePropertyMap props, ModuleInstanceMap map) {
-    this.setSource(readScalar("source", props, map));
-  }
-
 }

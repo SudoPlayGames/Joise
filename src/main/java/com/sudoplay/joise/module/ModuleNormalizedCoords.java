@@ -52,90 +52,96 @@ import com.sudoplay.joise.ModuleInstanceMap;
 import com.sudoplay.joise.ModuleMap;
 import com.sudoplay.joise.ModulePropertyMap;
 
-public class ModuleNormalizedCoords extends SourcedModule {
+public class ModuleNormalizedCoords extends
+    SourcedModule {
 
-  public static final double DEFAULT_LENGTH = 1.0;
+  private static final double DEFAULT_LENGTH = 1.0;
 
-  protected ScalarParameter length = new ScalarParameter(DEFAULT_LENGTH);
+  private ScalarParameter length = new ScalarParameter(DEFAULT_LENGTH);
 
   public ModuleNormalizedCoords() {
     this(DEFAULT_LENGTH);
   }
 
+  @SuppressWarnings("WeakerAccess")
   public ModuleNormalizedCoords(double length) {
-    setLength(length);
+    this.setLength(length);
   }
 
   public void setLength(double source) {
-    length.set(source);
+    this.length.set(source);
   }
 
   public void setLength(Module source) {
-    length.set(source);
+    this.length.set(source);
   }
 
+  @SuppressWarnings("unused")
   public void setLength(ScalarParameter scalarParameter) {
-    length.set(scalarParameter);
+    this.length.set(scalarParameter);
   }
 
   @Override
   public double get(double x, double y) {
-    if (x == 0 && y == 0) return source.get(x, y);
+
+    if (x == 0 && y == 0) {
+      return this.source.get(x, y);
+    }
 
     double len = Math.sqrt(x * x + y * y);
-    double r = length.get(x, y);
-    return source.get(x / len * r, y / len * r);
+    double r = this.length.get(x, y);
+    return this.source.get(x / len * r, y / len * r);
   }
 
   @Override
   public double get(double x, double y, double z) {
-    if (x == 0 && y == 0 && z == 0) return source.get(x, y, z);
+
+    if (x == 0 && y == 0 && z == 0) {
+      return this.source.get(x, y, z);
+    }
 
     double len = Math.sqrt(x * x + y * y + z * z);
-    double r = length.get(x, y, z);
-    return source.get(x / len * r, y / len * r, z / len * r);
+    double r = this.length.get(x, y, z);
+    return this.source.get(x / len * r, y / len * r, z / len * r);
   }
 
   @Override
   public double get(double x, double y, double z, double w) {
-    if (x == 0 && y == 0 && z == 0 && w == 0) return source.get(x, y, z, w);
+
+    if (x == 0 && y == 0 && z == 0 && w == 0) {
+      return this.source.get(x, y, z, w);
+    }
 
     double len = Math.sqrt(x * x + y * y + z * z + w * w);
-    double r = length.get(x, y, z, w);
-    return source.get(x / len * r, y / len * r, z / len * r, w / len * r);
+    double r = this.length.get(x, y, z, w);
+    return this.source.get(x / len * r, y / len * r, z / len * r, w / len * r);
   }
 
   @Override
   public double get(double x, double y, double z, double w, double u, double v) {
-    if (x == 0 && y == 0 && z == 0 && w == 0 && u == 0 && v == 0)
-      return source.get(x, y, z, w, u, v);
+
+    if (x == 0 && y == 0 && z == 0 && w == 0 && u == 0 && v == 0) {
+      return this.source.get(x, y, z, w, u, v);
+    }
 
     double len = Math.sqrt(x * x + y * y + z * z + w * w + u * u + v * v);
-    double r = length.get(x, y, z, w, u, v);
-    return source.get(x / len * r, y / len * r, z / len * r, w / len * r, u
-        / len * r, v / len * r);
+    double r = this.length.get(x, y, z, w, u, v);
+    return this.source.get(x / len * r, y / len * r, z / len * r, w / len * r, u / len * r, v / len * r);
   }
 
   @Override
-  protected void _writeToMap(ModuleMap map) {
-
-    ModulePropertyMap props = new ModulePropertyMap(this);
-
-    writeScalar("length", length, props, map);
-    writeSource(props, map);
-
-    map.put(getId(), props);
-
+  public void writeToMap(ModuleMap moduleMap) {
+    ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
+    modulePropertyMap
+        .writeScalar("length", this.length, moduleMap)
+        .writeScalar("source", this.source, moduleMap);
+    moduleMap.put(this.getId(), modulePropertyMap);
   }
 
   @Override
-  public Module buildFromPropertyMap(ModulePropertyMap props,
-      ModuleInstanceMap map) {
-
-    this.setLength(readScalar("length", props, map));
-    readSource(props, map);
-
+  public Module buildFromPropertyMap(ModulePropertyMap modulePropertyMap, ModuleInstanceMap moduleInstanceMap) {
+    this.setLength(modulePropertyMap.readScalar("length", moduleInstanceMap));
+    this.setSource(modulePropertyMap.readScalar("source", moduleInstanceMap));
     return this;
   }
-
 }

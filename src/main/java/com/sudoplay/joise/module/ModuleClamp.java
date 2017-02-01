@@ -48,23 +48,24 @@
 
 package com.sudoplay.joise.module;
 
-import static com.sudoplay.joise.noise.Util.clamp;
-
 import com.sudoplay.joise.ModuleInstanceMap;
 import com.sudoplay.joise.ModuleMap;
 import com.sudoplay.joise.ModulePropertyMap;
+import com.sudoplay.joise.noise.Util;
 
-public class ModuleClamp extends SourcedModule {
+public class ModuleClamp extends
+    SourcedModule {
 
-  protected double low;
-  protected double high;
+  private double low;
+  private double high;
 
   public ModuleClamp() {
-    setRange(-1.0, 1.0);
+    this.setRange(-1.0, 1.0);
   }
 
+  @SuppressWarnings("unused")
   public ModuleClamp(double low, double high) {
-    setRange(low, high);
+    this.setRange(low, high);
   }
 
   public void setRange(double low, double high) {
@@ -82,45 +83,39 @@ public class ModuleClamp extends SourcedModule {
 
   @Override
   public double get(double x, double y) {
-    return clamp(source.get(x, y), low, high);
+    return Util.clamp(this.source.get(x, y), this.low, this.high);
   }
 
   @Override
   public double get(double x, double y, double z) {
-    return clamp(source.get(x, y, z), low, high);
+    return Util.clamp(this.source.get(x, y, z), this.low, this.high);
   }
 
   @Override
   public double get(double x, double y, double z, double w) {
-    return clamp(source.get(x, y, z, w), low, high);
+    return Util.clamp(this.source.get(x, y, z, w), this.low, this.high);
   }
 
   @Override
   public double get(double x, double y, double z, double w, double u, double v) {
-    return clamp(source.get(x, y, z, w, u, v), low, high);
+    return Util.clamp(this.source.get(x, y, z, w, u, v), this.low, this.high);
   }
 
   @Override
-  protected void _writeToMap(ModuleMap map) {
-
-    ModulePropertyMap props = new ModulePropertyMap(this);
-
-    writeDouble("low", low, props);
-    writeDouble("high", high, props);
-    writeSource(props, map);
-
-    map.put(getId(), props);
-
+  public void writeToMap(ModuleMap moduleMap) {
+    ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
+    modulePropertyMap
+        .writeDouble("low", this.low)
+        .writeDouble("high", this.high)
+        .writeScalar("source", this.source, moduleMap);
+    moduleMap.put(this.getId(), modulePropertyMap);
   }
 
   @Override
-  public Module buildFromPropertyMap(ModulePropertyMap props,
-      ModuleInstanceMap map) {
-
-    this.setLow(readDouble("low", props));
-    this.setHigh(readDouble("high", props));
-    readSource(props, map);
-
+  public Module buildFromPropertyMap(ModulePropertyMap modulePropertyMap, ModuleInstanceMap moduleInstanceMap) {
+    this.setLow(modulePropertyMap.readDouble("low"));
+    this.setHigh(modulePropertyMap.readDouble("high"));
+    this.setSource(modulePropertyMap.readScalar("source", moduleInstanceMap));
     return this;
   }
 

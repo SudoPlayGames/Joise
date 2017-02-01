@@ -55,7 +55,8 @@ import com.sudoplay.joise.module.ModuleBasisFunction.BasisType;
 import com.sudoplay.joise.module.ModuleBasisFunction.InterpolationType;
 import com.sudoplay.joise.noise.Util;
 
-public class ModuleFractal extends SeedableModule {
+public class ModuleFractal extends
+    SeededModule {
 
   public enum FractalType {
     FBM, RIDGEMULTI, BILLOW, MULTI, HYBRIDMULTI, DECARPENTIERSWISS
@@ -140,37 +141,44 @@ public class ModuleFractal extends SeedableModule {
 
   public void setType(FractalType type) {
     this.type = type;
+
     switch (type) {
       case BILLOW:
         this.H = 1.0;
         this.gain = 0.5;
         this.offset = 0.0;
         break;
+
       case DECARPENTIERSWISS:
         this.H = 0.9;
         this.gain = 1.0;
         this.offset = 0.7;
         break;
+
       case FBM:
         this.H = 1.0;
         this.gain = 0.5;
         this.offset = 0.0;
         break;
+
       case HYBRIDMULTI:
         this.H = 0.25;
         this.gain = 1.0;
         this.offset = 0.7;
         break;
+
       case MULTI:
         this.H = 1.0;
         this.gain = 0.0;
         this.offset = 0.0;
         break;
+
       case RIDGEMULTI:
         this.H = 0.9;
         this.gain = 0.5;
         this.offset = 1.0;
         break;
+
       default:
         throw new AssertionError();
     }
@@ -182,6 +190,7 @@ public class ModuleFractal extends SeedableModule {
       BasisType basisType,
       InterpolationType interpolationType
   ) {
+
     for (int i = 0; i < MAX_SOURCES; i++) {
       this.basis[i].setType(basisType);
       this.basis[i].setInterpolation(interpolationType);
@@ -190,6 +199,7 @@ public class ModuleFractal extends SeedableModule {
 
   @SuppressWarnings("WeakerAccess")
   public void setAllSourceBasisTypes(BasisType basisType) {
+
     for (int i = 0; i < MAX_SOURCES; i++) {
       this.basis[i].setType(basisType);
     }
@@ -197,6 +207,7 @@ public class ModuleFractal extends SeedableModule {
 
   @SuppressWarnings("WeakerAccess")
   public void setAllSourceInterpolationTypes(InterpolationType interpolationType) {
+
     for (int i = 0; i < MAX_SOURCES; i++) {
       this.basis[i].setInterpolation(interpolationType);
     }
@@ -225,9 +236,9 @@ public class ModuleFractal extends SeedableModule {
 
   @SuppressWarnings({"WeakerAccess", "unused"})
   public void overrideSource(int index, Module source) {
+
     if (index < 0 || index >= MAX_SOURCES) {
-      throw new IllegalArgumentException("expecting index < " + MAX_SOURCES
-          + " but was " + index);
+      throw new IllegalArgumentException("expecting index < " + MAX_SOURCES + " but was " + index);
     }
     this.source[index] = source;
   }
@@ -249,8 +260,8 @@ public class ModuleFractal extends SeedableModule {
 
     for (int i = 0; i < MAX_SOURCES; i++) {
 
-      if (this.source[i] instanceof SeedableModule) {
-        ((SeedableModule) this.source[i]).setSeed(seed);
+      if (this.source[i] instanceof SeededModule) {
+        ((SeededModule) this.source[i]).setSeed(seed);
       }
     }
   }
@@ -691,7 +702,10 @@ public class ModuleFractal extends SeedableModule {
     y *= this.lacunarity;
 
     for (int i = 1; i < this.numOctaves; ++i) {
-      if (weight > 1.0) weight = 1.0;
+
+      if (weight > 1.0) {
+        weight = 1.0;
+      }
       signal = (this.source[i].get(x, y) + this.offset) * this.exparray[i];
       value += weight * signal;
       weight *= this.gain * signal;
@@ -713,7 +727,10 @@ public class ModuleFractal extends SeedableModule {
     z *= this.lacunarity;
 
     for (int i = 1; i < this.numOctaves; ++i) {
-      if (weight > 1.0) weight = 1.0;
+
+      if (weight > 1.0) {
+        weight = 1.0;
+      }
       signal = (this.source[i].get(x, y, z) + this.offset) * this.exparray[i];
       value += weight * signal;
       weight *= this.gain * signal;
@@ -738,7 +755,10 @@ public class ModuleFractal extends SeedableModule {
     w *= this.lacunarity;
 
     for (int i = 1; i < this.numOctaves; ++i) {
-      if (weight > 1.0) weight = 1.0;
+
+      if (weight > 1.0) {
+        weight = 1.0;
+      }
       signal = (this.source[i].get(x, y, z, w) + this.offset) * this.exparray[i];
       value += weight * signal;
       weight *= this.gain * signal;
@@ -768,7 +788,10 @@ public class ModuleFractal extends SeedableModule {
     v *= this.lacunarity;
 
     for (int i = 1; i < this.numOctaves; ++i) {
-      if (weight > 1.0) weight = 1.0;
+
+      if (weight > 1.0) {
+        weight = 1.0;
+      }
       signal = (this.source[i].get(x, y, z, w, u, v) + this.offset) * this.exparray[i];
       value += weight * signal;
       weight *= this.gain * signal;
@@ -792,10 +815,18 @@ public class ModuleFractal extends SeedableModule {
 
     for (int sourceIndex = 0; sourceIndex < this.numOctaves; ++sourceIndex) {
       double n = this.source[sourceIndex].get(x + this.offset * dx_sum, y + this.offset * dy_sum);
-      double dx = this.getDX(this.source[sourceIndex], this.derivativeSpacing[sourceIndex], x + this.offset * dx_sum,
-          y + this.offset * dy_sum);
-      double dy = this.getDY(this.source[sourceIndex], this.derivativeSpacing[sourceIndex], x + this.offset * dx_sum,
-          y + this.offset * dy_sum);
+      double dx = this.getDX(
+          this.source[sourceIndex],
+          this.derivativeSpacing[sourceIndex],
+          x + this.offset * dx_sum,
+          y + this.offset * dy_sum
+      );
+      double dy = this.getDY(
+          this.source[sourceIndex],
+          this.derivativeSpacing[sourceIndex],
+          x + this.offset * dx_sum,
+          y + this.offset * dy_sum
+      );
       sum += amp * (1.0 - Math.abs(n));
       dx_sum += amp * dx * -n;
       dy_sum += amp * dy * -n;
@@ -1032,11 +1063,13 @@ public class ModuleFractal extends SeedableModule {
 
     switch (type) {
       case FBM:
+
         for (int i = 0; i < MAX_SOURCES; i++) {
           this.exparray[i] = Math.pow(this.lacunarity, -i * this.H);
         }
         minvalue = 0.0;
         maxvalue = 0.0;
+
         for (int i = 0; i < MAX_SOURCES; i++) {
           minvalue += -1.0 * this.exparray[i];
           maxvalue += 1.0 * this.exparray[i];
@@ -1050,11 +1083,13 @@ public class ModuleFractal extends SeedableModule {
         break;
 
       case RIDGEMULTI:
+
         for (int i = 0; i < MAX_SOURCES; ++i) {
           this.exparray[i] = Math.pow(this.lacunarity, -i * this.H);
         }
         minvalue = 0.0;
         maxvalue = 0.0;
+
         for (int i = 0; i < MAX_SOURCES; ++i) {
           minvalue += (this.offset - 1.0) * (this.offset - 1.0) * this.exparray[i];
           maxvalue += (this.offset) * (this.offset) * this.exparray[i];
@@ -1068,11 +1103,13 @@ public class ModuleFractal extends SeedableModule {
         break;
 
       case DECARPENTIERSWISS:
+
         for (int i = 0; i < MAX_SOURCES; ++i) {
           this.exparray[i] = Math.pow(this.lacunarity, -i * this.H);
         }
         minvalue = 0.0;
         maxvalue = 0.0;
+
         for (int i = 0; i < MAX_SOURCES; ++i) {
           minvalue += (this.offset - 1.0) * (this.offset - 1.0) * this.exparray[i];
           maxvalue += (this.offset) * (this.offset) * this.exparray[i];
@@ -1086,11 +1123,13 @@ public class ModuleFractal extends SeedableModule {
         break;
 
       case BILLOW:
+
         for (int i = 0; i < MAX_SOURCES; ++i) {
           this.exparray[i] = Math.pow(this.lacunarity, -i * this.H);
         }
         minvalue = 0.0;
         maxvalue = 0.0;
+
         for (int i = 0; i < MAX_SOURCES; ++i) {
           minvalue += -1.0 * this.exparray[i];
           maxvalue += 1.0 * this.exparray[i];
@@ -1104,11 +1143,13 @@ public class ModuleFractal extends SeedableModule {
         break;
 
       case MULTI:
+
         for (int i = 0; i < MAX_SOURCES; ++i) {
           this.exparray[i] = Math.pow(this.lacunarity, -i * this.H);
         }
         minvalue = 1.0;
         maxvalue = 1.0;
+
         for (int i = 0; i < MAX_SOURCES; ++i) {
           minvalue *= -1.0 * this.exparray[i] + 1.0;
           maxvalue *= 1.0 * this.exparray[i] + 1.0;
@@ -1166,55 +1207,53 @@ public class ModuleFractal extends SeedableModule {
   }
 
   @Override
-  protected void _writeToMap(ModuleMap map) {
+  public void writeToMap(ModuleMap moduleMap) {
+    ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
 
-    ModulePropertyMap props = new ModulePropertyMap(this);
-
-    this.writeEnum("type", this.type, props);
-    this.writeLong("octaves", this.numOctaves, props);
-    this.writeDouble("frequency", this.frequency, props);
-    this.writeDouble("lacunarity", this.lacunarity, props);
-    this.writeDouble("gain", this.gain, props);
-    this.writeDouble("H", this.H, props);
-    this.writeDouble("offset", this.offset, props);
+    modulePropertyMap
+        .writeEnum("type", this.type)
+        .writeLong("octaves", this.numOctaves)
+        .writeDouble("frequency", this.frequency)
+        .writeDouble("lacunarity", this.lacunarity)
+        .writeDouble("gain", this.gain)
+        .writeDouble("H", this.H)
+        .writeDouble("offset", this.offset);
 
     for (int i = 0; i < this.numOctaves; i++) {
-      this.writeDouble("spacing_" + i, this.derivativeSpacing[i], props);
+      modulePropertyMap.writeDouble("spacing_" + i, this.derivativeSpacing[i]);
     }
 
     for (int i = 0; i < this.numOctaves; i++) {
-      props.put("source_" + i, this.source[i].getId());
-      this.source[i]._writeToMap(map);
+      modulePropertyMap.put("source_" + i, this.source[i].getId());
+      this.source[i].writeToMap(moduleMap);
     }
 
-    this.writeSeed(props);
-
-    map.put(this.getId(), props);
-
+    this.writeSeed(modulePropertyMap);
+    moduleMap.put(this.getId(), modulePropertyMap);
   }
 
   @Override
-  public Module buildFromPropertyMap(ModulePropertyMap props, ModuleInstanceMap map) {
+  public Module buildFromPropertyMap(ModulePropertyMap modulePropertyMap, ModuleInstanceMap moduleInstanceMap) {
 
-    this.setType(this.readEnum("type", FractalType.class, props));
-    this.setNumOctaves(this.readLong("octaves", props));
-    this.setFrequency(this.readDouble("frequency", props));
-    this.setLacunarity(this.readDouble("lacunarity", props));
-    this.setGain(this.readDouble("gain", props));
-    this.setH(this.readDouble("H", props));
-    this.setOffset(this.readDouble("offset", props));
+    this.setType(modulePropertyMap.readEnum("type", FractalType.class));
+    this.setNumOctaves(modulePropertyMap.readLong("octaves"));
+    this.setFrequency(modulePropertyMap.readDouble("frequency"));
+    this.setLacunarity(modulePropertyMap.readDouble("lacunarity"));
+    this.setGain(modulePropertyMap.readDouble("gain"));
+    this.setH(modulePropertyMap.readDouble("H"));
+    this.setOffset(modulePropertyMap.readDouble("offset"));
 
     for (int i = 0; i < this.numOctaves; i++) {
-      this.setSourceDerivativeSpacing(i, this.readDouble("spacing_" + i, props, DEFAULT_SPACING));
+      this.setSourceDerivativeSpacing(i, modulePropertyMap.readDouble("spacing_" + i, DEFAULT_SPACING));
     }
 
-    this.readSeed(props);
+    this.readSeed(modulePropertyMap);
 
     // must override sources after seed has been set
     for (int i = 0; i < this.numOctaves; i++) {
       // this is intended, not suspicious
       //noinspection SuspiciousMethodCalls
-      this.overrideSource(i, map.get(props.get("source_" + i)));
+      this.overrideSource(i, moduleInstanceMap.get(modulePropertyMap.get("source_" + i)));
     }
 
     return this;

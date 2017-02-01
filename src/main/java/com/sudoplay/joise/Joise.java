@@ -61,7 +61,7 @@ public class Joise {
   private Module module;
   private ModuleMap moduleMap;
   private ModuleFactoryRegistry moduleFactoryRegistry;
-  private HashMap<String, ArrayList<SeedableModule>> seedMap = new HashMap<String, ArrayList<SeedableModule>>();
+  private HashMap<String, ArrayList<SeededModule>> seedMap = new HashMap<String, ArrayList<SeededModule>>();
 
   /**
    * Common initialization.
@@ -150,14 +150,14 @@ public class Joise {
         ModulePropertyMap props = e.getValue();
         module = this.moduleFactoryRegistry.get(props.get("module").toString()).create();
         module.buildFromPropertyMap(props, im);
-        if (module instanceof SeedableModule
-            && ((SeedableModule) module).hasSeedName()) {
-          SeedableModule sm = (SeedableModule) module;
+        if (module instanceof SeededModule
+            && ((SeededModule) module).hasSeedName()) {
+          SeededModule sm = (SeededModule) module;
           String seedName = sm.getSeedName();
 
-          ArrayList<SeedableModule> list = seedMap.get(seedName);
+          ArrayList<SeededModule> list = seedMap.get(seedName);
           if (list == null) {
-            list = new ArrayList<SeedableModule>();
+            list = new ArrayList<SeededModule>();
             seedMap.put(seedName, list);
           }
           list.add(sm);
@@ -192,11 +192,11 @@ public class Joise {
    *           if the seed name is not found in the seed map
    */
   public void setSeed(String seedName, long seed) {
-    ArrayList<SeedableModule> list = seedMap.get(seedName);
+    ArrayList<SeededModule> list = seedMap.get(seedName);
     if (list == null || list.isEmpty()) {
       throw new IllegalStateException("Seed name not found: " + seedName);
     }
-    for (SeedableModule sm : list) {
+    for (SeededModule sm : list) {
       sm.setSeed(seed);
     }
   }

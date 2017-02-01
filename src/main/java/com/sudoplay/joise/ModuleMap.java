@@ -53,13 +53,14 @@ import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
 @SuppressWarnings("serial")
-public class ModuleMap extends LinkedHashMap<String, ModulePropertyMap> {
+public class ModuleMap extends
+    LinkedHashMap<String, ModulePropertyMap> {
 
   @Override
   public ModulePropertyMap put(String module, ModulePropertyMap propertyMap) {
+
     if (propertyMap == null) {
-      throw new NullPointerException("property map for module [" + module
-          + "] null");
+      throw new NullPointerException("property map for module [" + module + "] null");
     }
     return super.put(module, propertyMap);
   }
@@ -67,16 +68,19 @@ public class ModuleMap extends LinkedHashMap<String, ModulePropertyMap> {
   @Override
   public ModulePropertyMap get(Object key) {
     ModulePropertyMap props = super.get(key);
+
     if (props == null) {
       throw new NullPointerException("property map [" + key + "] null");
     }
     return super.get(key);
   }
 
+  @SuppressWarnings("unused")
   public boolean contains(String id) {
     return super.get(id) != null;
   }
 
+  @SuppressWarnings("WeakerAccess")
   public Iterator<Entry<String, ModulePropertyMap>> mapIterator() {
     return super.entrySet().iterator();
   }
@@ -86,7 +90,7 @@ public class ModuleMap extends LinkedHashMap<String, ModulePropertyMap> {
     StringBuilder sb = new StringBuilder();
     sb.append("[");
 
-    Iterator<Entry<String, ModulePropertyMap>> it = mapIterator();
+    Iterator<Entry<String, ModulePropertyMap>> it = this.mapIterator();
     while (it.hasNext()) {
       Entry<String, ModulePropertyMap> e = it.next();
       sb.append("[");

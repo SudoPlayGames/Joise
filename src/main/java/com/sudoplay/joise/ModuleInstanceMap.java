@@ -48,19 +48,22 @@
 
 package com.sudoplay.joise;
 
+import com.sudoplay.joise.module.Module;
+
 import java.util.HashMap;
 import java.util.Iterator;
 
-import com.sudoplay.joise.module.Module;
-
 @SuppressWarnings("serial")
-public class ModuleInstanceMap extends HashMap<String, Module> {
+public class ModuleInstanceMap extends
+    HashMap<String, Module> {
 
   @Override
   public Module put(String id, Module module) {
+
     if (id == null) {
       throw new NullPointerException("null id");
     }
+
     if (module == null) {
       throw new NullPointerException("null module, id=" + id);
     }
@@ -70,16 +73,19 @@ public class ModuleInstanceMap extends HashMap<String, Module> {
   @Override
   public Module get(Object key) {
     Module module = super.get(key);
+
     if (module == null) {
       throw new NullPointerException("null module, id=" + key);
     }
     return module;
   }
 
+  @SuppressWarnings("unused")
   public boolean contains(String id) {
     return super.get(id) != null;
   }
 
+  @SuppressWarnings("WeakerAccess")
   public Iterator<Entry<String, Module>> iterator() {
     return super.entrySet().iterator();
   }
@@ -88,8 +94,8 @@ public class ModuleInstanceMap extends HashMap<String, Module> {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("[");
+    Iterator<Entry<String, Module>> it = this.iterator();
 
-    Iterator<Entry<String, Module>> it = iterator();
     while (it.hasNext()) {
       Entry<String, Module> e = it.next();
       sb.append("[");
@@ -102,5 +108,4 @@ public class ModuleInstanceMap extends HashMap<String, Module> {
     sb.append("]");
     return sb.toString();
   }
-
 }

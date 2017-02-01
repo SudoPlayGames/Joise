@@ -52,79 +52,76 @@ import com.sudoplay.joise.ModuleInstanceMap;
 import com.sudoplay.joise.ModuleMap;
 import com.sudoplay.joise.ModulePropertyMap;
 
-public class ModuleScaleOffset extends SourcedModule {
+public class ModuleScaleOffset extends
+    SourcedModule {
 
-  protected ScalarParameter scale = new ScalarParameter(1.0);
-  protected ScalarParameter offset = new ScalarParameter(0.0);
+  private ScalarParameter scale = new ScalarParameter(1.0);
+  private ScalarParameter offset = new ScalarParameter(0.0);
 
   public void setScale(double s) {
-    scale.set(s);
+    this.scale.set(s);
   }
 
   public void setOffset(double o) {
-    offset.set(o);
+    this.offset.set(o);
   }
 
+  @SuppressWarnings("unused")
   public void setScale(Module s) {
-    scale.set(s);
+    this.scale.set(s);
   }
 
   public void setOffset(Module o) {
-    offset.set(o);
+    this.offset.set(o);
   }
 
+  @SuppressWarnings("unused")
   public void setScale(ScalarParameter scalarParameter) {
-    scale.set(scalarParameter);
+    this.scale.set(scalarParameter);
   }
 
+  @SuppressWarnings("unused")
   public void setOffset(ScalarParameter scalarParameter) {
-    offset.set(scalarParameter);
+    this.offset.set(scalarParameter);
   }
 
   @Override
   public double get(double x, double y) {
-    return source.get(x, y) * scale.get(x, y) + offset.get(x, y);
+    return this.source.get(x, y) * this.scale.get(x, y) + this.offset.get(x, y);
   }
 
   @Override
   public double get(double x, double y, double z) {
-    return source.get(x, y, z) * scale.get(x, y, z) + offset.get(x, y, z);
+    return this.source.get(x, y, z) * this.scale.get(x, y, z) + this.offset.get(x, y, z);
   }
 
   @Override
   public double get(double x, double y, double z, double w) {
-    return source.get(x, y, z, w) * scale.get(x, y, z, w)
-        + offset.get(x, y, z, w);
+    return this.source.get(x, y, z, w) * this.scale.get(x, y, z, w)
+        + this.offset.get(x, y, z, w);
   }
 
   @Override
   public double get(double x, double y, double z, double w, double u, double v) {
-    return source.get(x, y, z, w, u, v) * scale.get(x, y, z, w, u, v)
-        + offset.get(x, y, z, w, u, v);
+    return this.source.get(x, y, z, w, u, v) * this.scale.get(x, y, z, w, u, v)
+        + this.offset.get(x, y, z, w, u, v);
   }
 
   @Override
-  protected void _writeToMap(ModuleMap map) {
-
-    ModulePropertyMap props = new ModulePropertyMap(this);
-
-    writeScalar("offset", offset, props, map);
-    writeScalar("scale", scale, props, map);
-    writeSource(props, map);
-
-    map.put(getId(), props);
-
+  public void writeToMap(ModuleMap moduleMap) {
+    ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
+    modulePropertyMap
+        .writeScalar("offset", this.offset, moduleMap)
+        .writeScalar("scale", this.scale, moduleMap)
+        .writeScalar("source", this.source, moduleMap);
+    moduleMap.put(this.getId(), modulePropertyMap);
   }
 
   @Override
-  public Module buildFromPropertyMap(ModulePropertyMap props,
-      ModuleInstanceMap map) {
-
-    this.setOffset(readScalar("offset", props, map));
-    this.setScale(readScalar("scale", props, map));
-    readSource(props, map);
-
+  public Module buildFromPropertyMap(ModulePropertyMap modulePropertyMap, ModuleInstanceMap moduleInstanceMap) {
+    this.setOffset(modulePropertyMap.readScalar("offset", moduleInstanceMap));
+    this.setScale(modulePropertyMap.readScalar("scale", moduleInstanceMap));
+    this.setSource(modulePropertyMap.readScalar("source", moduleInstanceMap));
     return this;
   }
-
 }

@@ -48,108 +48,111 @@
 
 package com.sudoplay.joise.module;
 
-import static com.sudoplay.joise.noise.Util.lerp;
-
 import com.sudoplay.joise.ModuleInstanceMap;
 import com.sudoplay.joise.ModuleMap;
 import com.sudoplay.joise.ModulePropertyMap;
+import com.sudoplay.joise.noise.Util;
 
-public class ModuleBlend extends Module {
+public class ModuleBlend extends
+    Module {
 
-  protected ScalarParameter low = new ScalarParameter(0.0);
-  protected ScalarParameter high = new ScalarParameter(1.0);
-  protected ScalarParameter control = new ScalarParameter(0.5);
+  private ScalarParameter low = new ScalarParameter(0.0);
+  private ScalarParameter high = new ScalarParameter(1.0);
+  private ScalarParameter control = new ScalarParameter(0.5);
 
+  @SuppressWarnings("unused")
   public void setLowSource(double source) {
-    low.set(source);
+    this.low.set(source);
   }
 
+  @SuppressWarnings("unused")
   public void setHighSource(double source) {
-    high.set(source);
+    this.high.set(source);
   }
 
+  @SuppressWarnings("unused")
   public void setControlSource(double source) {
-    control.set(source);
+    this.control.set(source);
   }
 
+  @SuppressWarnings("unused")
   public void setLowSource(Module source) {
-    low.set(source);
+    this.low.set(source);
   }
 
+  @SuppressWarnings("unused")
   public void setHighSource(Module source) {
-    high.set(source);
+    this.high.set(source);
   }
 
+  @SuppressWarnings("unused")
   public void setControlSource(Module source) {
-    control.set(source);
+    this.control.set(source);
   }
 
+  @SuppressWarnings({"unused", "WeakerAccess"})
   public void setLowSource(ScalarParameter scalarParameter) {
-    low.set(scalarParameter);
+    this.low.set(scalarParameter);
   }
 
+  @SuppressWarnings({"unused", "WeakerAccess"})
   public void setHighSource(ScalarParameter scalarParameter) {
-    high.set(scalarParameter);
+    this.high.set(scalarParameter);
   }
 
+  @SuppressWarnings({"unused", "WeakerAccess"})
   public void setControlSource(ScalarParameter scalarParameter) {
-    control.set(scalarParameter);
+    this.control.set(scalarParameter);
   }
 
   @Override
   public double get(double x, double y) {
-    double v1 = low.get(x, y);
-    double v2 = high.get(x, y);
-    double bl = control.get(x, y);
+    double v1 = this.low.get(x, y);
+    double v2 = this.high.get(x, y);
+    double bl = this.control.get(x, y);
     bl = (bl + 1.0) * 0.5;
-    return lerp(bl, v1, v2);
+    return Util.lerp(bl, v1, v2);
   }
 
   @Override
   public double get(double x, double y, double z) {
-    double v1 = low.get(x, y, z);
-    double v2 = high.get(x, y, z);
-    double bl = control.get(x, y, z);
-    return lerp(bl, v1, v2);
+    double v1 = this.low.get(x, y, z);
+    double v2 = this.high.get(x, y, z);
+    double bl = this.control.get(x, y, z);
+    return Util.lerp(bl, v1, v2);
   }
 
   @Override
   public double get(double x, double y, double z, double w) {
-    double v1 = low.get(x, y, z, w);
-    double v2 = high.get(x, y, z, w);
-    double bl = control.get(x, y, z, w);
-    return lerp(bl, v1, v2);
+    double v1 = this.low.get(x, y, z, w);
+    double v2 = this.high.get(x, y, z, w);
+    double bl = this.control.get(x, y, z, w);
+    return Util.lerp(bl, v1, v2);
   }
 
   @Override
   public double get(double x, double y, double z, double w, double u, double v) {
-    double v1 = low.get(x, y, z, w, u, v);
-    double v2 = high.get(x, y, z, w, u, v);
-    double bl = control.get(x, y, z, w, u, v);
-    return lerp(bl, v1, v2);
+    double v1 = this.low.get(x, y, z, w, u, v);
+    double v2 = this.high.get(x, y, z, w, u, v);
+    double bl = this.control.get(x, y, z, w, u, v);
+    return Util.lerp(bl, v1, v2);
   }
 
   @Override
-  protected void _writeToMap(ModuleMap map) {
-
-    ModulePropertyMap props = new ModulePropertyMap(this);
-
-    writeScalar("high", high, props, map);
-    writeScalar("low", low, props, map);
-    writeScalar("control", control, props, map);
-
-    map.put(getId(), props);
-
+  public void writeToMap(ModuleMap moduleMap) {
+    ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
+    modulePropertyMap
+        .writeScalar("high", this.high, moduleMap)
+        .writeScalar("low", this.low, moduleMap)
+        .writeScalar("control", this.control, moduleMap);
+    moduleMap.put(this.getId(), modulePropertyMap);
   }
 
   @Override
-  public Module buildFromPropertyMap(ModulePropertyMap props,
-      ModuleInstanceMap map) {
-
-    this.setHighSource(readScalar("high", props, map));
-    this.setLowSource(readScalar("low", props, map));
-    this.setControlSource(readScalar("control", props, map));
-
+  public Module buildFromPropertyMap(ModulePropertyMap modulePropertyMap, ModuleInstanceMap moduleInstanceMap) {
+    this.setHighSource(modulePropertyMap.readScalar("high", moduleInstanceMap));
+    this.setLowSource(modulePropertyMap.readScalar("low", moduleInstanceMap));
+    this.setControlSource(modulePropertyMap.readScalar("control", moduleInstanceMap));
     return this;
   }
 

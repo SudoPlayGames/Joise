@@ -52,46 +52,39 @@ import com.sudoplay.joise.ModuleInstanceMap;
 import com.sudoplay.joise.ModuleMap;
 import com.sudoplay.joise.ModulePropertyMap;
 
-public class ModuleSin extends SourcedModule {
+public class ModuleSin extends
+    SourcedModule {
 
   @Override
   public double get(double x, double y) {
-    return Math.sin(source.get(x, y));
+    return Math.sin(this.source.get(x, y));
   }
 
   @Override
   public double get(double x, double y, double z) {
-    return Math.sin(source.get(x, y, z));
+    return Math.sin(this.source.get(x, y, z));
   }
 
   @Override
   public double get(double x, double y, double z, double w) {
-    return Math.sin(source.get(x, y, z, w));
+    return Math.sin(this.source.get(x, y, z, w));
   }
 
   @Override
   public double get(double x, double y, double z, double w, double u, double v) {
-    return Math.sin(source.get(x, y, z, w, u, v));
+    return Math.sin(this.source.get(x, y, z, w, u, v));
   }
 
   @Override
-  protected void _writeToMap(ModuleMap map) {
-
-    ModulePropertyMap props = new ModulePropertyMap(this);
-
-    writeSource(props, map);
-
-    map.put(getId(), props);
-
+  public void writeToMap(ModuleMap moduleMap) {
+    ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
+    modulePropertyMap.writeScalar("source", this.source, moduleMap);
+    moduleMap.put(this.getId(), modulePropertyMap);
   }
 
   @Override
-  public Module buildFromPropertyMap(ModulePropertyMap props,
-      ModuleInstanceMap map) {
-
-    readSource(props, map);
-
+  public Module buildFromPropertyMap(ModulePropertyMap modulePropertyMap, ModuleInstanceMap moduleInstanceMap) {
+    this.setSource(modulePropertyMap.readScalar("source", moduleInstanceMap));
     return this;
   }
-
 }

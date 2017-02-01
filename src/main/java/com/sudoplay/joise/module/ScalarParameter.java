@@ -54,71 +54,84 @@ public class ScalarParameter {
   private double value;
 
   public ScalarParameter(Module source) {
-    set(source);
+    this.set(source);
   }
 
   public ScalarParameter(double source) {
-    set(source);
+    this.set(source);
   }
 
   public void set(Module source) {
-    module = source;
+    this.module = source;
   }
 
   public void set(double source) {
-    module = null;
-    value = source;
+    this.module = null;
+    this.value = source;
   }
 
   public void set(ScalarParameter scalarParameter) {
 
     if (scalarParameter.isModule()) {
       this.set(scalarParameter.getModule());
+
     } else {
       this.set(scalarParameter.getValue());
     }
-
   }
 
   public boolean isModule() {
-    return module != null;
+    return this.module != null;
   }
 
   public Module getModule() {
-    return module;
+    return this.module;
   }
 
   public double getValue() {
-    return value;
+    return this.value;
   }
 
   public double get(double x, double y) {
-    if (module != null) return module.get(x, y);
-    return value;
+
+    if (this.module != null) {
+      return this.module.get(x, y);
+    }
+    return this.value;
   }
 
   public double get(double x, double y, double z) {
-    if (module != null) return module.get(x, y, z);
-    return value;
+
+    if (this.module != null) {
+      return this.module.get(x, y, z);
+    }
+    return this.value;
   }
 
   public double get(double x, double y, double z, double w) {
-    if (module != null) return module.get(x, y, z, w);
-    return value;
+
+    if (this.module != null) {
+      return this.module.get(x, y, z, w);
+    }
+    return this.value;
   }
 
   public double get(double x, double y, double z, double w, double u, double v) {
-    if (module != null) return module.get(x, y, z, w, u, v);
-    return value;
-  }
-  
-  @Override
-  public String toString() {
-    if (module != null) {
-      return module.getId();
-    } else {
-      return String.valueOf(value);
+
+    if (this.module != null) {
+      return this.module.get(x, y, z, w, u, v);
     }
+    return this.value;
   }
 
+  @Override
+  public String toString() {
+
+    if (this.module != null) {
+      return this.module.getId();
+
+    } else {
+      return String.valueOf(this.value);
+    }
+  }
 }
