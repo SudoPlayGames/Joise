@@ -50,32 +50,36 @@ package com.sudoplay.joise.generator;
 
 public abstract class BasePRNG {
 
+  protected static final long DEFAULT_SEED = 10000;
+
   public abstract int get();
 
   public abstract void setSeed(long seed);
 
   public void setSeedTime() {
-    setSeed(System.currentTimeMillis());
+    this.setSeed(System.currentTimeMillis());
   }
 
+  @SuppressWarnings("WeakerAccess")
   public int getTarget(int t) {
-    double v = get01();
+    double v = this.get01();
     return (int) (v * (double) t);
   }
 
   public double get01() {
-    return ((double) get() / (double) 4294967295L) + 0.5;
+    return ((double) this.get() / (double) 4294967295L) + 0.5;
   }
-  
+
+  @SuppressWarnings("unused")
   public int getRange(int low, int high) {
+
     if (high < low) {
       int temp = low;
       low = high;
       high = temp;
     }
     double range = (double) ((high - low) + 1);
-    double val = (double) low + get01() * range;
+    double val = (double) low + this.get01() * range;
     return (int) val;
   }
-
 }

@@ -51,22 +51,23 @@ package com.sudoplay.joise.generator;
 /**
  * Linear congruential generator.
  */
-public class LCG extends BasePRNG {
+public class LCG extends
+    BasePRNG {
 
-  protected long state;
+  private long state;
 
   public LCG() {
-    setSeed(10000);
+    this.setSeed(DEFAULT_SEED);
   }
 
   @Override
   public int get() {
-    return (int) (state = (25214903917L * state + 11) % 281474976710656L);
+    return (int) (this.state = (25214903917L * this.state + 11) % 281474976710656L);
   }
 
   @Override
   public void setSeed(long seed) {
-    state = (int) seed;
+    this.state = (int) seed;
   }
 
 }

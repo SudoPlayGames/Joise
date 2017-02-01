@@ -48,35 +48,38 @@
 
 package com.sudoplay.joise.generator;
 
-public class XORShift extends BasePRNG {
+@SuppressWarnings("unused")
+public class XORShift extends
+    BasePRNG {
 
-  protected int x, y, z, w, v;
-  protected LCG lcg = new LCG();
-  
+  private int x, y, z, w, v;
+  private LCG lcg = new LCG();
+
   public XORShift() {
-    setSeed(10000);
+    this.setSeed(10000);
   }
-  
+
   @Override
   public int get() {
     int t;
-    t = (x ^ (x >> 7));
-    x = y;
-    y = z;
-    z = w;
-    w = v;
-    v = (v ^ (v << 6)) ^ (t ^ (t << 13));
-    return (y + y + 1) * v;
+    t = (this.x ^ (this.x >> 7));
+    // y is intentionally assigned to x here
+    //noinspection SuspiciousNameCombination
+    this.x = this.y;
+    this.y = this.z;
+    this.z = this.w;
+    this.w = this.v;
+    this.v = (this.v ^ (this.v << 6)) ^ (t ^ (t << 13));
+    return (this.y + this.y + 1) * this.v;
   }
 
   @Override
   public void setSeed(long seed) {
-    lcg.setSeed(seed);
-    x = lcg.get();
-    y = lcg.get();
-    z = lcg.get();
-    w = lcg.get();
-    v = lcg.get();
+    this.lcg.setSeed(seed);
+    this.x = this.lcg.get();
+    this.y = this.lcg.get();
+    this.z = this.lcg.get();
+    this.w = this.lcg.get();
+    this.v = this.lcg.get();
   }
-
 }

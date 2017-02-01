@@ -51,25 +51,27 @@ package com.sudoplay.joise.generator;
 /**
  * Multiply with carry.
  */
-public class MWC extends BasePRNG {
+@SuppressWarnings("unused")
+public class MWC extends
+    BasePRNG {
 
-  protected LCG lcg = new LCG();
-  protected long x;
-  protected long a = 0xffffda61L;
+  private LCG lcg = new LCG();
+  private long x;
 
   public MWC() {
-    setSeed(10000);
+    this.setSeed(DEFAULT_SEED);
   }
 
   @Override
   public int get() {
-    return (int) (x = (a * (x & 0xffffffffL)) + (x >>> 32));
+    long a = 0xffffda61L;
+    return (int) (this.x = (a * (this.x & 0xffffffffL)) + (this.x >>> 32));
   }
 
   @Override
   public void setSeed(long seed) {
-    lcg.setSeed(seed);
-    x = lcg.get() & 0xffffffffL;
+    this.lcg.setSeed(seed);
+    this.x = this.lcg.get() & 0xffffffffL;
   }
 
 }

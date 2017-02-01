@@ -48,34 +48,35 @@
 
 package com.sudoplay.joise.generator;
 
-public class KISS extends BasePRNG {
+@SuppressWarnings("unused")
+public class KISS extends
+    BasePRNG {
 
-  protected LCG lcg = new LCG();
-  protected int z, w, jsr, jcong;
+  private LCG lcg = new LCG();
+  private int z, w, jsr, jcong;
 
   public KISS() {
-    setSeed(10000);
+    this.setSeed(DEFAULT_SEED);
   }
 
   @Override
   public int get() {
-    z = 36969 * (z & 65535) + (z >> 16);
-    w = 18000 * (w & 65535) + (w >> 16);
-    int mwc = (z << 16) + w;
-    jcong = 69069 * jcong + 1234567;
-    jsr ^= (jsr << 17);
-    jsr ^= (jsr >> 13);
-    jsr ^= (jsr << 5);
-    return ((mwc ^ jcong) + jsr);
+    this.z = 36969 * (this.z & 65535) + (this.z >> 16);
+    this.w = 18000 * (this.w & 65535) + (this.w >> 16);
+    int mwc = (this.z << 16) + this.w;
+    this.jcong = 69069 * this.jcong + 1234567;
+    this.jsr ^= (this.jsr << 17);
+    this.jsr ^= (this.jsr >> 13);
+    this.jsr ^= (this.jsr << 5);
+    return ((mwc ^ this.jcong) + this.jsr);
   }
 
   @Override
   public void setSeed(long seed) {
-    lcg.setSeed(seed);
-    z = lcg.get();
-    w = lcg.get();
-    jsr = lcg.get();
-    jcong = lcg.get();
+    this.lcg.setSeed(seed);
+    this.z = this.lcg.get();
+    this.w = this.lcg.get();
+    this.jsr = this.lcg.get();
+    this.jcong = this.lcg.get();
   }
-
 }

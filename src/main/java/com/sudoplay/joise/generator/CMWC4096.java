@@ -51,15 +51,17 @@ package com.sudoplay.joise.generator;
 /**
  * Complimentary multiply with carry.
  */
-public class CMWC4096 extends BasePRNG {
+@SuppressWarnings("unused")
+public class CMWC4096 extends
+    BasePRNG {
 
-  protected int c;
-  protected int[] Q = new int[4096];
-  protected LCG lcg = new LCG();
-  protected int i;
+  private int c;
+  private int[] Q = new int[4096];
+  private LCG lcg = new LCG();
+  private int i;
 
   public CMWC4096() {
-    setSeed(10000);
+    this.setSeed(DEFAULT_SEED);
   }
 
   @Override
@@ -68,24 +70,26 @@ public class CMWC4096 extends BasePRNG {
     long a = 18782L;
     long b = 4294967295L;
     int r = (int) (b - 1);
-    i = (i + 1) & 4095;
-    t = a * Q[i] + c;
-    c = (int) (t >> 32);
-    t = (t & b) + c;
+    this.i = (this.i + 1) & 4095;
+    t = a * this.Q[this.i] + this.c;
+    this.c = (int) (t >> 32);
+    t = (t & b) + this.c;
+
     if (t > r) {
-      c++;
+      this.c++;
       t = t - b;
     }
-    return Q[i] = (int) (r - t);
+    return this.Q[this.i] = (int) (r - t);
   }
 
   @Override
   public void setSeed(long seed) {
-    lcg.setSeed(seed);
+    this.lcg.setSeed(seed);
+
     for (int i = 0; i < 4096; i++) {
-      Q[i] = lcg.get();
+      this.Q[i] = this.lcg.get();
     }
-    c = lcg.getTarget(18781);
+    this.c = this.lcg.getTarget(18781);
   }
 
 }
