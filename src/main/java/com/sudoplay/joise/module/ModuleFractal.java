@@ -57,139 +57,173 @@ import com.sudoplay.joise.noise.Util;
 
 public class ModuleFractal extends SeedableModule {
 
-  public static final FractalType DEFAULT_FRACTAL_TYPE = FractalType.FBM;
-  public static final BasisType DEFAULT_BASIS_TYPE = BasisType.GRADVAL;
-  public static final InterpolationType DEFAULT_INTERPOLATION_TYPE = InterpolationType.QUINTIC;
-  public static final int DEFAULT_OCTAVES = 2;
-  public static final double DEFAULT_FREQUENCY = 1.0;
-  public static final double DEFAULT_LACUNARITY = 2.0;
-
-  public static enum FractalType {
+  public enum FractalType {
     FBM, RIDGEMULTI, BILLOW, MULTI, HYBRIDMULTI, DECARPENTIERSWISS
   }
 
-  protected ModuleBasisFunction[] basis = new ModuleBasisFunction[MAX_SOURCES];
-  protected Module[] source = new Module[MAX_SOURCES];
+  private static final FractalType DEFAULT_FRACTAL_TYPE = FractalType.FBM;
+  private static final BasisType DEFAULT_BASIS_TYPE = BasisType.GRADVAL;
+  private static final InterpolationType DEFAULT_INTERPOLATION_TYPE = InterpolationType.QUINTIC;
+  private static final int DEFAULT_OCTAVES = 2;
+  private static final double DEFAULT_FREQUENCY = 1.0;
+  private static final double DEFAULT_LACUNARITY = 2.0;
+  private static final double DEFAULT_SPACING = 0.0001;
 
-  protected double[] exparray = new double[MAX_SOURCES];
-  protected double[][] correct = new double[MAX_SOURCES][2];
+  private ModuleBasisFunction[] basis = new ModuleBasisFunction[MAX_SOURCES];
+  private Module[] source = new Module[MAX_SOURCES];
+  private double[] derivativeSpacing = new double[MAX_SOURCES];
+  private double[] exparray = new double[MAX_SOURCES];
+  private double[][] correct = new double[MAX_SOURCES][2];
 
-  protected double offset, gain, H;
-  protected double frequency, lacunarity;
-  protected int numOctaves;
-  protected FractalType type;
+  private double offset;
+  private double gain;
+  private double H;
+  private double frequency;
+  private double lacunarity;
+  private int numOctaves;
+  private FractalType type;
 
   public ModuleFractal() {
     this(DEFAULT_FRACTAL_TYPE, DEFAULT_BASIS_TYPE, DEFAULT_INTERPOLATION_TYPE);
   }
 
-  public ModuleFractal(FractalType type, BasisType basisType,
-      InterpolationType interpolationType) {
+  public ModuleFractal(
+      FractalType type,
+      BasisType basisType,
+      InterpolationType interpolationType
+  ) {
+
     for (int i = 0; i < MAX_SOURCES; i++) {
-      basis[i] = new ModuleBasisFunction();
+      this.basis[i] = new ModuleBasisFunction();
+      this.derivativeSpacing[i] = DEFAULT_SPACING;
     }
-    setNumOctaves(DEFAULT_OCTAVES);
-    setFrequency(DEFAULT_FREQUENCY);
-    setLacunarity(DEFAULT_LACUNARITY);
-    setType(type);
-    setAllSourceTypes(basisType, interpolationType);
-    resetAllSources();
+    this.setNumOctaves(DEFAULT_OCTAVES);
+    this.setFrequency(DEFAULT_FREQUENCY);
+    this.setLacunarity(DEFAULT_LACUNARITY);
+    this.setType(type);
+    this.setAllSourceTypes(basisType, interpolationType);
+    this.resetAllSources();
   }
 
   public void setNumOctaves(long n) {
+
     if (n > MAX_SOURCES) {
-      throw new IllegalArgumentException("number of octaves must be <= "
-          + MAX_SOURCES);
+      throw new IllegalArgumentException("number of octaves must be <= " + MAX_SOURCES);
     }
-    numOctaves = (int) n;
+    this.numOctaves = (int) n;
   }
 
+  @SuppressWarnings("WeakerAccess")
   public void setFrequency(double f) {
-    frequency = f;
+    this.frequency = f;
   }
 
+  @SuppressWarnings("WeakerAccess")
   public void setLacunarity(double l) {
-    lacunarity = l;
+    this.lacunarity = l;
   }
 
+  @SuppressWarnings("WeakerAccess")
   public void setGain(double g) {
-    gain = g;
+    this.gain = g;
   }
 
+  @SuppressWarnings("WeakerAccess")
   public void setOffset(double o) {
-    offset = o;
+    this.offset = o;
   }
 
+  @SuppressWarnings("WeakerAccess")
   public void setH(double h) {
-    H = h;
+    this.H = h;
   }
 
   public void setType(FractalType type) {
     this.type = type;
     switch (type) {
-    case BILLOW:
-      H = 1.0;
-      gain = 0.5;
-      offset = 0.0;
-      break;
-    case DECARPENTIERSWISS:
-      H = 0.9;
-      gain = 1.0;
-      offset = 0.7;
-      break;
-    case FBM:
-      H = 1.0;
-      gain = 0.5;
-      offset = 0.0;
-      break;
-    case HYBRIDMULTI:
-      H = 0.25;
-      gain = 1.0;
-      offset = 0.7;
-      break;
-    case MULTI:
-      H = 1.0;
-      gain = 0.0;
-      offset = 0.0;
-      break;
-    case RIDGEMULTI:
-      H = 0.9;
-      gain = 0.5;
-      offset = 1.0;
-      break;
-    default:
-      throw new AssertionError();
+      case BILLOW:
+        this.H = 1.0;
+        this.gain = 0.5;
+        this.offset = 0.0;
+        break;
+      case DECARPENTIERSWISS:
+        this.H = 0.9;
+        this.gain = 1.0;
+        this.offset = 0.7;
+        break;
+      case FBM:
+        this.H = 1.0;
+        this.gain = 0.5;
+        this.offset = 0.0;
+        break;
+      case HYBRIDMULTI:
+        this.H = 0.25;
+        this.gain = 1.0;
+        this.offset = 0.7;
+        break;
+      case MULTI:
+        this.H = 1.0;
+        this.gain = 0.0;
+        this.offset = 0.0;
+        break;
+      case RIDGEMULTI:
+        this.H = 0.9;
+        this.gain = 0.5;
+        this.offset = 1.0;
+        break;
+      default:
+        throw new AssertionError();
     }
-    calcWeights(type);
+    this.calcWeights(type);
   }
 
-  public void setAllSourceTypes(BasisType basisType,
-      InterpolationType interpolationType) {
+  @SuppressWarnings("WeakerAccess")
+  public void setAllSourceTypes(
+      BasisType basisType,
+      InterpolationType interpolationType
+  ) {
     for (int i = 0; i < MAX_SOURCES; i++) {
-      basis[i].setType(basisType);
-      basis[i].setInterpolation(interpolationType);
+      this.basis[i].setType(basisType);
+      this.basis[i].setInterpolation(interpolationType);
     }
   }
 
+  @SuppressWarnings("WeakerAccess")
   public void setAllSourceBasisTypes(BasisType basisType) {
     for (int i = 0; i < MAX_SOURCES; i++) {
-      basis[i].setType(basisType);
+      this.basis[i].setType(basisType);
     }
   }
 
+  @SuppressWarnings("WeakerAccess")
   public void setAllSourceInterpolationTypes(InterpolationType interpolationType) {
     for (int i = 0; i < MAX_SOURCES; i++) {
-      basis[i].setInterpolation(interpolationType);
+      this.basis[i].setInterpolation(interpolationType);
     }
   }
 
-  public void setSourceType(int index, BasisType basisType,
-      InterpolationType interpolationType) {
-    assertMaxSources(index);
-    basis[index].setType(basisType);
-    basis[index].setInterpolation(interpolationType);
+  @SuppressWarnings({"WeakerAccess", "unused"})
+  public void setSourceType(
+      int index,
+      BasisType basisType,
+      InterpolationType interpolationType
+  ) {
+    this.assertMaxSources(index);
+    this.basis[index].setType(basisType);
+    this.basis[index].setInterpolation(interpolationType);
   }
 
+  /**
+   * Sets the derivative spacing. This parameter is only used when calculating the DeCarpentierSwiss fractal type.
+   *
+   * @param derivativeSpacing the derivative spacing
+   */
+  @SuppressWarnings({"WeakerAccess", "unused"})
+  public void setSourceDerivativeSpacing(int index, double derivativeSpacing) {
+    this.derivativeSpacing[index] = derivativeSpacing;
+  }
+
+  @SuppressWarnings({"WeakerAccess", "unused"})
   public void overrideSource(int index, Module source) {
     if (index < 0 || index >= MAX_SOURCES) {
       throw new IllegalArgumentException("expecting index < " + MAX_SOURCES
@@ -198,604 +232,702 @@ public class ModuleFractal extends SeedableModule {
     this.source[index] = source;
   }
 
+  @SuppressWarnings({"WeakerAccess", "unused"})
   public void resetSource(int index) {
-    assertMaxSources(index);
-    source[index] = basis[index];
+    this.assertMaxSources(index);
+    this.source[index] = this.basis[index];
   }
 
+  @SuppressWarnings({"WeakerAccess", "unused"})
   public void resetAllSources() {
-    for (int i = 0; i < MAX_SOURCES; i++) {
-      source[i] = basis[i];
-    }
+    System.arraycopy(this.basis, 0, this.source, 0, MAX_SOURCES);
   }
 
   @Override
   public void setSeed(long seed) {
     super.setSeed(seed);
+
     for (int i = 0; i < MAX_SOURCES; i++) {
-      if (source[i] instanceof SeedableModule) {
-        ((SeedableModule) source[i]).setSeed(seed);
+
+      if (this.source[i] instanceof SeedableModule) {
+        ((SeedableModule) this.source[i]).setSeed(seed);
       }
     }
   }
 
+  @SuppressWarnings({"WeakerAccess", "unused"})
   public ModuleBasisFunction getBasis(int index) {
-    assertMaxSources(index);
-    return basis[index];
+    this.assertMaxSources(index);
+    return this.basis[index];
   }
 
   @Override
   public double get(double x, double y) {
-    switch (type) {
-    case BILLOW:
-      return getBillow(x, y);
-    case DECARPENTIERSWISS:
-      return getDeCarpentierSwiss(x, y);
-    case FBM:
-      return getFBM(x, y);
-    case HYBRIDMULTI:
-      return getHybridMulti(x, y);
-    case MULTI:
-      return getMulti(x, y);
-    case RIDGEMULTI:
-      return getRidgedMulti(x, y);
-    default:
-      throw new AssertionError();
+
+    switch (this.type) {
+      case BILLOW:
+        return this.getBillow(x, y);
+
+      case DECARPENTIERSWISS:
+        return this.getDeCarpentierSwiss(x, y);
+
+      case FBM:
+        return this.getFBM(x, y);
+
+      case HYBRIDMULTI:
+        return this.getHybridMulti(x, y);
+
+      case MULTI:
+        return this.getMulti(x, y);
+
+      case RIDGEMULTI:
+        return this.getRidgedMulti(x, y);
+
+      default:
+        throw new AssertionError();
     }
   }
 
   @Override
   public double get(double x, double y, double z) {
-    switch (type) {
-    case BILLOW:
-      return getBillow(x, y, z);
-    case DECARPENTIERSWISS:
-      return getDeCarpentierSwiss(x, y, z);
-    case FBM:
-      return getFBM(x, y, z);
-    case HYBRIDMULTI:
-      return getHybridMulti(x, y, z);
-    case MULTI:
-      return getMulti(x, y, z);
-    case RIDGEMULTI:
-      return getRidgedMulti(x, y, z);
-    default:
-      throw new AssertionError();
+
+    switch (this.type) {
+      case BILLOW:
+        return this.getBillow(x, y, z);
+
+      case DECARPENTIERSWISS:
+        return this.getDeCarpentierSwiss(x, y, z);
+
+      case FBM:
+        return this.getFBM(x, y, z);
+
+      case HYBRIDMULTI:
+        return this.getHybridMulti(x, y, z);
+
+      case MULTI:
+        return this.getMulti(x, y, z);
+
+      case RIDGEMULTI:
+        return this.getRidgedMulti(x, y, z);
+
+      default:
+        throw new AssertionError();
     }
   }
 
   @Override
   public double get(double x, double y, double z, double w) {
-    switch (type) {
-    case BILLOW:
-      return getBillow(x, y, z, w);
-    case DECARPENTIERSWISS:
-      return getDeCarpentierSwiss(x, y, z, w);
-    case FBM:
-      return getFBM(x, y, z, w);
-    case HYBRIDMULTI:
-      return getHybridMulti(x, y, z, w);
-    case MULTI:
-      return getMulti(x, y, z, w);
-    case RIDGEMULTI:
-      return getRidgedMulti(x, y, z, w);
-    default:
-      throw new AssertionError();
+
+    switch (this.type) {
+      case BILLOW:
+        return this.getBillow(x, y, z, w);
+
+      case DECARPENTIERSWISS:
+        return this.getDeCarpentierSwiss(x, y, z, w);
+
+      case FBM:
+        return this.getFBM(x, y, z, w);
+
+      case HYBRIDMULTI:
+        return this.getHybridMulti(x, y, z, w);
+
+      case MULTI:
+        return this.getMulti(x, y, z, w);
+
+      case RIDGEMULTI:
+        return this.getRidgedMulti(x, y, z, w);
+
+      default:
+        throw new AssertionError();
     }
   }
 
   @Override
   public double get(double x, double y, double z, double w, double u, double v) {
-    switch (type) {
-    case BILLOW:
-      return getBillow(x, y, z, w, u, v);
-    case DECARPENTIERSWISS:
-      return getDeCarpentierSwiss(x, y, z, w, u, v);
-    case FBM:
-      return getFBM(x, y, z, w, u, v);
-    case HYBRIDMULTI:
-      return getHybridMulti(x, y, z, w, u, v);
-    case MULTI:
-      return getMulti(x, y, z, w, u, v);
-    case RIDGEMULTI:
-      return getRidgedMulti(x, y, z, w, u, v);
-    default:
-      throw new AssertionError();
+
+    switch (this.type) {
+      case BILLOW:
+        return this.getBillow(x, y, z, w, u, v);
+
+      case DECARPENTIERSWISS:
+        return this.getDeCarpentierSwiss(x, y, z, w, u, v);
+
+      case FBM:
+        return this.getFBM(x, y, z, w, u, v);
+
+      case HYBRIDMULTI:
+        return this.getHybridMulti(x, y, z, w, u, v);
+
+      case MULTI:
+        return this.getMulti(x, y, z, w, u, v);
+
+      case RIDGEMULTI:
+        return this.getRidgedMulti(x, y, z, w, u, v);
+
+      default:
+        throw new AssertionError();
     }
   }
 
-  protected double getFBM(double x, double y) {
+  private double getFBM(double x, double y) {
     double sum = 0;
     double amp = 1.0;
 
-    x *= frequency;
-    y *= frequency;
+    x *= this.frequency;
+    y *= this.frequency;
 
-    for (int i = 0; i < numOctaves; ++i) {
-      double n = source[i].get(x, y);
+    for (int i = 0; i < this.numOctaves; ++i) {
+      double n = this.source[i].get(x, y);
       sum += n * amp;
-      amp *= gain;
+      amp *= this.gain;
 
-      x *= lacunarity;
-      y *= lacunarity;
+      x *= this.lacunarity;
+      y *= this.lacunarity;
     }
     return sum;
   }
 
-  protected double getFBM(double x, double y, double z) {
+  private double getFBM(double x, double y, double z) {
     double sum = 0;
     double amp = 1.0;
 
-    x *= frequency;
-    y *= frequency;
-    z *= frequency;
+    x *= this.frequency;
+    y *= this.frequency;
+    z *= this.frequency;
 
-    for (int i = 0; i < numOctaves; ++i) {
-      double n = source[i].get(x, y, z);
+    for (int i = 0; i < this.numOctaves; ++i) {
+      double n = this.source[i].get(x, y, z);
       sum += n * amp;
-      amp *= gain;
+      amp *= this.gain;
 
-      x *= lacunarity;
-      y *= lacunarity;
-      z *= lacunarity;
+      x *= this.lacunarity;
+      y *= this.lacunarity;
+      z *= this.lacunarity;
     }
     return sum;
   }
 
-  protected double getFBM(double x, double y, double z, double w) {
+  private double getFBM(double x, double y, double z, double w) {
     double sum = 0;
     double amp = 1.0;
 
-    x *= frequency;
-    y *= frequency;
-    z *= frequency;
-    w *= frequency;
+    x *= this.frequency;
+    y *= this.frequency;
+    z *= this.frequency;
+    w *= this.frequency;
 
-    for (int i = 0; i < numOctaves; ++i) {
-      double n = source[i].get(x, y, z, w);
+    for (int i = 0; i < this.numOctaves; ++i) {
+      double n = this.source[i].get(x, y, z, w);
       sum += n * amp;
-      amp *= gain;
+      amp *= this.gain;
 
-      x *= lacunarity;
-      y *= lacunarity;
-      z *= lacunarity;
-      w *= lacunarity;
+      x *= this.lacunarity;
+      y *= this.lacunarity;
+      z *= this.lacunarity;
+      w *= this.lacunarity;
     }
     return sum;
   }
 
-  protected double getFBM(double x, double y, double z, double w, double u,
-      double v) {
+  private double getFBM(double x, double y, double z, double w, double u, double v) {
     double sum = 0;
     double amp = 1.0;
 
-    x *= frequency;
-    y *= frequency;
-    z *= frequency;
-    w *= frequency;
-    u *= frequency;
-    v *= frequency;
+    x *= this.frequency;
+    y *= this.frequency;
+    z *= this.frequency;
+    w *= this.frequency;
+    u *= this.frequency;
+    v *= this.frequency;
 
-    for (int i = 0; i < numOctaves; ++i) {
-      double n = source[i].get(x, y, z, w);
+    for (int i = 0; i < this.numOctaves; ++i) {
+      double n = this.source[i].get(x, y, z, w);
       sum += n * amp;
-      amp *= gain;
+      amp *= this.gain;
 
-      x *= lacunarity;
-      y *= lacunarity;
-      z *= lacunarity;
-      w *= lacunarity;
-      u *= lacunarity;
-      v *= lacunarity;
+      x *= this.lacunarity;
+      y *= this.lacunarity;
+      z *= this.lacunarity;
+      w *= this.lacunarity;
+      u *= this.lacunarity;
+      v *= this.lacunarity;
     }
     return sum;
   }
 
-  protected double getMulti(double x, double y) {
+  private double getMulti(double x, double y) {
     double value = 1.0;
-    x *= frequency;
-    y *= frequency;
-    for (int i = 0; i < numOctaves; ++i) {
-      value *= source[i].get(x, y) * exparray[i] + 1.0;
-      x *= lacunarity;
-      y *= lacunarity;
+    x *= this.frequency;
+    y *= this.frequency;
+
+    for (int i = 0; i < this.numOctaves; ++i) {
+      value *= this.source[i].get(x, y) * this.exparray[i] + 1.0;
+      x *= this.lacunarity;
+      y *= this.lacunarity;
     }
-    return value * correct[numOctaves - 1][0] + correct[numOctaves - 1][1];
+    return value * this.correct[this.numOctaves - 1][0] + this.correct[this.numOctaves - 1][1];
   }
 
-  protected double getMulti(double x, double y, double z) {
+  private double getMulti(double x, double y, double z) {
     double value = 1.0;
-    x *= frequency;
-    y *= frequency;
-    z *= frequency;
-    for (int i = 0; i < numOctaves; ++i) {
-      value *= source[i].get(x, y, z) * exparray[i] + 1.0;
-      x *= lacunarity;
-      y *= lacunarity;
-      z *= lacunarity;
+    x *= this.frequency;
+    y *= this.frequency;
+    z *= this.frequency;
+
+    for (int i = 0; i < this.numOctaves; ++i) {
+      value *= this.source[i].get(x, y, z) * this.exparray[i] + 1.0;
+      x *= this.lacunarity;
+      y *= this.lacunarity;
+      z *= this.lacunarity;
     }
-    return value * correct[numOctaves - 1][0] + correct[numOctaves - 1][1];
+    return value * this.correct[this.numOctaves - 1][0] + this.correct[this.numOctaves - 1][1];
   }
 
-  protected double getMulti(double x, double y, double z, double w) {
+  private double getMulti(double x, double y, double z, double w) {
     double value = 1.0;
-    x *= frequency;
-    y *= frequency;
-    z *= frequency;
-    w *= frequency;
-    for (int i = 0; i < numOctaves; ++i) {
-      value *= source[i].get(x, y, z, w) * exparray[i] + 1.0;
-      x *= lacunarity;
-      y *= lacunarity;
-      z *= lacunarity;
-      w *= lacunarity;
+    x *= this.frequency;
+    y *= this.frequency;
+    z *= this.frequency;
+    w *= this.frequency;
+
+    for (int i = 0; i < this.numOctaves; ++i) {
+      value *= this.source[i].get(x, y, z, w) * this.exparray[i] + 1.0;
+      x *= this.lacunarity;
+      y *= this.lacunarity;
+      z *= this.lacunarity;
+      w *= this.lacunarity;
     }
-    return value * correct[numOctaves - 1][0] + correct[numOctaves - 1][1];
+    return value * this.correct[this.numOctaves - 1][0] + this.correct[this.numOctaves - 1][1];
   }
 
-  protected double getMulti(double x, double y, double z, double w, double u,
-      double v) {
+  private double getMulti(double x, double y, double z, double w, double u, double v) {
     double value = 1.0;
-    x *= frequency;
-    y *= frequency;
-    z *= frequency;
-    w *= frequency;
-    u *= frequency;
-    v *= frequency;
-    for (int i = 0; i < numOctaves; ++i) {
-      value *= source[i].get(x, y, z, w, u, v) * exparray[i] + 1.0;
-      x *= lacunarity;
-      y *= lacunarity;
-      z *= lacunarity;
-      w *= lacunarity;
-      u *= lacunarity;
-      v *= lacunarity;
+    x *= this.frequency;
+    y *= this.frequency;
+    z *= this.frequency;
+    w *= this.frequency;
+    u *= this.frequency;
+    v *= this.frequency;
+
+    for (int i = 0; i < this.numOctaves; ++i) {
+      value *= this.source[i].get(x, y, z, w, u, v) * this.exparray[i] + 1.0;
+      x *= this.lacunarity;
+      y *= this.lacunarity;
+      z *= this.lacunarity;
+      w *= this.lacunarity;
+      u *= this.lacunarity;
+      v *= this.lacunarity;
     }
-    return value * correct[numOctaves - 1][0] + correct[numOctaves - 1][1];
+    return value * this.correct[this.numOctaves - 1][0] + this.correct[this.numOctaves - 1][1];
   }
 
-  protected double getBillow(double x, double y) {
+  private double getBillow(double x, double y) {
     double sum = 0.0;
     double amp = 1.0;
 
-    x *= frequency;
-    y *= frequency;
+    x *= this.frequency;
+    y *= this.frequency;
 
-    for (int i = 0; i < numOctaves; ++i) {
-      double n = source[i].get(x, y);
+    for (int i = 0; i < this.numOctaves; ++i) {
+      double n = this.source[i].get(x, y);
       sum += (2.0 * Math.abs(n) - 1.0) * amp;
-      amp *= gain;
+      amp *= this.gain;
 
-      x *= lacunarity;
-      y *= lacunarity;
+      x *= this.lacunarity;
+      y *= this.lacunarity;
     }
     return sum;
   }
 
-  protected double getBillow(double x, double y, double z) {
+  private double getBillow(double x, double y, double z) {
     double sum = 0.0;
     double amp = 1.0;
-    x *= frequency;
-    y *= frequency;
-    z *= frequency;
-    for (int i = 0; i < numOctaves; ++i) {
-      double n = source[i].get(x, y, z);
+    x *= this.frequency;
+    y *= this.frequency;
+    z *= this.frequency;
+
+    for (int i = 0; i < this.numOctaves; ++i) {
+      double n = this.source[i].get(x, y, z);
       sum += (2.0 * Math.abs(n) - 1.0) * amp;
-      amp *= gain;
-      x *= lacunarity;
-      y *= lacunarity;
-      z *= lacunarity;
+      amp *= this.gain;
+      x *= this.lacunarity;
+      y *= this.lacunarity;
+      z *= this.lacunarity;
     }
     return sum;
   }
 
-  protected double getBillow(double x, double y, double z, double w) {
+  private double getBillow(double x, double y, double z, double w) {
     double sum = 0.0;
     double amp = 1.0;
-    x *= frequency;
-    y *= frequency;
-    z *= frequency;
-    w *= frequency;
-    for (int i = 0; i < numOctaves; ++i) {
-      double n = source[i].get(x, y, z, w);
+    x *= this.frequency;
+    y *= this.frequency;
+    z *= this.frequency;
+    w *= this.frequency;
+
+    for (int i = 0; i < this.numOctaves; ++i) {
+      double n = this.source[i].get(x, y, z, w);
       sum += (2.0 * Math.abs(n) - 1.0) * amp;
-      amp *= gain;
-      x *= lacunarity;
-      y *= lacunarity;
-      z *= lacunarity;
-      w *= lacunarity;
+      amp *= this.gain;
+      x *= this.lacunarity;
+      y *= this.lacunarity;
+      z *= this.lacunarity;
+      w *= this.lacunarity;
     }
     return sum;
   }
 
-  protected double getBillow(double x, double y, double z, double w, double u,
-      double v) {
+  private double getBillow(double x, double y, double z, double w, double u, double v) {
     double sum = 0.0;
     double amp = 1.0;
-    x *= frequency;
-    y *= frequency;
-    z *= frequency;
-    w *= frequency;
-    u *= frequency;
-    v *= frequency;
-    for (int i = 0; i < numOctaves; ++i) {
-      double n = source[i].get(x, y, z, w, u, v);
+    x *= this.frequency;
+    y *= this.frequency;
+    z *= this.frequency;
+    w *= this.frequency;
+    u *= this.frequency;
+    v *= this.frequency;
+
+    for (int i = 0; i < this.numOctaves; ++i) {
+      double n = this.source[i].get(x, y, z, w, u, v);
       sum += (2.0 * Math.abs(n) - 1.0) * amp;
-      amp *= gain;
-      x *= lacunarity;
-      y *= lacunarity;
-      z *= lacunarity;
-      w *= lacunarity;
-      u *= lacunarity;
-      v *= lacunarity;
+      amp *= this.gain;
+      x *= this.lacunarity;
+      y *= this.lacunarity;
+      z *= this.lacunarity;
+      w *= this.lacunarity;
+      u *= this.lacunarity;
+      v *= this.lacunarity;
     }
     return sum;
   }
 
-  protected double getRidgedMulti(double x, double y) {
+  private double getRidgedMulti(double x, double y) {
     double sum = 0;
     double amp = 1.0;
-    x *= frequency;
-    y *= frequency;
-    for (int i = 0; i < numOctaves; ++i) {
-      double n = source[i].get(x, y);
+    x *= this.frequency;
+    y *= this.frequency;
+
+    for (int i = 0; i < this.numOctaves; ++i) {
+      double n = this.source[i].get(x, y);
       n = 1.0 - Math.abs(n);
       sum += amp * n;
-      amp *= gain;
-      x *= lacunarity;
-      y *= lacunarity;
+      amp *= this.gain;
+      x *= this.lacunarity;
+      y *= this.lacunarity;
     }
     return sum;
   }
 
-  protected double getRidgedMulti(double x, double y, double z) {
+  private double getRidgedMulti(double x, double y, double z) {
     double sum = 0;
     double amp = 1.0;
-    x *= frequency;
-    y *= frequency;
-    z *= frequency;
-    for (int i = 0; i < numOctaves; ++i) {
-      double n = source[i].get(x, y, z);
+    x *= this.frequency;
+    y *= this.frequency;
+    z *= this.frequency;
+
+    for (int i = 0; i < this.numOctaves; ++i) {
+      double n = this.source[i].get(x, y, z);
       n = 1.0 - Math.abs(n);
       sum += amp * n;
-      amp *= gain;
-      x *= lacunarity;
-      y *= lacunarity;
-      z *= lacunarity;
+      amp *= this.gain;
+      x *= this.lacunarity;
+      y *= this.lacunarity;
+      z *= this.lacunarity;
     }
     return sum;
   }
 
-  protected double getRidgedMulti(double x, double y, double z, double w) {
+  private double getRidgedMulti(double x, double y, double z, double w) {
     double result = 0.0, signal;
-    x *= frequency;
-    y *= frequency;
-    z *= frequency;
-    w *= frequency;
-    for (int i = 0; i < numOctaves; ++i) {
-      signal = source[i].get(x, y, z, w);
-      signal = offset - Math.abs(signal);
+    x *= this.frequency;
+    y *= this.frequency;
+    z *= this.frequency;
+    w *= this.frequency;
+
+    for (int i = 0; i < this.numOctaves; ++i) {
+      signal = this.source[i].get(x, y, z, w);
+      signal = this.offset - Math.abs(signal);
       signal *= signal;
-      result += signal * exparray[i];
-      x *= lacunarity;
-      y *= lacunarity;
-      z *= lacunarity;
-      w *= lacunarity;
+      result += signal * this.exparray[i];
+      x *= this.lacunarity;
+      y *= this.lacunarity;
+      z *= this.lacunarity;
+      w *= this.lacunarity;
     }
-    return result * correct[numOctaves - 1][0] + correct[numOctaves - 1][1];
+    return result * this.correct[this.numOctaves - 1][0] + this.correct[this.numOctaves - 1][1];
   }
 
-  protected double getRidgedMulti(double x, double y, double z, double w,
-      double u, double v) {
+  private double getRidgedMulti(double x, double y, double z, double w, double u, double v) {
     double result = 0.0, signal;
-    x *= frequency;
-    y *= frequency;
-    z *= frequency;
-    w *= frequency;
-    u *= frequency;
-    v *= frequency;
-    for (int i = 0; i < numOctaves; ++i) {
-      signal = source[i].get(x, y, z, w, u, v);
-      signal = offset - Math.abs(signal);
+    x *= this.frequency;
+    y *= this.frequency;
+    z *= this.frequency;
+    w *= this.frequency;
+    u *= this.frequency;
+    v *= this.frequency;
+
+    for (int i = 0; i < this.numOctaves; ++i) {
+      signal = this.source[i].get(x, y, z, w, u, v);
+      signal = this.offset - Math.abs(signal);
       signal *= signal;
-      result += signal * exparray[i];
-      x *= lacunarity;
-      y *= lacunarity;
-      z *= lacunarity;
-      w *= lacunarity;
-      u *= lacunarity;
-      v *= lacunarity;
+      result += signal * this.exparray[i];
+      x *= this.lacunarity;
+      y *= this.lacunarity;
+      z *= this.lacunarity;
+      w *= this.lacunarity;
+      u *= this.lacunarity;
+      v *= this.lacunarity;
     }
-    return result * correct[numOctaves - 1][0] + correct[numOctaves - 1][1];
+    return result * this.correct[this.numOctaves - 1][0] + this.correct[this.numOctaves - 1][1];
   }
 
-  protected double getHybridMulti(double x, double y) {
+  private double getHybridMulti(double x, double y) {
     double value, signal, weight;
-    x *= frequency;
-    y *= frequency;
-    value = source[0].get(x, y) + offset;
-    weight = gain * value;
-    x *= lacunarity;
-    y *= lacunarity;
-    for (int i = 1; i < numOctaves; ++i) {
+    x *= this.frequency;
+    y *= this.frequency;
+    value = this.source[0].get(x, y) + this.offset;
+    weight = this.gain * value;
+    x *= this.lacunarity;
+    y *= this.lacunarity;
+
+    for (int i = 1; i < this.numOctaves; ++i) {
       if (weight > 1.0) weight = 1.0;
-      signal = (source[i].get(x, y) + offset) * exparray[i];
+      signal = (this.source[i].get(x, y) + this.offset) * this.exparray[i];
       value += weight * signal;
-      weight *= gain * signal;
-      x *= lacunarity;
-      y *= lacunarity;
+      weight *= this.gain * signal;
+      x *= this.lacunarity;
+      y *= this.lacunarity;
     }
-    return value * correct[numOctaves - 1][0] + correct[numOctaves - 1][1];
+    return value * this.correct[this.numOctaves - 1][0] + this.correct[this.numOctaves - 1][1];
   }
 
-  protected double getHybridMulti(double x, double y, double z) {
+  private double getHybridMulti(double x, double y, double z) {
     double value, signal, weight;
-    x *= frequency;
-    y *= frequency;
-    z *= frequency;
-    value = source[0].get(x, y, z) + offset;
-    weight = gain * value;
-    x *= lacunarity;
-    y *= lacunarity;
-    z *= lacunarity;
-    for (int i = 1; i < numOctaves; ++i) {
+    x *= this.frequency;
+    y *= this.frequency;
+    z *= this.frequency;
+    value = this.source[0].get(x, y, z) + this.offset;
+    weight = this.gain * value;
+    x *= this.lacunarity;
+    y *= this.lacunarity;
+    z *= this.lacunarity;
+
+    for (int i = 1; i < this.numOctaves; ++i) {
       if (weight > 1.0) weight = 1.0;
-      signal = (source[i].get(x, y, z) + offset) * exparray[i];
+      signal = (this.source[i].get(x, y, z) + this.offset) * this.exparray[i];
       value += weight * signal;
-      weight *= gain * signal;
-      x *= lacunarity;
-      y *= lacunarity;
-      z *= lacunarity;
+      weight *= this.gain * signal;
+      x *= this.lacunarity;
+      y *= this.lacunarity;
+      z *= this.lacunarity;
     }
-    return value * correct[numOctaves - 1][0] + correct[numOctaves - 1][1];
+    return value * this.correct[this.numOctaves - 1][0] + this.correct[this.numOctaves - 1][1];
   }
 
-  protected double getHybridMulti(double x, double y, double z, double w) {
+  private double getHybridMulti(double x, double y, double z, double w) {
     double value, signal, weight;
-    x *= frequency;
-    y *= frequency;
-    z *= frequency;
-    w *= frequency;
-    value = source[0].get(x, y, z, w) + offset;
-    weight = gain * value;
-    x *= lacunarity;
-    y *= lacunarity;
-    z *= lacunarity;
-    w *= lacunarity;
-    for (int i = 1; i < numOctaves; ++i) {
+    x *= this.frequency;
+    y *= this.frequency;
+    z *= this.frequency;
+    w *= this.frequency;
+    value = this.source[0].get(x, y, z, w) + this.offset;
+    weight = this.gain * value;
+    x *= this.lacunarity;
+    y *= this.lacunarity;
+    z *= this.lacunarity;
+    w *= this.lacunarity;
+
+    for (int i = 1; i < this.numOctaves; ++i) {
       if (weight > 1.0) weight = 1.0;
-      signal = (source[i].get(x, y, z, w) + offset) * exparray[i];
+      signal = (this.source[i].get(x, y, z, w) + this.offset) * this.exparray[i];
       value += weight * signal;
-      weight *= gain * signal;
-      x *= lacunarity;
-      y *= lacunarity;
-      z *= lacunarity;
-      w *= lacunarity;
+      weight *= this.gain * signal;
+      x *= this.lacunarity;
+      y *= this.lacunarity;
+      z *= this.lacunarity;
+      w *= this.lacunarity;
     }
-    return value * correct[numOctaves - 1][0] + correct[numOctaves - 1][1];
+    return value * this.correct[this.numOctaves - 1][0] + this.correct[this.numOctaves - 1][1];
   }
 
-  protected double getHybridMulti(double x, double y, double z, double w,
-      double u, double v) {
+  private double getHybridMulti(double x, double y, double z, double w, double u, double v) {
     double value, signal, weight;
-    x *= frequency;
-    y *= frequency;
-    z *= frequency;
-    w *= frequency;
-    u *= frequency;
-    v *= frequency;
-    value = source[0].get(x, y, z, w, u, v) + offset;
-    weight = gain * value;
-    x *= lacunarity;
-    y *= lacunarity;
-    z *= lacunarity;
-    w *= lacunarity;
-    u *= lacunarity;
-    v *= lacunarity;
-    for (int i = 1; i < numOctaves; ++i) {
+    x *= this.frequency;
+    y *= this.frequency;
+    z *= this.frequency;
+    w *= this.frequency;
+    u *= this.frequency;
+    v *= this.frequency;
+    value = this.source[0].get(x, y, z, w, u, v) + this.offset;
+    weight = this.gain * value;
+    x *= this.lacunarity;
+    y *= this.lacunarity;
+    z *= this.lacunarity;
+    w *= this.lacunarity;
+    u *= this.lacunarity;
+    v *= this.lacunarity;
+
+    for (int i = 1; i < this.numOctaves; ++i) {
       if (weight > 1.0) weight = 1.0;
-      signal = (source[i].get(x, y, z, w, u, v) + offset) * exparray[i];
+      signal = (this.source[i].get(x, y, z, w, u, v) + this.offset) * this.exparray[i];
       value += weight * signal;
-      weight *= gain * signal;
-      x *= lacunarity;
-      y *= lacunarity;
-      z *= lacunarity;
-      w *= lacunarity;
-      u *= lacunarity;
-      v *= lacunarity;
+      weight *= this.gain * signal;
+      x *= this.lacunarity;
+      y *= this.lacunarity;
+      z *= this.lacunarity;
+      w *= this.lacunarity;
+      u *= this.lacunarity;
+      v *= this.lacunarity;
     }
-    return value * correct[numOctaves - 1][0] + correct[numOctaves - 1][1];
+    return value * this.correct[this.numOctaves - 1][0] + this.correct[this.numOctaves - 1][1];
   }
 
-  protected double getDeCarpentierSwiss(double x, double y) {
+  private double getDeCarpentierSwiss(double x, double y) {
     double sum = 0;
     double amp = 1.0;
     double dx_sum = 0;
     double dy_sum = 0;
-    x *= frequency;
-    y *= frequency;
-    for (int i = 0; i < numOctaves; ++i) {
-      double n = source[i].get(x + offset * dx_sum, y + offset * dy_sum);
-      double dx = source[i].getDX(x + offset * dx_sum, y + offset * dy_sum);
-      double dy = source[i].getDY(x + offset * dx_sum, y + offset * dy_sum);
+    x *= this.frequency;
+    y *= this.frequency;
+
+    for (int sourceIndex = 0; sourceIndex < this.numOctaves; ++sourceIndex) {
+      double n = this.source[sourceIndex].get(x + this.offset * dx_sum, y + this.offset * dy_sum);
+      double dx = this.getDX(this.source[sourceIndex], this.derivativeSpacing[sourceIndex], x + this.offset * dx_sum,
+          y + this.offset * dy_sum);
+      double dy = this.getDY(this.source[sourceIndex], this.derivativeSpacing[sourceIndex], x + this.offset * dx_sum,
+          y + this.offset * dy_sum);
       sum += amp * (1.0 - Math.abs(n));
       dx_sum += amp * dx * -n;
       dy_sum += amp * dy * -n;
-      amp *= gain * Util.clamp(sum, 0.0, 1.0);
-      x *= lacunarity;
-      y *= lacunarity;
+      amp *= this.gain * Util.clamp(sum, 0.0, 1.0);
+      x *= this.lacunarity;
+      y *= this.lacunarity;
     }
     return sum;
   }
 
-  protected double getDeCarpentierSwiss(double x, double y, double z) {
+  private double getDeCarpentierSwiss(double x, double y, double z) {
     double sum = 0;
     double amp = 1.0;
     double dx_sum = 0;
     double dy_sum = 0;
     double dz_sum = 0;
-    x *= frequency;
-    y *= frequency;
-    z *= frequency;
-    for (int i = 0; i < numOctaves; ++i) {
-      double n = source[i].get(x + offset * dx_sum, y + offset * dy_sum, z
-          + offset * dz_sum);
-      double dx = source[i].getDX(x + offset * dx_sum, y + offset * dy_sum, z
-          + offset * dz_sum);
-      double dy = source[i].getDY(x + offset * dx_sum, y + offset * dy_sum, z
-          + offset * dz_sum);
-      double dz = source[i].getDZ(x + offset * dx_sum, y + offset * dy_sum, z
-          + offset * dz_sum);
+    x *= this.frequency;
+    y *= this.frequency;
+    z *= this.frequency;
+
+    for (int sourceIndex = 0; sourceIndex < this.numOctaves; ++sourceIndex) {
+      double n = this.source[sourceIndex].get(
+          x + this.offset * dx_sum,
+          y + this.offset * dy_sum,
+          z + this.offset * dz_sum
+      );
+      double dx = this.getDX(
+          this.source[sourceIndex],
+          this.derivativeSpacing[sourceIndex],
+          x + this.offset * dx_sum,
+          y + this.offset * dy_sum,
+          z + this.offset * dz_sum
+      );
+      double dy = this.getDY(
+          this.source[sourceIndex],
+          this.derivativeSpacing[sourceIndex],
+          x + this.offset * dx_sum,
+          y + this.offset * dy_sum,
+          z + this.offset * dz_sum
+      );
+      double dz = this.getDZ(
+          this.source[sourceIndex],
+          this.derivativeSpacing[sourceIndex],
+          x + this.offset * dx_sum,
+          y + this.offset * dy_sum,
+          z + this.offset * dz_sum
+      );
       sum += amp * (1.0 - Math.abs(n));
       dx_sum += amp * dx * -n;
       dy_sum += amp * dy * -n;
       dz_sum += amp * dz * -n;
-      amp *= gain * Util.clamp(sum, 0.0, 1.0);
-      x *= lacunarity;
-      y *= lacunarity;
-      z *= lacunarity;
+      amp *= this.gain * Util.clamp(sum, 0.0, 1.0);
+      x *= this.lacunarity;
+      y *= this.lacunarity;
+      z *= this.lacunarity;
     }
     return sum;
   }
 
-  protected double getDeCarpentierSwiss(double x, double y, double z, double w) {
+  private double getDeCarpentierSwiss(double x, double y, double z, double w) {
     double sum = 0;
     double amp = 1.0;
     double dx_sum = 0;
     double dy_sum = 0;
     double dz_sum = 0;
     double dw_sum = 0;
-    x *= frequency;
-    y *= frequency;
-    z *= frequency;
-    w *= frequency;
-    for (int i = 0; i < numOctaves; ++i) {
-      double n = source[i].get(x + offset * dx_sum, y + offset * dy_sum, z
-          + offset * dz_sum, w + offset * dw_sum);
-      double dx = source[i].getDX(x + offset * dx_sum, y + offset * dy_sum, z
-          + offset * dz_sum, w + offset * dw_sum);
-      double dy = source[i].getDY(x + offset * dx_sum, y + offset * dy_sum, z
-          + offset * dz_sum, w + offset * dw_sum);
-      double dz = source[i].getDZ(x + offset * dx_sum, y + offset * dy_sum, z
-          + offset * dz_sum, w + offset * dw_sum);
-      double dw = source[i].getDW(x + offset * dx_sum, y + offset * dy_sum, z
-          + offset * dz_sum, w + offset * dw_sum);
+    x *= this.frequency;
+    y *= this.frequency;
+    z *= this.frequency;
+    w *= this.frequency;
+
+    for (int sourceIndex = 0; sourceIndex < this.numOctaves; ++sourceIndex) {
+      double n = this.source[sourceIndex].get(
+          x + this.offset * dx_sum,
+          y + this.offset * dy_sum,
+          z + this.offset * dz_sum,
+          w + this.offset * dw_sum
+      );
+      double dx = this.getDX(
+          this.source[sourceIndex],
+          this.derivativeSpacing[sourceIndex],
+          x + this.offset * dx_sum,
+          y + this.offset * dy_sum,
+          z + this.offset * dz_sum,
+          w + this.offset * dw_sum
+      );
+      double dy = this.getDY(
+          this.source[sourceIndex],
+          this.derivativeSpacing[sourceIndex],
+          x + this.offset * dx_sum,
+          y + this.offset * dy_sum,
+          z + this.offset * dz_sum,
+          w + this.offset * dw_sum
+      );
+      double dz = this.getDZ(
+          this.source[sourceIndex],
+          this.derivativeSpacing[sourceIndex],
+          x + this.offset * dx_sum,
+          y + this.offset * dy_sum,
+          z + this.offset * dz_sum,
+          w + this.offset * dw_sum
+      );
+      double dw = this.getDW(
+          this.source[sourceIndex],
+          this.derivativeSpacing[sourceIndex],
+          x + this.offset * dx_sum,
+          y + this.offset * dy_sum,
+          z + this.offset * dz_sum,
+          w + this.offset * dw_sum
+      );
       sum += amp * (1.0 - Math.abs(n));
       dx_sum += amp * dx * -n;
       dy_sum += amp * dy * -n;
       dz_sum += amp * dz * -n;
       dw_sum += amp * dw * -n;
-      amp *= gain * Util.clamp(sum, 0.0, 1.0);
-      x *= lacunarity;
-      y *= lacunarity;
-      z *= lacunarity;
-      w *= lacunarity;
+      amp *= this.gain * Util.clamp(sum, 0.0, 1.0);
+      x *= this.lacunarity;
+      y *= this.lacunarity;
+      z *= this.lacunarity;
+      w *= this.lacunarity;
     }
     return sum;
   }
 
-  protected double getDeCarpentierSwiss(double x, double y, double z, double w,
-      double u, double v) {
+  private double getDeCarpentierSwiss(
+      double x,
+      double y,
+      double z,
+      double w,
+      double u,
+      double v
+  ) {
     double sum = 0;
     double amp = 1.0;
     double dx_sum = 0;
@@ -804,33 +936,79 @@ public class ModuleFractal extends SeedableModule {
     double dw_sum = 0;
     double du_sum = 0;
     double dv_sum = 0;
-    x *= frequency;
-    y *= frequency;
-    z *= frequency;
-    w *= frequency;
-    u *= frequency;
-    v *= frequency;
-    for (int i = 0; i < numOctaves; ++i) {
-      double n = source[i].get(x + offset * dx_sum, y + offset * dy_sum, z
-          + offset * dz_sum);
-      double dx = source[i].getDX(x + offset * dx_sum, y + offset * dy_sum, z
-          + offset * dx_sum, w + offset * dw_sum, u + offset * du_sum, v
-          + offset * dv_sum);
-      double dy = source[i].getDY(x + offset * dx_sum, y + offset * dy_sum, z
-          + offset * dz_sum, w + offset * dw_sum, u + offset * du_sum, v
-          + offset * dv_sum);
-      double dz = source[i].getDZ(x + offset * dx_sum, y + offset * dy_sum, z
-          + offset * dz_sum, w + offset * dw_sum, u + offset * du_sum, v
-          + offset * dv_sum);
-      double dw = source[i].getDW(x + offset * dx_sum, y + offset * dy_sum, z
-          + offset * dz_sum, w + offset * dw_sum, u + offset * du_sum, v
-          + offset * dv_sum);
-      double du = source[i].getDU(x + offset * dx_sum, y + offset * dy_sum, z
-          + offset * dz_sum, w + offset * dw_sum, u + offset * du_sum, v
-          + offset * dv_sum);
-      double dv = source[i].getDV(x + offset * dx_sum, y + offset * dy_sum, z
-          + offset * dz_sum, w + offset * dw_sum, u + offset * du_sum, v
-          + offset * dv_sum);
+    x *= this.frequency;
+    y *= this.frequency;
+    z *= this.frequency;
+    w *= this.frequency;
+    u *= this.frequency;
+    v *= this.frequency;
+
+    for (int sourceIndex = 0; sourceIndex < this.numOctaves; ++sourceIndex) {
+      double n = this.source[sourceIndex].get(
+          x + this.offset * dx_sum,
+          y + this.offset * dy_sum,
+          z + this.offset * dz_sum
+      );
+      double dx = this.getDX(
+          this.source[sourceIndex],
+          this.derivativeSpacing[sourceIndex],
+          x + this.offset * dx_sum,
+          y + this.offset * dy_sum,
+          z + this.offset * dx_sum,
+          w + this.offset * dw_sum,
+          u + this.offset * du_sum,
+          v + this.offset * dv_sum
+      );
+      double dy = this.getDY(
+          this.source[sourceIndex],
+          this.derivativeSpacing[sourceIndex],
+          x + this.offset * dx_sum,
+          y + this.offset * dy_sum,
+          z + this.offset * dz_sum,
+          w + this.offset * dw_sum,
+          u + this.offset * du_sum,
+          v + this.offset * dv_sum
+      );
+      double dz = this.getDZ(
+          this.source[sourceIndex],
+          this.derivativeSpacing[sourceIndex],
+          x + this.offset * dx_sum,
+          y + this.offset * dy_sum,
+          z + this.offset * dz_sum,
+          w + this.offset * dw_sum,
+          u + this.offset * du_sum,
+          v + this.offset * dv_sum
+      );
+      double dw = this.getDW(
+          this.source[sourceIndex],
+          this.derivativeSpacing[sourceIndex],
+          x + this.offset * dx_sum,
+          y + this.offset * dy_sum,
+          z + this.offset * dz_sum,
+          w + this.offset * dw_sum,
+          u + this.offset * du_sum,
+          v + this.offset * dv_sum
+      );
+      double du = this.getDU(
+          this.source[sourceIndex],
+          this.derivativeSpacing[sourceIndex],
+          x + this.offset * dx_sum,
+          y + this.offset * dy_sum,
+          z + this.offset * dz_sum,
+          w + this.offset * dw_sum,
+          u + this.offset * du_sum,
+          v + this.offset * dv_sum
+      );
+      double dv = this.getDV(
+          this.source[sourceIndex],
+          this.derivativeSpacing[sourceIndex],
+          x + this.offset * dx_sum,
+          y + this.offset * dy_sum,
+          z + this.offset * dz_sum,
+          w + this.offset * dw_sum,
+          u + this.offset * du_sum,
+          v + this.offset * dv_sum
+      );
       sum += amp * (1.0 - Math.abs(n));
       dx_sum += amp * dx * -n;
       dy_sum += amp * dy * -n;
@@ -838,151 +1016,151 @@ public class ModuleFractal extends SeedableModule {
       dw_sum += amp * dw * -n;
       du_sum += amp * du * -n;
       dv_sum += amp * dv * -n;
-      amp *= gain * Util.clamp(sum, 0.0, 1.0);
-      x *= lacunarity;
-      y *= lacunarity;
-      z *= lacunarity;
-      w *= lacunarity;
-      u *= lacunarity;
-      v *= lacunarity;
+      amp *= this.gain * Util.clamp(sum, 0.0, 1.0);
+      x *= this.lacunarity;
+      y *= this.lacunarity;
+      z *= this.lacunarity;
+      w *= this.lacunarity;
+      u *= this.lacunarity;
+      v *= this.lacunarity;
     }
     return sum;
   }
 
-  protected void calcWeights(FractalType type) {
+  private void calcWeights(FractalType type) {
     double minvalue, maxvalue;
+
     switch (type) {
-    case FBM:
-      for (int i = 0; i < MAX_SOURCES; i++) {
-        exparray[i] = Math.pow(lacunarity, -i * H);
-      }
-      minvalue = 0.0;
-      maxvalue = 0.0;
-      for (int i = 0; i < MAX_SOURCES; i++) {
-        minvalue += -1.0 * exparray[i];
-        maxvalue += 1.0 * exparray[i];
+      case FBM:
+        for (int i = 0; i < MAX_SOURCES; i++) {
+          this.exparray[i] = Math.pow(this.lacunarity, -i * this.H);
+        }
+        minvalue = 0.0;
+        maxvalue = 0.0;
+        for (int i = 0; i < MAX_SOURCES; i++) {
+          minvalue += -1.0 * this.exparray[i];
+          maxvalue += 1.0 * this.exparray[i];
 
-        double A = -1.0, B = 1.0;
-        double scale = (B - A) / (maxvalue - minvalue);
-        double bias = A - minvalue * scale;
-        correct[i][0] = scale;
-        correct[i][1] = bias;
-      }
-      break;
+          double A = -1.0, B = 1.0;
+          double scale = (B - A) / (maxvalue - minvalue);
+          double bias = A - minvalue * scale;
+          this.correct[i][0] = scale;
+          this.correct[i][1] = bias;
+        }
+        break;
 
-    case RIDGEMULTI:
-      for (int i = 0; i < MAX_SOURCES; ++i) {
-        exparray[i] = Math.pow(lacunarity, -i * H);
-      }
-      minvalue = 0.0;
-      maxvalue = 0.0;
-      for (int i = 0; i < MAX_SOURCES; ++i) {
-        minvalue += (offset - 1.0) * (offset - 1.0) * exparray[i];
-        maxvalue += (offset) * (offset) * exparray[i];
+      case RIDGEMULTI:
+        for (int i = 0; i < MAX_SOURCES; ++i) {
+          this.exparray[i] = Math.pow(this.lacunarity, -i * this.H);
+        }
+        minvalue = 0.0;
+        maxvalue = 0.0;
+        for (int i = 0; i < MAX_SOURCES; ++i) {
+          minvalue += (this.offset - 1.0) * (this.offset - 1.0) * this.exparray[i];
+          maxvalue += (this.offset) * (this.offset) * this.exparray[i];
 
-        double A = -1.0, B = 1.0;
-        double scale = (B - A) / (maxvalue - minvalue);
-        double bias = A - minvalue * scale;
-        correct[i][0] = scale;
-        correct[i][1] = bias;
-      }
-      break;
+          double A = -1.0, B = 1.0;
+          double scale = (B - A) / (maxvalue - minvalue);
+          double bias = A - minvalue * scale;
+          this.correct[i][0] = scale;
+          this.correct[i][1] = bias;
+        }
+        break;
 
-    case DECARPENTIERSWISS:
-      for (int i = 0; i < MAX_SOURCES; ++i) {
-        exparray[i] = Math.pow(lacunarity, -i * H);
-      }
-      minvalue = 0.0;
-      maxvalue = 0.0;
-      for (int i = 0; i < MAX_SOURCES; ++i) {
-        minvalue += (offset - 1.0) * (offset - 1.0) * exparray[i];
-        maxvalue += (offset) * (offset) * exparray[i];
+      case DECARPENTIERSWISS:
+        for (int i = 0; i < MAX_SOURCES; ++i) {
+          this.exparray[i] = Math.pow(this.lacunarity, -i * this.H);
+        }
+        minvalue = 0.0;
+        maxvalue = 0.0;
+        for (int i = 0; i < MAX_SOURCES; ++i) {
+          minvalue += (this.offset - 1.0) * (this.offset - 1.0) * this.exparray[i];
+          maxvalue += (this.offset) * (this.offset) * this.exparray[i];
 
-        double A = -1.0, B = 1.0;
-        double scale = (B - A) / (maxvalue - minvalue);
-        double bias = A - minvalue * scale;
-        correct[i][0] = scale;
-        correct[i][1] = bias;
-      }
-      break;
+          double A = -1.0, B = 1.0;
+          double scale = (B - A) / (maxvalue - minvalue);
+          double bias = A - minvalue * scale;
+          this.correct[i][0] = scale;
+          this.correct[i][1] = bias;
+        }
+        break;
 
-    case BILLOW:
-      for (int i = 0; i < MAX_SOURCES; ++i) {
-        exparray[i] = Math.pow(lacunarity, -i * H);
-      }
-      minvalue = 0.0;
-      maxvalue = 0.0;
-      for (int i = 0; i < MAX_SOURCES; ++i) {
-        minvalue += -1.0 * exparray[i];
-        maxvalue += 1.0 * exparray[i];
+      case BILLOW:
+        for (int i = 0; i < MAX_SOURCES; ++i) {
+          this.exparray[i] = Math.pow(this.lacunarity, -i * this.H);
+        }
+        minvalue = 0.0;
+        maxvalue = 0.0;
+        for (int i = 0; i < MAX_SOURCES; ++i) {
+          minvalue += -1.0 * this.exparray[i];
+          maxvalue += 1.0 * this.exparray[i];
 
-        double A = -1.0, B = 1.0;
-        double scale = (B - A) / (maxvalue - minvalue);
-        double bias = A - minvalue * scale;
-        correct[i][0] = scale;
-        correct[i][1] = bias;
-      }
-      break;
+          double A = -1.0, B = 1.0;
+          double scale = (B - A) / (maxvalue - minvalue);
+          double bias = A - minvalue * scale;
+          this.correct[i][0] = scale;
+          this.correct[i][1] = bias;
+        }
+        break;
 
-    case MULTI:
-      for (int i = 0; i < MAX_SOURCES; ++i) {
-        exparray[i] = Math.pow(lacunarity, -i * H);
-      }
-      minvalue = 1.0;
-      maxvalue = 1.0;
-      for (int i = 0; i < MAX_SOURCES; ++i) {
-        minvalue *= -1.0 * exparray[i] + 1.0;
-        maxvalue *= 1.0 * exparray[i] + 1.0;
+      case MULTI:
+        for (int i = 0; i < MAX_SOURCES; ++i) {
+          this.exparray[i] = Math.pow(this.lacunarity, -i * this.H);
+        }
+        minvalue = 1.0;
+        maxvalue = 1.0;
+        for (int i = 0; i < MAX_SOURCES; ++i) {
+          minvalue *= -1.0 * this.exparray[i] + 1.0;
+          maxvalue *= 1.0 * this.exparray[i] + 1.0;
 
-        double A = -1.0, B = 1.0;
-        double scale = (B - A) / (maxvalue - minvalue);
-        double bias = A - minvalue * scale;
-        correct[i][0] = scale;
-        correct[i][1] = bias;
-      }
-      break;
+          double A = -1.0, B = 1.0;
+          double scale = (B - A) / (maxvalue - minvalue);
+          double bias = A - minvalue * scale;
+          this.correct[i][0] = scale;
+          this.correct[i][1] = bias;
+        }
+        break;
 
-    case HYBRIDMULTI:
-      for (int i = 0; i < MAX_SOURCES; ++i) {
-        exparray[i] = Math.pow(lacunarity, -i * H);
-      }
-      minvalue = 1.0;
-      maxvalue = 1.0;
-      double weightmin,
-      weightmax;
-      double A = -1.0,
-      B = 1.0,
-      scale,
-      bias;
+      case HYBRIDMULTI:
 
-      minvalue = offset - 1.0;
-      maxvalue = offset + 1.0;
-      weightmin = gain * minvalue;
-      weightmax = gain * maxvalue;
+        for (int i = 0; i < MAX_SOURCES; ++i) {
+          this.exparray[i] = Math.pow(this.lacunarity, -i * this.H);
+        }
+        double A = -1.0,
+            B = 1.0,
+            scale,
+            bias,
+            weightMin,
+            weightMax;
 
-      scale = (B - A) / (maxvalue - minvalue);
-      bias = A - minvalue * scale;
-      correct[0][0] = scale;
-      correct[0][1] = bias;
-
-      for (int i = 1; i < MAX_SOURCES; ++i) {
-        if (weightmin > 1.0) weightmin = 1.0;
-        if (weightmax > 1.0) weightmax = 1.0;
-
-        double signal = (offset - 1.0) * exparray[i];
-        minvalue += signal * weightmin;
-        weightmin *= gain * signal;
-
-        signal = (offset + 1.0) * exparray[i];
-        maxvalue += signal * weightmax;
-        weightmax *= gain * signal;
+        minvalue = this.offset - 1.0;
+        maxvalue = this.offset + 1.0;
+        weightMin = this.gain * minvalue;
+        weightMax = this.gain * maxvalue;
 
         scale = (B - A) / (maxvalue - minvalue);
         bias = A - minvalue * scale;
-        correct[i][0] = scale;
-        correct[i][1] = bias;
-      }
-      break;
+        this.correct[0][0] = scale;
+        this.correct[0][1] = bias;
+
+        for (int i = 1; i < MAX_SOURCES; ++i) {
+          if (weightMin > 1.0) weightMin = 1.0;
+          if (weightMax > 1.0) weightMax = 1.0;
+
+          double signal = (this.offset - 1.0) * this.exparray[i];
+          minvalue += signal * weightMin;
+          weightMin *= this.gain * signal;
+
+          signal = (this.offset + 1.0) * this.exparray[i];
+          maxvalue += signal * weightMax;
+          weightMax *= this.gain * signal;
+
+          scale = (B - A) / (maxvalue - minvalue);
+          bias = A - minvalue * scale;
+          this.correct[i][0] = scale;
+          this.correct[i][1] = bias;
+        }
+        break;
     }
 
   }
@@ -992,44 +1170,252 @@ public class ModuleFractal extends SeedableModule {
 
     ModulePropertyMap props = new ModulePropertyMap(this);
 
-    writeEnum("type", type, props);
-    writeLong("octaves", numOctaves, props);
-    writeDouble("frequency", frequency, props);
-    writeDouble("lacunarity", lacunarity, props);
-    writeDouble("gain", gain, props);
-    writeDouble("H", H, props);
-    writeDouble("offset", offset, props);
-    for (int i = 0; i < numOctaves; i++) {
-      props.put("source_" + i, source[i].getId());
-      source[i]._writeToMap(map);
+    this.writeEnum("type", this.type, props);
+    this.writeLong("octaves", this.numOctaves, props);
+    this.writeDouble("frequency", this.frequency, props);
+    this.writeDouble("lacunarity", this.lacunarity, props);
+    this.writeDouble("gain", this.gain, props);
+    this.writeDouble("H", this.H, props);
+    this.writeDouble("offset", this.offset, props);
+
+    for (int i = 0; i < this.numOctaves; i++) {
+      this.writeDouble("spacing_" + i, this.derivativeSpacing[i], props);
     }
 
-    writeSeed(props);
+    for (int i = 0; i < this.numOctaves; i++) {
+      props.put("source_" + i, this.source[i].getId());
+      this.source[i]._writeToMap(map);
+    }
 
-    map.put(getId(), props);
+    this.writeSeed(props);
+
+    map.put(this.getId(), props);
 
   }
 
   @Override
-  public Module buildFromPropertyMap(ModulePropertyMap props,
-      ModuleInstanceMap map) {
+  public Module buildFromPropertyMap(ModulePropertyMap props, ModuleInstanceMap map) {
 
-    this.setType(readEnum("type", FractalType.class, props));
-    this.setNumOctaves(readLong("octaves", props));
-    this.setFrequency(readDouble("frequency", props));
-    this.setLacunarity(readDouble("lacunarity", props));
-    this.setGain(readDouble("gain", props));
-    this.setH(readDouble("H", props));
-    this.setOffset(readDouble("offset", props));
+    this.setType(this.readEnum("type", FractalType.class, props));
+    this.setNumOctaves(this.readLong("octaves", props));
+    this.setFrequency(this.readDouble("frequency", props));
+    this.setLacunarity(this.readDouble("lacunarity", props));
+    this.setGain(this.readDouble("gain", props));
+    this.setH(this.readDouble("H", props));
+    this.setOffset(this.readDouble("offset", props));
 
-    readSeed(props);
+    for (int i = 0; i < this.numOctaves; i++) {
+      this.setSourceDerivativeSpacing(i, this.readDouble("spacing_" + i, props, DEFAULT_SPACING));
+    }
+
+    this.readSeed(props);
 
     // must override sources after seed has been set
-    for (int i = 0; i < numOctaves; i++) {
-      overrideSource(i, map.get(props.get("source_" + i)));
+    for (int i = 0; i < this.numOctaves; i++) {
+      // this is intended, not suspicious
+      //noinspection SuspiciousMethodCalls
+      this.overrideSource(i, map.get(props.get("source_" + i)));
     }
 
     return this;
+  }
+
+  /**
+   * Throws an {@link IllegalArgumentException} if the supplied index is less than zero or greater than or
+   * equal to the max sources.
+   *
+   * @param index the index to test bounds
+   */
+  private void assertMaxSources(int index) {
+
+    if (index < 0 || index >= Module.MAX_SOURCES) {
+      throw new IllegalArgumentException("expected index < " + Module.MAX_SOURCES + ", got " + index);
+    }
+  }
+
+  private double getDX(
+      Module module,
+      double derivativeSpacing,
+      double x,
+      double y
+  ) {
+    return (module.get(x - derivativeSpacing, y)
+        - module.get(x + derivativeSpacing, y)) / derivativeSpacing;
+  }
+
+  private double getDY(
+      Module module,
+      double derivativeSpacing,
+      double x,
+      double y
+  ) {
+    return (module.get(x, y - derivativeSpacing)
+        - module.get(x, y + derivativeSpacing)) / derivativeSpacing;
+  }
+
+  private double getDX(
+      Module module,
+      double derivativeSpacing,
+      double x,
+      double y,
+      double z
+  ) {
+    return (module.get(x - derivativeSpacing, y, z)
+        - module.get(x + derivativeSpacing, y, z)) / derivativeSpacing;
+  }
+
+  private double getDY(
+      Module module,
+      double derivativeSpacing,
+      double x,
+      double y,
+      double z
+  ) {
+    return (module.get(x, y - derivativeSpacing, z)
+        - module.get(x, y + derivativeSpacing, z)) / derivativeSpacing;
+  }
+
+  private double getDZ(
+      Module module,
+      double derivativeSpacing,
+      double x,
+      double y,
+      double z
+  ) {
+    return (module.get(x, y, z - derivativeSpacing)
+        - module.get(x, y, z + derivativeSpacing)) / derivativeSpacing;
+  }
+
+  private double getDX(
+      Module module,
+      double derivativeSpacing,
+      double x,
+      double y,
+      double z,
+      double w
+  ) {
+    return (module.get(x - derivativeSpacing, y, z, w)
+        - module.get(x + derivativeSpacing, y, z, w)) / derivativeSpacing;
+  }
+
+  private double getDY(
+      Module module,
+      double derivativeSpacing,
+      double x,
+      double y,
+      double z,
+      double w
+  ) {
+    return (module.get(x, y - derivativeSpacing, z, w)
+        - module.get(x, y + derivativeSpacing, z, w)) / derivativeSpacing;
+  }
+
+  private double getDZ(
+      Module module,
+      double derivativeSpacing,
+      double x,
+      double y,
+      double z,
+      double w
+  ) {
+    return (module.get(x, y, z - derivativeSpacing, w)
+        - module.get(x, y, z + derivativeSpacing, w)) / derivativeSpacing;
+  }
+
+  private double getDW(
+      Module module,
+      double derivativeSpacing,
+      double x,
+      double y,
+      double z,
+      double w
+  ) {
+    return (module.get(x, y, z, w - derivativeSpacing)
+        - module.get(x, y, z, w + derivativeSpacing)) / derivativeSpacing;
+  }
+
+  private double getDX(
+      Module module,
+      double derivativeSpacing,
+      double x,
+      double y,
+      double z,
+      double w,
+      double u,
+      double v
+  ) {
+    return (module.get(x - derivativeSpacing, y, z, w, u, v)
+        - module.get(x + derivativeSpacing, y, z, w, u, v)) / derivativeSpacing;
+  }
+
+  private double getDY(
+      Module module,
+      double derivativeSpacing,
+      double x,
+      double y,
+      double z,
+      double w,
+      double u,
+      double v
+  ) {
+    return (module.get(x, y - derivativeSpacing, z, w, u, v)
+        - module.get(x, y + derivativeSpacing, z, w, u, v)) / derivativeSpacing;
+  }
+
+  private double getDZ(
+      Module module,
+      double derivativeSpacing,
+      double x,
+      double y,
+      double z,
+      double w,
+      double u,
+      double v
+  ) {
+    return (module.get(x, y, z - derivativeSpacing, w, u, v)
+        - module.get(x, y, z + derivativeSpacing, w, u, v)) / derivativeSpacing;
+  }
+
+  private double getDW(
+      Module module,
+      double derivativeSpacing,
+      double x,
+      double y,
+      double z,
+      double w,
+      double u,
+      double v
+  ) {
+    return (module.get(x, y, z, w - derivativeSpacing, u, v)
+        - module.get(x, y, z, w + derivativeSpacing, u, v)) / derivativeSpacing;
+  }
+
+  private double getDU(
+      Module module,
+      double derivativeSpacing,
+      double x,
+      double y,
+      double z,
+      double w,
+      double u,
+      double v
+  ) {
+    return (module.get(x, y, z, w, u - derivativeSpacing, v)
+        - module.get(x, y, z, w, u + derivativeSpacing, v)) / derivativeSpacing;
+  }
+
+  private double getDV(
+      Module module,
+      double derivativeSpacing,
+      double x,
+      double y,
+      double z,
+      double w,
+      double u,
+      double v
+  ) {
+    return (module.get(x, y, z, w, u, v - derivativeSpacing)
+        - module.get(x, y, z, w, u, v + derivativeSpacing)) / derivativeSpacing;
   }
 
 }

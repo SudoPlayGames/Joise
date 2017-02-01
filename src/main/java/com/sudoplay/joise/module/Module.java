@@ -56,10 +56,11 @@ import com.sudoplay.util.ModuleID;
 
 public abstract class Module {
 
+  @SuppressWarnings("WeakerAccess")
   public static final long DEFAULT_SEED = 10000;
-  public static final int MAX_SOURCES = 10;
 
-  protected double spacing = 0.0001;
+  @SuppressWarnings("WeakerAccess")
+  public static final int MAX_SOURCES = 10;
 
   public abstract double get(double x, double y);
 
@@ -67,268 +68,375 @@ public abstract class Module {
 
   public abstract double get(double x, double y, double z, double w);
 
-  public abstract double get(double x, double y, double z, double w, double u,
-      double v);
+  public abstract double get(double x, double y, double z, double w, double u, double v);
 
+  /**
+   * The globally unique string id for this module, used in text serialization.
+   */
   private final String id = ModuleID.create();
 
+  /**
+   * @return the globally unique string id for this module
+   */
   public String getId() {
     return this.id;
   }
 
+  /**
+   * @return a new {@link ModuleMap} of the module chain using this module as the entry point
+   */
   public ModuleMap getModuleMap() {
     ModuleMap map = new ModuleMap();
-    _writeToMap(map);
+    this._writeToMap(map);
     return map;
   }
 
+  /**
+   * Writes the module chain to an existing {@link ModuleMap}, using this module as the entry point.
+   * <p>
+   * Note: This method is deprecated since version 1.1.0 and will be removed in the future.
+   * <p>
+   * TODO: should this be removed now?
+   *
+   * @param map existing {@link ModuleMap}
+   */
+  @Deprecated
   public void writeToMap(ModuleMap map) {
+
     if (map.contains(this.id)) {
       return;
     }
-    _writeToMap(map);
+    this._writeToMap(map);
   }
 
   protected abstract void _writeToMap(ModuleMap map);
 
-  public abstract Module buildFromPropertyMap(ModulePropertyMap props,
-      ModuleInstanceMap map);
+  public abstract Module buildFromPropertyMap(ModulePropertyMap props, ModuleInstanceMap map);
 
-  public void setDerivativeSpacing(double spacing) {
-    this.spacing = spacing;
-  }
+  /**
+   * Returns a scalar parameter from the provided property map.
+   *
+   * @param propertyName      the name of the property
+   * @param modulePropertyMap the module property map
+   * @param moduleInstanceMap the module instance map
+   * @throws JoiseException if there is an error with the retrieval
+   */
+  @SuppressWarnings({"WeakerAccess", "unused"})
+  protected ScalarParameter readScalar(
+      String propertyName,
+      ModulePropertyMap modulePropertyMap,
+      ModuleInstanceMap moduleInstanceMap
+  ) {
 
-  public double getDX(double x, double y) {
-    return (get(x - spacing, y) - get(x + spacing, y)) / spacing;
-  }
+    try {
 
-  public double getDY(double x, double y) {
-    return (get(x, y - spacing) - get(x, y + spacing)) / spacing;
-  }
+      if (modulePropertyMap.isModuleID(propertyName)) {
+        // This is correct, not a suspicious method call
+        //noinspection SuspiciousMethodCalls
+        return new ScalarParameter(moduleInstanceMap.get(modulePropertyMap.get(propertyName)));
 
-  public double getDX(double x, double y, double z) {
-    return (get(x - spacing, y, z) - get(x + spacing, y, z)) / spacing;
-  }
+      } else {
+        return new ScalarParameter(modulePropertyMap.getAsDouble(propertyName));
+      }
 
-  public double getDY(double x, double y, double z) {
-    return (get(x, y - spacing, z) - get(x, y + spacing, z)) / spacing;
-  }
-
-  public double getDZ(double x, double y, double z) {
-    return (get(x, y, z - spacing) - get(x, y, z + spacing)) / spacing;
-  }
-
-  public double getDX(double x, double y, double z, double w) {
-    return (get(x - spacing, y, z, w) - get(x + spacing, y, z, w)) / spacing;
-  }
-
-  public double getDY(double x, double y, double z, double w) {
-    return (get(x, y - spacing, z, w) - get(x, y + spacing, z, w)) / spacing;
-  }
-
-  public double getDZ(double x, double y, double z, double w) {
-    return (get(x, y, z - spacing, w) - get(x, y, z + spacing, w)) / spacing;
-  }
-
-  public double getDW(double x, double y, double z, double w) {
-    return (get(x, y, z, w - spacing) - get(x, y, z, w + spacing)) / spacing;
-  }
-
-  public double getDX(double x, double y, double z, double w, double u, double v) {
-    return (get(x - spacing, y, z, w, u, v) - get(x + spacing, y, z, w, u, v))
-        / spacing;
-  }
-
-  public double getDY(double x, double y, double z, double w, double u, double v) {
-    return (get(x, y - spacing, z, w, u, v) - get(x, y + spacing, z, w, u, v))
-        / spacing;
-  }
-
-  public double getDZ(double x, double y, double z, double w, double u, double v) {
-    return (get(x, y, z - spacing, w, u, v) - get(x, y, z + spacing, w, u, v))
-        / spacing;
-  }
-
-  public double getDW(double x, double y, double z, double w, double u, double v) {
-    return (get(x, y, z, w - spacing, u, v) - get(x, y, z, w + spacing, u, v))
-        / spacing;
-  }
-
-  public double getDU(double x, double y, double z, double w, double u, double v) {
-    return (get(x, y, z, w, u - spacing, v) - get(x, y, z, w, u + spacing, v))
-        / spacing;
-  }
-
-  public double getDV(double x, double y, double z, double w, double u, double v) {
-    return (get(x, y, z, w, u, v - spacing) - get(x, y, z, w, u, v + spacing))
-        / spacing;
-  }
-
-  protected void assertMaxSources(int index) {
-    if (index < 0 || index >= MAX_SOURCES) {
-      throw new IllegalArgumentException("expecting index < " + MAX_SOURCES
-          + " but was " + index);
+    } catch (Exception e) {
+      throw new JoiseException(e);
     }
   }
 
   /**
-   * Returns a scalar parameter from the provided property map.
-   * 
-   * @param name
-   * @param props
-   * @param map
+   * Returns a scalar parameter from the provided property map. If the provided property map does not contain the
+   * property name provided, the provided default value is returned instead.
    *
-   * @throws JoiseException
-   *           if there is an error with the retrieval
+   * @param propertyName      the name of the property
+   * @param modulePropertyMap the module property map
+   * @param moduleInstanceMap the module instance map
+   * @throws JoiseException if there is an error with the retrieval
    */
-  protected ScalarParameter readScalar(String name, ModulePropertyMap props, ModuleInstanceMap map) {
+  @SuppressWarnings({"WeakerAccess", "unused"})
+  protected ScalarParameter readScalar(
+      String propertyName,
+      ModulePropertyMap modulePropertyMap,
+      ModuleInstanceMap moduleInstanceMap,
+      ScalarParameter defaultValue
+  ) {
 
-    try {
-      if (props.isModuleID(name)) {
-        return new ScalarParameter(map.get(props.get(name)));
-      } else {
-        return new ScalarParameter(props.getAsDouble(name));
-      }
-    } catch (Exception e) {
-      throw new JoiseException(e);
+    if (modulePropertyMap.contains(propertyName)) {
+      return this.readScalar(propertyName, modulePropertyMap, moduleInstanceMap);
+
+    } else {
+      return defaultValue;
     }
-
   }
 
   /**
    * Write a scalar property to the provided property map. If the scalar is a
    * module, {@link #_writeToMap(ModuleMap)} is called on the scalar's module.
-   * 
-   * @param key
-   * @param scalar
-   * @param props
-   * @param map
+   *
+   * @param propertyName      the name of the property
+   * @param scalarParameter   the scalar parameter
+   * @param modulePropertyMap the module property map
+   * @param moduleMap         the module map to write to
    */
-  protected void writeScalar(String key, ScalarParameter scalar,
-      ModulePropertyMap props, ModuleMap map) {
+  @SuppressWarnings({"WeakerAccess", "unused"})
+  protected void writeScalar(
+      String propertyName,
+      ScalarParameter scalarParameter,
+      ModulePropertyMap modulePropertyMap,
+      ModuleMap moduleMap
+  ) {
+    modulePropertyMap.put(propertyName, scalarParameter);
 
-    props.put(key, scalar);
-    if (scalar != null && scalar.isModule()) {
-      scalar.getModule()._writeToMap(map);
+    if (scalarParameter != null && scalarParameter.isModule()) {
+      scalarParameter.getModule()._writeToMap(moduleMap);
     }
-
   }
 
   /**
    * Returns an enum property from the provided property map.
-   * 
-   * @param name
-   * @param c
-   * @param props
+   *
+   * @param propertyName      the name of the property
+   * @param enumClass         the class of the enum
+   * @param modulePropertyMap the module property map
+   * @throws JoiseException if there is an error with the retrieval
    */
-  protected <T extends Enum<T>> T readEnum(String name, Class<T> c, ModulePropertyMap props) {
+  @SuppressWarnings({"WeakerAccess", "unused"})
+  protected <T extends Enum<T>> T readEnum(
+      String propertyName,
+      Class<T> enumClass,
+      ModulePropertyMap modulePropertyMap
+  ) {
 
     try {
-      return Enum.valueOf(c, props.get(name).toString().toUpperCase());
+      return Enum.valueOf(enumClass, modulePropertyMap.get(propertyName).toString().toUpperCase());
+
     } catch (Exception e) {
       throw new JoiseException(e);
     }
+  }
 
+  /**
+   * Returns an enum property from the provided property map. If the provided property map does not contain the
+   * property name provided, the provided default value is returned instead.
+   *
+   * @param propertyName      the name of the property
+   * @param enumClass         the class of the enum
+   * @param modulePropertyMap the module property map
+   * @throws JoiseException if there is an error with the retrieval
+   */
+  @SuppressWarnings({"WeakerAccess", "unused"})
+  protected <T extends Enum<T>> T readEnum(
+      String propertyName,
+      Class<T> enumClass,
+      ModulePropertyMap modulePropertyMap,
+      T defaultValue
+  ) {
+
+    if (modulePropertyMap.contains(propertyName)) {
+      return this.readEnum(propertyName, enumClass, modulePropertyMap);
+
+    } else {
+      return defaultValue;
+    }
   }
 
   /**
    * Write an enum property to the provided property map. The enum is converted
    * to lower-case.
-   * 
-   * @param key
-   * @param _enum
-   * @param props
+   *
+   * @param propertyName      the name of the property
+   * @param _enum             the enum
+   * @param modulePropertyMap the module property map
    */
-  protected void writeEnum(String key, Enum<?> _enum, ModulePropertyMap props) {
-
-    props.put(key, _enum.toString().toLowerCase());
-
+  @SuppressWarnings({"WeakerAccess", "unused"})
+  protected void writeEnum(
+      String propertyName,
+      Enum<?> _enum,
+      ModulePropertyMap modulePropertyMap
+  ) {
+    modulePropertyMap.put(propertyName, _enum.toString().toLowerCase());
   }
 
   /**
    * Returns a long property from the provided property map.
-   * 
-   * @param key
-   * @param props
+   *
+   * @param propertyName      the name of the property
+   * @param modulePropertyMap the module property map
+   * @throws JoiseException if there is an error with the retrieval
    */
-  protected long readLong(String key, ModulePropertyMap props) {
+  @SuppressWarnings({"WeakerAccess", "unused"})
+  protected long readLong(
+      String propertyName,
+      ModulePropertyMap modulePropertyMap
+  ) {
 
     try {
-      return props.getAsLong(key);
+      return modulePropertyMap.getAsLong(propertyName);
+
     } catch (Exception e) {
       throw new JoiseException(e);
     }
+  }
 
+  /**
+   * Returns a long property from the provided property map. If the provided property map does not contain the
+   * property name provided, the provided default value is returned instead.
+   *
+   * @param propertyName      the name of the property
+   * @param modulePropertyMap the module property map
+   * @param defaultValue      the default value
+   * @throws JoiseException if there is an error with the retrieval
+   */
+  @SuppressWarnings({"WeakerAccess", "unused"})
+  protected long readLong(
+      String propertyName,
+      ModulePropertyMap modulePropertyMap,
+      long defaultValue
+  ) {
+
+    if (modulePropertyMap.contains(propertyName)) {
+      return this.readLong(propertyName, modulePropertyMap);
+
+    } else {
+      return defaultValue;
+    }
   }
 
   /**
    * Write a long property to the provided property map.
-   * 
-   * @param key
-   * @param value
-   * @param props
+   *
+   * @param propertyName      the name of the property
+   * @param longValue         the long value
+   * @param modulePropertyMap the module property map
    */
-  protected void writeLong(String key, long value, ModulePropertyMap props) {
-
-    props.put(key, value);
-
+  @SuppressWarnings({"WeakerAccess", "unused"})
+  protected void writeLong(
+      String propertyName,
+      long longValue,
+      ModulePropertyMap modulePropertyMap
+  ) {
+    modulePropertyMap.put(propertyName, longValue);
   }
 
   /**
    * Returns a double property from the provided property map.
-   * 
-   * @param key
-   * @param props
+   *
+   * @param propertyName      the name of the property
+   * @param modulePropertyMap the module property map
+   * @throws JoiseException if there is an error with the retrieval
    */
-  protected double readDouble(String key, ModulePropertyMap props) {
+  @SuppressWarnings({"WeakerAccess", "unused"})
+  protected double readDouble(
+      String propertyName,
+      ModulePropertyMap modulePropertyMap
+  ) {
 
     try {
-      return props.getAsDouble(key);
+      return modulePropertyMap.getAsDouble(propertyName);
+
     } catch (Exception e) {
       throw new JoiseException(e);
     }
+  }
 
+  /**
+   * Returns a double property from the provided property map. If the provided property map does not contain the
+   * property name provided, the provided default value is returned instead.
+   *
+   * @param propertyName      the name of the property
+   * @param modulePropertyMap the module property map
+   * @param defaultValue      the default value
+   * @throws JoiseException if there is an error with the retrieval
+   */
+  @SuppressWarnings({"WeakerAccess", "unused"})
+  protected double readDouble(
+      String propertyName,
+      ModulePropertyMap modulePropertyMap,
+      double defaultValue
+  ) {
+
+    if (modulePropertyMap.contains(propertyName)) {
+      return this.readDouble(propertyName, modulePropertyMap);
+
+    } else {
+      return defaultValue;
+    }
   }
 
   /**
    * Write a double property to the provided property map.
-   * 
-   * @param key
-   * @param value
-   * @param props
+   *
+   * @param propertyName      the name of the property
+   * @param doubleValue       the double value
+   * @param modulePropertyMap the module property map
    */
-  protected void writeDouble(String key, double value, ModulePropertyMap props) {
-
-    props.put(key, value);
-
+  @SuppressWarnings({"WeakerAccess", "unused"})
+  protected void writeDouble(
+      String propertyName,
+      double doubleValue,
+      ModulePropertyMap modulePropertyMap
+  ) {
+    modulePropertyMap.put(propertyName, doubleValue);
   }
 
   /**
    * Returns a boolean property from the provided property map.
-   * 
-   * @param key
-   * @param props
+   *
+   * @param propertyName      the name of the property
+   * @param modulePropertyMap the module property map
+   * @throws JoiseException if there is an error with the retrieval
    */
-  protected boolean readBoolean(String key, ModulePropertyMap props) {
+  @SuppressWarnings({"WeakerAccess", "unused"})
+  protected boolean readBoolean(
+      String propertyName,
+      ModulePropertyMap modulePropertyMap
+  ) {
 
     try {
-      return props.getAsBoolean(key);
+      return modulePropertyMap.getAsBoolean(propertyName);
+
     } catch (Exception e) {
       throw new JoiseException(e);
     }
+  }
 
+  /**
+   * Returns a boolean property from the provided property map. If the provided property map does not contain the
+   * property name provided, the provided default value is returned instead.
+   *
+   * @param propertyName      the name of the property
+   * @param modulePropertyMap the module property map
+   * @param defaultValue      the default value
+   * @throws JoiseException if there is an error with the retrieval
+   */
+  @SuppressWarnings({"WeakerAccess", "unused"})
+  protected boolean readBoolean(
+      String propertyName,
+      ModulePropertyMap modulePropertyMap,
+      boolean defaultValue
+  ) {
+
+    if (modulePropertyMap.contains(propertyName)) {
+      return this.readBoolean(propertyName, modulePropertyMap);
+
+    } else {
+      return defaultValue;
+    }
   }
 
   /**
    * Write a boolean property to the provided property map.
-   * 
-   * @param key
-   * @param value
-   * @param props
+   *
+   * @param propertyName      the name of the property
+   * @param booleanValue      the boolean value
+   * @param modulePropertyMap the module property map
    */
-  protected void writeBoolean(String key, boolean value, ModulePropertyMap props) {
-
-    props.put(key, String.valueOf(value));
-
+  @SuppressWarnings({"WeakerAccess", "unused"})
+  protected void writeBoolean(
+      String propertyName,
+      boolean booleanValue,
+      ModulePropertyMap modulePropertyMap
+  ) {
+    modulePropertyMap.put(propertyName, String.valueOf(booleanValue));
   }
 }
