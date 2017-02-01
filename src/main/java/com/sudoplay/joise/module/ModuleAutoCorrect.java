@@ -121,7 +121,7 @@ public class ModuleAutoCorrect extends SourcedModule {
     super.setSource(source);
   }
 
-  public void calculate() {
+  public void calculate2D() {
     if (!source.isModule() || locked) return;
 
     double mn, mx;
@@ -140,6 +140,13 @@ public class ModuleAutoCorrect extends SourcedModule {
     }
     scale2 = (high - low) / (mx - mn);
     offset2 = low - mn * scale2;
+  }
+
+  public void calculate3D() {
+    if (!source.isModule() || locked) return;
+
+    double mn, mx;
+    LCG lcg = new LCG();
 
     // Calculate 3D
     mn = 10000.0;
@@ -155,6 +162,13 @@ public class ModuleAutoCorrect extends SourcedModule {
     }
     scale3 = (high - low) / (mx - mn);
     offset3 = low - mn * scale3;
+  }
+
+  public void calculate4D() {
+    if (!source.isModule() || locked) return;
+
+    double mn, mx;
+    LCG lcg = new LCG();
 
     // Calculate 4D
     mn = 10000.0;
@@ -171,6 +185,13 @@ public class ModuleAutoCorrect extends SourcedModule {
     }
     scale4 = (high - low) / (mx - mn);
     offset4 = low - mn * scale4;
+  }
+
+  public void calculate6D() {
+    if (!source.isModule() || locked) return;
+
+    double mn, mx;
+    LCG lcg = new LCG();
 
     // Calculate 6D
     mn = 10000.0;
@@ -189,7 +210,20 @@ public class ModuleAutoCorrect extends SourcedModule {
     }
     scale6 = (high - low) / (mx - mn);
     offset6 = low - mn * scale6;
+  }
 
+  public void calculateAll() {
+    if (!source.isModule() || locked) return;
+
+    calculate2D();
+    calculate3D();
+    calculate4D();
+    calculate6D();
+  }
+
+  @Deprecated
+  public void calculate() {
+    calculateAll();
   }
 
   @Override
