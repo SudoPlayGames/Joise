@@ -50,7 +50,7 @@ package com.sudoplay.joise;
 
 import com.sudoplay.joise.module.Module;
 import com.sudoplay.joise.module.ScalarParameter;
-import com.sudoplay.util.ModuleID;
+import com.sudoplay.joise.util.ModuleID;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;

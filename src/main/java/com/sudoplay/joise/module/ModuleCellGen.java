@@ -60,7 +60,7 @@ import com.sudoplay.joise.noise.worker.spi.WorkerNoise2;
 import com.sudoplay.joise.noise.worker.spi.WorkerNoise3;
 import com.sudoplay.joise.noise.worker.spi.WorkerNoise4;
 import com.sudoplay.joise.noise.worker.spi.WorkerNoise6;
-import com.sudoplay.util.ModuleID;
+import com.sudoplay.joise.util.ModuleID;
 
 public class ModuleCellGen extends
     SeededModule {

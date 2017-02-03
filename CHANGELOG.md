@@ -13,6 +13,8 @@
   * added method `Module#setSeed(String seedName, long seed)` to replace similar method in `Joise` class
   * added `ModuleChainBuilder` class to build module chains from `ModuleMap`s; replaces similar functionality in `Joise` class
   * removed `Joise` class
+  * removed `Assert` utility class
+  * moved package `com.sudoplay.util` to `com.sudoplay.joise.util`
 
 #### 1.0.5
 

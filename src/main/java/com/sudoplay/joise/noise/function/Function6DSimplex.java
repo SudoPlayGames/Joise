@@ -52,7 +52,7 @@ import com.sudoplay.joise.noise.Interpolator;
 import com.sudoplay.joise.noise.Noise;
 import com.sudoplay.joise.noise.NoiseLUT;
 import com.sudoplay.joise.noise.function.spi.Function6D;
-import com.sudoplay.util.Bits;
+import com.sudoplay.joise.util.Bits;
 
 public class Function6DSimplex implements
     Function6D {

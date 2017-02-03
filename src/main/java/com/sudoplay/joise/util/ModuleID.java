@@ -46,7 +46,7 @@
  *   3. This notice may not be removed or altered from any source distribution.
  */
 
-package com.sudoplay.util;
+package com.sudoplay.joise.util;
 
 public class ModuleID {
 

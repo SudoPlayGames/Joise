@@ -51,7 +51,7 @@ package com.sudoplay.joise.module;
 import com.sudoplay.joise.ModuleInstanceMap;
 import com.sudoplay.joise.ModuleMap;
 import com.sudoplay.joise.ModulePropertyMap;
-import com.sudoplay.util.ModuleID;
+import com.sudoplay.joise.util.ModuleID;
 
 public abstract class Module {
 

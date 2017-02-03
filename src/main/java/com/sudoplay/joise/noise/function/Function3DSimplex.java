@@ -52,7 +52,7 @@ import com.sudoplay.joise.noise.Interpolator;
 import com.sudoplay.joise.noise.Noise;
 import com.sudoplay.joise.noise.NoiseLUT;
 import com.sudoplay.joise.noise.function.spi.Function3D;
-import com.sudoplay.util.Bits;
+import com.sudoplay.joise.util.Bits;
 
 public class Function3DSimplex implements
     Function3D {

@@ -52,7 +52,7 @@ import com.sudoplay.joise.ModuleInstanceMap;
 import com.sudoplay.joise.ModuleMap;
 import com.sudoplay.joise.ModulePropertyMap;
 import com.sudoplay.joise.noise.Util;
-import com.sudoplay.util.Checked;
+import com.sudoplay.joise.util.Checked;
 
 public class ModuleTiers extends
     SourcedModule {
@@ -62,11 +62,6 @@ public class ModuleTiers extends
 
   private int numTiers = DEFAULT_NUM_TIERS;
   private boolean smooth = DEFAULT_SMOOTH;
-
-  @SuppressWarnings("unused")
-  public void setNumTiers(long n) {
-    this.numTiers = Checked.safeLongToInt(n);
-  }
 
   public void setNumTiers(int n) {
     this.numTiers = n;
@@ -184,7 +179,7 @@ public class ModuleTiers extends
 
   @Override
   public Module buildFromPropertyMap(ModulePropertyMap modulePropertyMap, ModuleInstanceMap moduleInstanceMap) {
-    this.setNumTiers(modulePropertyMap.readLong("tiers"));
+    this.setNumTiers(Checked.safeLongToInt(modulePropertyMap.readLong("tiers")));
     this.setSmooth(modulePropertyMap.readBoolean("smooth"));
     this.setSource(modulePropertyMap.readScalar("source", moduleInstanceMap));
     return this;

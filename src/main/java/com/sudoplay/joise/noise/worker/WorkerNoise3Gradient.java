@@ -51,7 +51,7 @@ package com.sudoplay.joise.noise.worker;
 import com.sudoplay.joise.noise.Noise;
 import com.sudoplay.joise.noise.NoiseLUT;
 import com.sudoplay.joise.noise.worker.spi.WorkerNoise3;
-import com.sudoplay.util.Bits;
+import com.sudoplay.joise.util.Bits;
 
 public class WorkerNoise3Gradient implements
     WorkerNoise3 {

@@ -52,7 +52,7 @@ import com.sudoplay.joise.ModuleInstanceMap;
 import com.sudoplay.joise.ModuleMap;
 import com.sudoplay.joise.ModulePropertyMap;
 import com.sudoplay.joise.generator.LCG;
-import com.sudoplay.util.Checked;
+import com.sudoplay.joise.util.Checked;
 
 import static com.sudoplay.joise.noise.Util.clamp;
 
@@ -99,8 +99,8 @@ public class ModuleAutoCorrect extends
     this.high = high;
   }
 
-  public void setSamples(long s) {
-    this.samples = Checked.safeLongToInt(s);
+  public void setSamples(int s) {
+    this.samples = s;
   }
 
   public void setSampleScale(double s) {
@@ -326,7 +326,7 @@ public class ModuleAutoCorrect extends
   public Module buildFromPropertyMap(ModulePropertyMap modulePropertyMap, ModuleInstanceMap moduleInstanceMap) {
     this.setLow(modulePropertyMap.readDouble("low"));
     this.setHigh(modulePropertyMap.readDouble("high"));
-    this.setSamples(modulePropertyMap.readLong("samples"));
+    this.setSamples(Checked.safeLongToInt(modulePropertyMap.readLong("samples")));
     this.setSampleScale(modulePropertyMap.readDouble("sampleScale"));
     this.setLocked(modulePropertyMap.readBoolean("locked"));
 
