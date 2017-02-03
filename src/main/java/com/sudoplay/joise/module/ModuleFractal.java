@@ -57,6 +57,8 @@ import com.sudoplay.joise.noise.Util;
 
 public class ModuleFractal extends
     Module {
+  
+  private static final int MAX_OCTAVES = 10;
 
   public enum FractalType {
     FBM, RIDGEMULTI, BILLOW, MULTI, HYBRIDMULTI, DECARPENTIERSWISS
@@ -70,11 +72,11 @@ public class ModuleFractal extends
   private static final double DEFAULT_LACUNARITY = 2.0;
   private static final double DEFAULT_SPACING = 0.0001;
 
-  private ModuleBasisFunction[] basis = new ModuleBasisFunction[MAX_SOURCES];
-  private Module[] source = new Module[MAX_SOURCES];
-  private double[] derivativeSpacing = new double[MAX_SOURCES];
-  private double[] exparray = new double[MAX_SOURCES];
-  private double[][] correct = new double[MAX_SOURCES][2];
+  private ModuleBasisFunction[] basis = new ModuleBasisFunction[MAX_OCTAVES];
+  private Module[] source = new Module[MAX_OCTAVES];
+  private double[] derivativeSpacing = new double[MAX_OCTAVES];
+  private double[] exparray = new double[MAX_OCTAVES];
+  private double[][] correct = new double[MAX_OCTAVES][2];
 
   private double offset;
   private double gain;
@@ -94,7 +96,7 @@ public class ModuleFractal extends
       InterpolationType interpolationType
   ) {
 
-    for (int i = 0; i < MAX_SOURCES; i++) {
+    for (int i = 0; i < MAX_OCTAVES; i++) {
       this.basis[i] = new ModuleBasisFunction();
       this.derivativeSpacing[i] = DEFAULT_SPACING;
     }
@@ -108,8 +110,8 @@ public class ModuleFractal extends
 
   public void setNumOctaves(long n) {
 
-    if (n > MAX_SOURCES) {
-      throw new IllegalArgumentException("number of octaves must be <= " + MAX_SOURCES);
+    if (n > MAX_OCTAVES) {
+      throw new IllegalArgumentException("number of octaves must be <= " + MAX_OCTAVES);
     }
     this.numOctaves = (int) n;
   }
@@ -191,7 +193,7 @@ public class ModuleFractal extends
       InterpolationType interpolationType
   ) {
 
-    for (int i = 0; i < MAX_SOURCES; i++) {
+    for (int i = 0; i < MAX_OCTAVES; i++) {
       this.basis[i].setType(basisType);
       this.basis[i].setInterpolation(interpolationType);
     }
@@ -200,7 +202,7 @@ public class ModuleFractal extends
   @SuppressWarnings("WeakerAccess")
   public void setAllSourceBasisTypes(BasisType basisType) {
 
-    for (int i = 0; i < MAX_SOURCES; i++) {
+    for (int i = 0; i < MAX_OCTAVES; i++) {
       this.basis[i].setType(basisType);
     }
   }
@@ -208,7 +210,7 @@ public class ModuleFractal extends
   @SuppressWarnings("WeakerAccess")
   public void setAllSourceInterpolationTypes(InterpolationType interpolationType) {
 
-    for (int i = 0; i < MAX_SOURCES; i++) {
+    for (int i = 0; i < MAX_OCTAVES; i++) {
       this.basis[i].setInterpolation(interpolationType);
     }
   }
@@ -237,8 +239,8 @@ public class ModuleFractal extends
   @SuppressWarnings({"WeakerAccess", "unused"})
   public void overrideSource(int index, Module source) {
 
-    if (index < 0 || index >= MAX_SOURCES) {
-      throw new IllegalArgumentException("expecting index < " + MAX_SOURCES + " but was " + index);
+    if (index < 0 || index >= MAX_OCTAVES) {
+      throw new IllegalArgumentException("expecting index < " + MAX_OCTAVES + " but was " + index);
     }
     this.source[index] = source;
   }
@@ -251,12 +253,12 @@ public class ModuleFractal extends
 
   @SuppressWarnings("WeakerAccess")
   public void resetAllSources() {
-    System.arraycopy(this.basis, 0, this.source, 0, MAX_SOURCES);
+    System.arraycopy(this.basis, 0, this.source, 0, MAX_OCTAVES);
   }
 
   public void setSeed(long seed) {
 
-    for (int i = 0; i < MAX_SOURCES; i++) {
+    for (int i = 0; i < MAX_OCTAVES; i++) {
 
       if (this.source[i] instanceof SeededModule) {
         ((SeededModule) this.source[i]).setSeed(seed);
@@ -1062,13 +1064,13 @@ public class ModuleFractal extends
     switch (type) {
       case FBM:
 
-        for (int i = 0; i < MAX_SOURCES; i++) {
+        for (int i = 0; i < MAX_OCTAVES; i++) {
           this.exparray[i] = Math.pow(this.lacunarity, -i * this.H);
         }
         minvalue = 0.0;
         maxvalue = 0.0;
 
-        for (int i = 0; i < MAX_SOURCES; i++) {
+        for (int i = 0; i < MAX_OCTAVES; i++) {
           minvalue += -1.0 * this.exparray[i];
           maxvalue += 1.0 * this.exparray[i];
 
@@ -1082,13 +1084,13 @@ public class ModuleFractal extends
 
       case RIDGEMULTI:
 
-        for (int i = 0; i < MAX_SOURCES; ++i) {
+        for (int i = 0; i < MAX_OCTAVES; ++i) {
           this.exparray[i] = Math.pow(this.lacunarity, -i * this.H);
         }
         minvalue = 0.0;
         maxvalue = 0.0;
 
-        for (int i = 0; i < MAX_SOURCES; ++i) {
+        for (int i = 0; i < MAX_OCTAVES; ++i) {
           minvalue += (this.offset - 1.0) * (this.offset - 1.0) * this.exparray[i];
           maxvalue += (this.offset) * (this.offset) * this.exparray[i];
 
@@ -1102,13 +1104,13 @@ public class ModuleFractal extends
 
       case DECARPENTIERSWISS:
 
-        for (int i = 0; i < MAX_SOURCES; ++i) {
+        for (int i = 0; i < MAX_OCTAVES; ++i) {
           this.exparray[i] = Math.pow(this.lacunarity, -i * this.H);
         }
         minvalue = 0.0;
         maxvalue = 0.0;
 
-        for (int i = 0; i < MAX_SOURCES; ++i) {
+        for (int i = 0; i < MAX_OCTAVES; ++i) {
           minvalue += (this.offset - 1.0) * (this.offset - 1.0) * this.exparray[i];
           maxvalue += (this.offset) * (this.offset) * this.exparray[i];
 
@@ -1122,13 +1124,13 @@ public class ModuleFractal extends
 
       case BILLOW:
 
-        for (int i = 0; i < MAX_SOURCES; ++i) {
+        for (int i = 0; i < MAX_OCTAVES; ++i) {
           this.exparray[i] = Math.pow(this.lacunarity, -i * this.H);
         }
         minvalue = 0.0;
         maxvalue = 0.0;
 
-        for (int i = 0; i < MAX_SOURCES; ++i) {
+        for (int i = 0; i < MAX_OCTAVES; ++i) {
           minvalue += -1.0 * this.exparray[i];
           maxvalue += 1.0 * this.exparray[i];
 
@@ -1142,13 +1144,13 @@ public class ModuleFractal extends
 
       case MULTI:
 
-        for (int i = 0; i < MAX_SOURCES; ++i) {
+        for (int i = 0; i < MAX_OCTAVES; ++i) {
           this.exparray[i] = Math.pow(this.lacunarity, -i * this.H);
         }
         minvalue = 1.0;
         maxvalue = 1.0;
 
-        for (int i = 0; i < MAX_SOURCES; ++i) {
+        for (int i = 0; i < MAX_OCTAVES; ++i) {
           minvalue *= -1.0 * this.exparray[i] + 1.0;
           maxvalue *= 1.0 * this.exparray[i] + 1.0;
 
@@ -1162,7 +1164,7 @@ public class ModuleFractal extends
 
       case HYBRIDMULTI:
 
-        for (int i = 0; i < MAX_SOURCES; ++i) {
+        for (int i = 0; i < MAX_OCTAVES; ++i) {
           this.exparray[i] = Math.pow(this.lacunarity, -i * this.H);
         }
         double A = -1.0,
@@ -1182,7 +1184,7 @@ public class ModuleFractal extends
         this.correct[0][0] = scale;
         this.correct[0][1] = bias;
 
-        for (int i = 1; i < MAX_SOURCES; ++i) {
+        for (int i = 1; i < MAX_OCTAVES; ++i) {
           if (weightMin > 1.0) weightMin = 1.0;
           if (weightMax > 1.0) weightMax = 1.0;
 
@@ -1269,8 +1271,8 @@ public class ModuleFractal extends
    */
   private void assertMaxSources(int index) {
 
-    if (index < 0 || index >= Module.MAX_SOURCES) {
-      throw new IllegalArgumentException("expected index < " + Module.MAX_SOURCES + ", got " + index);
+    if (index < 0 || index >= MAX_OCTAVES) {
+      throw new IllegalArgumentException("expected index < " + MAX_OCTAVES + ", got " + index);
     }
   }
 

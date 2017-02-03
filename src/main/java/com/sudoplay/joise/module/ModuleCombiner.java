@@ -55,6 +55,8 @@ import com.sudoplay.joise.ModulePropertyMap;
 public class ModuleCombiner extends
     Module {
 
+  private static final int MAX_SOURCES = 10;
+
   public enum CombinerType {
     ADD, MULT, MAX, MIN, AVG
   }

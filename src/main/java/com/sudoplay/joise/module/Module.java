@@ -58,9 +58,6 @@ public abstract class Module {
   @SuppressWarnings("WeakerAccess")
   public static final long DEFAULT_SEED = 10000;
 
-  @SuppressWarnings("WeakerAccess")
-  public static final int MAX_SOURCES = 10;
-
   public abstract double get(double x, double y);
 
   public abstract double get(double x, double y, double z);
