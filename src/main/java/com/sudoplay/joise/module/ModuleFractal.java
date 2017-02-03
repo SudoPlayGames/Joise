@@ -57,7 +57,7 @@ import com.sudoplay.joise.noise.Util;
 
 public class ModuleFractal extends
     Module {
-  
+
   private static final int MAX_OCTAVES = 10;
 
   public enum FractalType {
@@ -100,10 +100,10 @@ public class ModuleFractal extends
       this.basis[i] = new ModuleBasisFunction();
       this.derivativeSpacing[i] = DEFAULT_SPACING;
     }
+    this.setType(type);
     this.setNumOctaves(DEFAULT_OCTAVES);
     this.setFrequency(DEFAULT_FREQUENCY);
     this.setLacunarity(DEFAULT_LACUNARITY);
-    this.setType(type);
     this.setAllSourceTypes(basisType, interpolationType);
     this.resetAllSources();
   }
@@ -124,21 +124,25 @@ public class ModuleFractal extends
   @SuppressWarnings("WeakerAccess")
   public void setLacunarity(double l) {
     this.lacunarity = l;
+    this.calcWeights();
   }
 
   @SuppressWarnings("WeakerAccess")
   public void setGain(double g) {
     this.gain = g;
+    this.calcWeights();
   }
 
   @SuppressWarnings("WeakerAccess")
   public void setOffset(double o) {
     this.offset = o;
+    this.calcWeights();
   }
 
   @SuppressWarnings("WeakerAccess")
   public void setH(double h) {
     this.H = h;
+    this.calcWeights();
   }
 
   public void setType(FractalType type) {
@@ -184,7 +188,7 @@ public class ModuleFractal extends
       default:
         throw new AssertionError();
     }
-    this.calcWeights(type);
+    this.calcWeights();
   }
 
   @SuppressWarnings("WeakerAccess")
@@ -1058,10 +1062,10 @@ public class ModuleFractal extends
     return sum;
   }
 
-  private void calcWeights(FractalType type) {
+  private void calcWeights() {
     double minvalue, maxvalue;
 
-    switch (type) {
+    switch (this.type) {
       case FBM:
 
         for (int i = 0; i < MAX_OCTAVES; i++) {
@@ -1242,13 +1246,15 @@ public class ModuleFractal extends
   @Override
   public Module buildFromPropertyMap(ModulePropertyMap modulePropertyMap, ModuleInstanceMap moduleInstanceMap) {
 
-    this.setType(modulePropertyMap.readEnum("type", FractalType.class));
+    this.type = modulePropertyMap.readEnum("type", FractalType.class);
     this.setNumOctaves(modulePropertyMap.readLong("octaves"));
     this.setFrequency(modulePropertyMap.readDouble("frequency"));
-    this.setLacunarity(modulePropertyMap.readDouble("lacunarity"));
-    this.setGain(modulePropertyMap.readDouble("gain"));
-    this.setH(modulePropertyMap.readDouble("H"));
-    this.setOffset(modulePropertyMap.readDouble("offset"));
+    this.lacunarity = modulePropertyMap.readDouble("lacunarity");
+    this.gain = modulePropertyMap.readDouble("gain");
+    this.H = modulePropertyMap.readDouble("H");
+    this.offset = modulePropertyMap.readDouble("offset");
+
+    this.calcWeights();
 
     for (int i = 0; i < this.numOctaves; i++) {
       this.setSourceDerivativeSpacing(i, modulePropertyMap.readDouble("spacing_" + i, DEFAULT_SPACING));
