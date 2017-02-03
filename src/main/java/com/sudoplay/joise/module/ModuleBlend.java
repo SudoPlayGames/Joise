@@ -139,6 +139,13 @@ public class ModuleBlend extends
   }
 
   @Override
+  public void setSeed(String seedName, long seed) {
+    this.high.setSeed(seedName, seed);
+    this.low.setSeed(seedName, seed);
+    this.control.setSeed(seedName, seed);
+  }
+
+  @Override
   public void writeToMap(ModuleMap moduleMap) {
     ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
     modulePropertyMap

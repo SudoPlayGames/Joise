@@ -152,6 +152,14 @@ public class ModuleBrightContrast extends
   }
 
   @Override
+  public void setSeed(String seedName, long seed) {
+    super.setSeed(seedName, seed);
+    this.bright.setSeed(seedName, seed);
+    this.factor.setSeed(seedName, seed);
+    this.threshold.setSeed(seedName, seed);
+  }
+
+  @Override
   public void writeToMap(ModuleMap moduleMap) {
     ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
     modulePropertyMap

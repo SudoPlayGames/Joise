@@ -591,6 +591,17 @@ public class ModuleCombiner extends
   }
 
   @Override
+  public void setSeed(String seedName, long seed) {
+
+    for (int i = 0; i < MAX_SOURCES; i++) {
+
+      if (this.sources[i] != null) {
+        this.sources[i].setSeed(seedName, seed);
+      }
+    }
+  }
+
+  @Override
   public void writeToMap(ModuleMap moduleMap) {
     ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
     modulePropertyMap.writeEnum("type", this.type);

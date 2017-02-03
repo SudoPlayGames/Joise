@@ -90,6 +90,8 @@ public abstract class Module {
     return map;
   }
 
+  public abstract void setSeed(String seedName, long seed);
+
   public abstract void writeToMap(ModuleMap map);
 
   public abstract Module buildFromPropertyMap(ModulePropertyMap props, ModuleInstanceMap map);

@@ -76,6 +76,14 @@ public abstract class SeededModule extends
     return this.seedName != null;
   }
 
+  @Override
+  public void setSeed(String seedName, long seed) {
+
+    if (seedName.equals(this.seedName)) {
+      this.setSeed(seed);
+    }
+  }
+
   @SuppressWarnings("WeakerAccess")
   protected void readSeed(ModulePropertyMap props) {
     String sn = (String) props.get("seedName");

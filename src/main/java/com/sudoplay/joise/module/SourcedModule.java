@@ -67,4 +67,9 @@ public abstract class SourcedModule extends Module {
   public ScalarParameter getSource() {
     return this.source;
   }
+
+  @Override
+  public void setSeed(String seedName, long seed) {
+    this.source.setSeed(seedName, seed);
+  }
 }

@@ -168,6 +168,11 @@ public class ModuleGradient extends
   }
 
   @Override
+  public void setSeed(String seedName, long seed) {
+    //
+  }
+
+  @Override
   public void writeToMap(ModuleMap moduleMap) {
     ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
     String sb = String.valueOf(this.gx1) + " " +

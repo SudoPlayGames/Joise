@@ -176,6 +176,17 @@ public class ModuleScaleDomain extends
   }
 
   @Override
+  public void setSeed(String seedName, long seed) {
+    super.setSeed(seedName, seed);
+    this.sx.setSeed(seedName, seed);
+    this.sy.setSeed(seedName, seed);
+    this.sz.setSeed(seedName, seed);
+    this.sw.setSeed(seedName, seed);
+    this.su.setSeed(seedName, seed);
+    this.sv.setSeed(seedName, seed);
+  }
+
+  @Override
   public void writeToMap(ModuleMap moduleMap) {
     ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
     modulePropertyMap

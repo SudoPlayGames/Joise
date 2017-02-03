@@ -217,6 +217,15 @@ public class ModuleRotateDomain extends
   }
 
   @Override
+  public void setSeed(String seedName, long seed) {
+    super.setSeed(seedName, seed);
+    this.ax.setSeed(seedName, seed);
+    this.ay.setSeed(seedName, seed);
+    this.az.setSeed(seedName, seed);
+    this.axisangle.setSeed(seedName, seed);
+  }
+
+  @Override
   public void writeToMap(ModuleMap moduleMap) {
     ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
     modulePropertyMap

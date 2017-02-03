@@ -108,6 +108,12 @@ public class ModuleBias extends
   }
 
   @Override
+  public void setSeed(String seedName, long seed) {
+    super.setSeed(seedName, seed);
+    this.bias.setSeed(seedName, seed);
+  }
+
+  @Override
   public void writeToMap(ModuleMap moduleMap) {
     ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
     modulePropertyMap

@@ -53,7 +53,8 @@ import com.sudoplay.joise.ModuleMap;
 import com.sudoplay.joise.ModulePropertyMap;
 import com.sudoplay.joise.noise.Util;
 
-public class ModuleSelect extends Module {
+public class ModuleSelect extends
+    Module {
 
   private ScalarParameter low = new ScalarParameter(0);
   private ScalarParameter high = new ScalarParameter(0);
@@ -253,6 +254,15 @@ public class ModuleSelect extends Module {
         return this.high.get(x, y, z, w, u, v);
       }
     }
+  }
+
+  @Override
+  public void setSeed(String seedName, long seed) {
+    this.low.setSeed(seedName, seed);
+    this.high.setSeed(seedName, seed);
+    this.control.setSeed(seedName, seed);
+    this.threshold.setSeed(seedName, seed);
+    this.falloff.setSeed(seedName, seed);
   }
 
   @Override

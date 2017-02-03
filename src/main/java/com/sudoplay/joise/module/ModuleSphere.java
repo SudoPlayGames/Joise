@@ -236,6 +236,17 @@ public class ModuleSphere extends
   }
 
   @Override
+  public void setSeed(String seedName, long seed) {
+    this.cx.setSeed(seedName, seed);
+    this.cy.setSeed(seedName, seed);
+    this.cz.setSeed(seedName, seed);
+    this.cw.setSeed(seedName, seed);
+    this.cu.setSeed(seedName, seed);
+    this.cv.setSeed(seedName, seed);
+    this.radius.setSeed(seedName, seed);
+  }
+
+  @Override
   public void writeToMap(ModuleMap moduleMap) {
     ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
     modulePropertyMap

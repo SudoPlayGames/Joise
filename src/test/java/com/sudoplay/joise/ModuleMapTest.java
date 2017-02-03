@@ -46,56 +46,21 @@
  *   3. This notice may not be removed or altered from any source distribution.
  */
 
-package com.sudoplay.joise.map;
+package com.sudoplay.joise;
 
-import static org.junit.Assert.assertEquals;
-
+import com.sudoplay.joise.generator.LCG;
+import com.sudoplay.joise.module.*;
+import com.sudoplay.joise.module.ModuleBasisFunction.BasisType;
+import com.sudoplay.joise.module.ModuleBasisFunction.InterpolationType;
+import com.sudoplay.joise.module.ModuleCombiner.CombinerType;
+import com.sudoplay.joise.module.ModuleFractal.FractalType;
+import com.sudoplay.joise.module.ModuleFunctionGradient.FunctionGradientAxis;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.sudoplay.joise.Joise;
-import com.sudoplay.joise.ModuleMap;
-import com.sudoplay.joise.generator.LCG;
-import com.sudoplay.joise.module.Module;
-import com.sudoplay.joise.module.ModuleAbs;
-import com.sudoplay.joise.module.ModuleAutoCorrect;
-import com.sudoplay.joise.module.ModuleBasisFunction;
-import com.sudoplay.joise.module.ModuleBasisFunction.BasisType;
-import com.sudoplay.joise.module.ModuleBasisFunction.InterpolationType;
-import com.sudoplay.joise.module.ModuleBias;
-import com.sudoplay.joise.module.ModuleBlend;
-import com.sudoplay.joise.module.ModuleBrightContrast;
-import com.sudoplay.joise.module.ModuleCache;
-import com.sudoplay.joise.module.ModuleCellGen;
-import com.sudoplay.joise.module.ModuleCellular;
-import com.sudoplay.joise.module.ModuleClamp;
-import com.sudoplay.joise.module.ModuleCombiner;
-import com.sudoplay.joise.module.ModuleCombiner.CombinerType;
-import com.sudoplay.joise.module.ModuleCos;
-import com.sudoplay.joise.module.ModuleFloor;
-import com.sudoplay.joise.module.ModuleFractal;
-import com.sudoplay.joise.module.ModuleFractal.FractalType;
-import com.sudoplay.joise.module.ModuleFunctionGradient;
-import com.sudoplay.joise.module.ModuleFunctionGradient.FunctionGradientAxis;
-import com.sudoplay.joise.module.ModuleGain;
-import com.sudoplay.joise.module.ModuleGradient;
-import com.sudoplay.joise.module.ModuleInvert;
-import com.sudoplay.joise.module.ModuleMagnitude;
-import com.sudoplay.joise.module.ModuleNormalizedCoords;
-import com.sudoplay.joise.module.ModulePow;
-import com.sudoplay.joise.module.ModuleRotateDomain;
-import com.sudoplay.joise.module.ModuleSawtooth;
-import com.sudoplay.joise.module.ModuleScaleDomain;
-import com.sudoplay.joise.module.ModuleScaleOffset;
-import com.sudoplay.joise.module.ModuleSelect;
-import com.sudoplay.joise.module.ModuleSin;
-import com.sudoplay.joise.module.ModuleSphere;
-import com.sudoplay.joise.module.ModuleTiers;
-import com.sudoplay.joise.module.ModuleTranslateDomain;
-import com.sudoplay.joise.module.ModuleTriangle;
-import com.sudoplay.joise.module.SeededModule;
+import static org.junit.Assert.assertEquals;
 
-public class MapTest {
+public class ModuleMapTest {
 
   private static ModuleBasisFunction func1;
   private static ModuleBasisFunction func2;
@@ -411,23 +376,22 @@ public class MapTest {
   private void test(Module module) {
     ModuleMap map = module.getModuleMap();
     // System.out.println(map);
-    Joise j = new Joise(map);
+    Module copiedModule = new ModuleChainBuilder().build(map);
     LCG lcg = new LCG();
     lcg.setSeedTime();
     double x, y;
     for (int i = 0; i < 100; i++) {
       x = lcg.get01() * 8.0;
       y = lcg.get01() * 8.0;
-      assertEquals(module.get(x, y), j.get(x, y), 1e-15);
+      assertEquals(module.get(x, y), copiedModule.get(x, y), 1e-15);
     }
   }
 
   private void testWithSeedName(SeededModule module) {
     module.setSeedName("externalSeed");
 
-    ModuleMap map = module.getModuleMap();
-    // System.out.println(map);
-    Joise j = new Joise(map);
+    ModuleMap moduleMap = module.getModuleMap();
+    Module copiedModule = new ModuleChainBuilder().build(moduleMap);
     LCG lcg = new LCG();
     lcg.setSeedTime();
     double x, y;
@@ -438,9 +402,9 @@ public class MapTest {
 
       seed = lcg.get();
       module.setSeed(seed);
-      j.setSeed("externalSeed", seed);
+      copiedModule.setSeed("externalSeed", seed);
 
-      assertEquals(module.get(x, y), j.get(x, y), 1e-15);
+      assertEquals(module.get(x, y), copiedModule.get(x, y), 1e-15);
     }
   }
 

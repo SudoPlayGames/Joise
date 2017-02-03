@@ -173,6 +173,17 @@ public class ModuleTranslateDomain extends
   }
 
   @Override
+  public void setSeed(String seedName, long seed) {
+    super.setSeed(seedName, seed);
+    this.ax.setSeed(seedName, seed);
+    this.ay.setSeed(seedName, seed);
+    this.az.setSeed(seedName, seed);
+    this.aw.setSeed(seedName, seed);
+    this.au.setSeed(seedName, seed);
+    this.av.setSeed(seedName, seed);
+  }
+
+  @Override
   public void writeToMap(ModuleMap moduleMap) {
     ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
     modulePropertyMap

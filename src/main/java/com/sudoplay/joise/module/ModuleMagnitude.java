@@ -170,6 +170,16 @@ public class ModuleMagnitude extends
   }
 
   @Override
+  public void setSeed(String seedName, long seed) {
+    this.sX.setSeed(seedName, seed);
+    this.sY.setSeed(seedName, seed);
+    this.sZ.setSeed(seedName, seed);
+    this.sW.setSeed(seedName, seed);
+    this.sU.setSeed(seedName, seed);
+    this.sV.setSeed(seedName, seed);
+  }
+
+  @Override
   public void writeToMap(ModuleMap moduleMap) {
     ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
     modulePropertyMap

@@ -53,7 +53,8 @@ import com.sudoplay.joise.ModuleMap;
 import com.sudoplay.joise.ModulePropertyMap;
 import com.sudoplay.joise.module.ModuleCellGen.CellularCache;
 
-public class ModuleCellular extends Module {
+public class ModuleCellular extends
+    Module {
 
   private double[] coefficients = new double[4];
   private ModuleCellGen generator;
@@ -124,6 +125,14 @@ public class ModuleCellular extends Module {
     CellularCache c = this.generator.getCache(x, y, z, w, u, v);
     return c.f[0] * this.coefficients[0] + c.f[1] * this.coefficients[1] + c.f[2]
         * this.coefficients[2] + c.f[3] * this.coefficients[3];
+  }
+
+  @Override
+  public void setSeed(String seedName, long seed) {
+
+    if (this.generator != null) {
+      this.generator.setSeed(seedName, seed);
+    }
   }
 
   @Override

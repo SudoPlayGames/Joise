@@ -124,6 +124,13 @@ public class ScalarParameter {
     return this.value;
   }
 
+  public void setSeed(String seedName, long seed) {
+
+    if (this.module != null) {
+      this.module.setSeed(seedName, seed);
+    }
+  }
+
   @Override
   public String toString() {
 

@@ -56,7 +56,7 @@ import com.sudoplay.joise.module.ModuleBasisFunction.InterpolationType;
 import com.sudoplay.joise.noise.Util;
 
 public class ModuleFractal extends
-    SeededModule {
+    Module {
 
   public enum FractalType {
     FBM, RIDGEMULTI, BILLOW, MULTI, HYBRIDMULTI, DECARPENTIERSWISS
@@ -249,14 +249,12 @@ public class ModuleFractal extends
     this.source[index] = this.basis[index];
   }
 
-  @SuppressWarnings({"WeakerAccess", "unused"})
+  @SuppressWarnings("WeakerAccess")
   public void resetAllSources() {
     System.arraycopy(this.basis, 0, this.source, 0, MAX_SOURCES);
   }
 
-  @Override
   public void setSeed(long seed) {
-    super.setSeed(seed);
 
     for (int i = 0; i < MAX_SOURCES; i++) {
 
@@ -1207,6 +1205,14 @@ public class ModuleFractal extends
   }
 
   @Override
+  public void setSeed(String seedName, long seed) {
+
+    for (int i = 0; i < this.numOctaves; i++) {
+      this.source[i].setSeed(seedName, seed);
+    }
+  }
+
+  @Override
   public void writeToMap(ModuleMap moduleMap) {
     ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
 
@@ -1228,7 +1234,6 @@ public class ModuleFractal extends
       this.source[i].writeToMap(moduleMap);
     }
 
-    this.writeSeed(modulePropertyMap);
     moduleMap.put(this.getId(), modulePropertyMap);
   }
 
@@ -1247,9 +1252,6 @@ public class ModuleFractal extends
       this.setSourceDerivativeSpacing(i, modulePropertyMap.readDouble("spacing_" + i, DEFAULT_SPACING));
     }
 
-    this.readSeed(modulePropertyMap);
-
-    // must override sources after seed has been set
     for (int i = 0; i < this.numOctaves; i++) {
       // this is intended, not suspicious
       //noinspection SuspiciousMethodCalls
