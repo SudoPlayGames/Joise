@@ -70,8 +70,6 @@ public class ModuleBasisFunction extends
     NONE, LINEAR, CUBIC, QUINTIC
   }
 
-  private double[] scale = new double[4];
-  private double[] offset = new double[4];
   private double[][] rotMatrix = new double[3][3];
   private double cos2d, sin2d;
   private double axisX, axisY, axisZ, axisAngle;
@@ -145,7 +143,6 @@ public class ModuleBasisFunction extends
         this.func6D = new Function6DGradient();
         break;
     }
-    this.setMagicNumbers(type);
   }
 
   public BasisType getBasisType() {
@@ -287,66 +284,6 @@ public class ModuleBasisFunction extends
     ny = (this.rotMatrix[0][1] * x) + (this.rotMatrix[1][1] * y) + (this.rotMatrix[2][1] * z);
     nz = (this.rotMatrix[0][2] * x) + (this.rotMatrix[1][2] * y) + (this.rotMatrix[2][2] * z);
     return this.func6D.get(nx, ny, nz, w, u, v, this.seed, this.interpolator);
-  }
-
-  private void setMagicNumbers(BasisType type) {
-
-    switch (type) {
-      case VALUE:
-        this.scale[0] = 1.0;
-        this.offset[0] = 0.0;
-        this.scale[1] = 1.0;
-        this.offset[1] = 0.0;
-        this.scale[2] = 1.0;
-        this.offset[2] = 0.0;
-        this.scale[3] = 1.0;
-        this.offset[3] = 0.0;
-        break;
-
-      case GRADIENT:
-        this.scale[0] = 1.86848;
-        this.offset[0] = -0.000118;
-        this.scale[1] = 1.85148;
-        this.offset[1] = -0.008272;
-        this.scale[2] = 1.64127;
-        this.offset[2] = -0.01527;
-        this.scale[3] = 1.92517;
-        this.offset[3] = 0.03393;
-        break;
-
-      case GRADVAL:
-        this.scale[0] = 0.6769;
-        this.offset[0] = -0.00151;
-        this.scale[1] = 0.6957;
-        this.offset[1] = -0.133;
-        this.scale[2] = 0.74622;
-        this.offset[2] = 0.01916;
-        this.scale[3] = 0.7961;
-        this.offset[3] = -0.0352;
-        break;
-
-      case WHITE:
-        this.scale[0] = 1.0;
-        this.offset[0] = 0.0;
-        this.scale[1] = 1.0;
-        this.offset[1] = 0.0;
-        this.scale[2] = 1.0;
-        this.offset[2] = 0.0;
-        this.scale[3] = 1.0;
-        this.offset[3] = 0.0;
-        break;
-
-      default:
-        this.scale[0] = 1.0;
-        this.offset[0] = 0.0;
-        this.scale[1] = 1.0;
-        this.offset[1] = 0.0;
-        this.scale[2] = 1.0;
-        this.offset[2] = 0.0;
-        this.scale[3] = 1.0;
-        this.offset[3] = 0.0;
-        break;
-    }
   }
 
   @Override
