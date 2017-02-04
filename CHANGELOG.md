@@ -11,10 +11,15 @@
   * moved all module property map accessor methods from the `Module` base class into the `ModulePropertyMap` class; refactored modules accordingly (#18)
   * changed name of `SeedableModule` to `SeededModule` (#18)
   * added method `Module#setSeed(String seedName, long seed)` to replace similar method in `Joise` class
-  * added `ModuleChainBuilder` class to build module chains from `ModuleMap`s; replaces similar functionality in `Joise` class
+  * added `ModuleChainBuilder` class to build module chains from `ModuleMap`; replaces similar functionality in `Joise` class
   * removed `Joise` class
   * removed `Assert` utility class
   * moved package `com.sudoplay.util` to `com.sudoplay.joise.util`
+  * moved MAX_SOURCES constant out of `Module` class; separated into two constants, one in `ModuleCombiner` and `ModuleFractal`
+  * fixed ModuleFractal#calcWeights(FractalType) is only called when the FractalType is set (#23)
+  * fixed ModuleBasisFunction rotation axis and angle are not written to or read from the ModuleMap (#22)
+  * removed unused scale and offset fields and associated method from `ModuleBasisFunction` class; fixes #20
+  * removed old util package from gwt xml
 
 #### 1.0.5
 
