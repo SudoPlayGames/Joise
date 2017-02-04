@@ -94,9 +94,9 @@ Module chains can be converted to and from a `ModuleMap`. This is convenient for
 // convert to a ModuleMap
 ModuleMap moduleMap = lastModuleInChain.getModuleMap();
 // convert from a ModuleMap
-Joise joise = new Joise(moduleMap);
+Module module = new ModuleChainBuilder().build(moduleMap);
 // sample the resulting chain
-joise.get(x, y, z);
+module.get(x, y, z);
 ```
 ###Naming Seeds
 Seeds can be named. This is convenient if you want to load a module chain from an external format, and set seeds programatically.
@@ -109,10 +109,8 @@ ModuleMap moduleMap = basis.getModuleMap();
 
 // ... load the module map back in later ...
 
-Joise joise = new Joise(loadedModuleMap);
-if (joise.hasSeed("worldseed")) {
-  joise.setSeed("worldseed", 42);
-}
+Module module = new ModuleChainBuilder().build(loadedModuleMap);
+module.setSeed("worldseed", 42);
 ```
 ##License
 
