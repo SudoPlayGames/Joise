@@ -74,6 +74,7 @@ public class ModuleBasisFunction extends
   private double[] offset = new double[4];
   private double[][] rotMatrix = new double[3][3];
   private double cos2d, sin2d;
+  private double axisX, axisY, axisZ, axisAngle;
 
   private Function2D func2D;
   private Function3D func3D;
@@ -178,7 +179,24 @@ public class ModuleBasisFunction extends
   }
 
   /**
+   * Set the rotation angle for 2D noise.
+   * <p>
+   * Does not recalculate the rotation matrix for 3D, 4D and 6D noise. For higher dimensional noise, use
+   * ModuleBasisFunction{@link #setRotationAngle(double, double, double, double)}.
+   *
+   * @param angle the angle in radians
+   */
+  @SuppressWarnings("WeakerAccess")
+  public void setRotationAngle(double angle) {
+    this.cos2d = Math.cos(angle);
+    this.sin2d = Math.sin(angle);
+    this.axisAngle = angle;
+  }
+
+  /**
    * Set the rotation axis and angle to use for 3D, 4D and 6D noise.
+   * <p>
+   * Also sets the rotation angle for 2D noise.
    *
    * @param x     x value of axis vector
    * @param y     y value of axis vector
@@ -187,22 +205,34 @@ public class ModuleBasisFunction extends
    */
   @SuppressWarnings("WeakerAccess")
   public void setRotationAngle(double x, double y, double z, double angle) {
-    double sin = Math.sin(angle);
-    double cos = Math.cos(angle);
+    this.setRotationAngle(angle);
+    this.axisX = x;
+    this.axisY = y;
+    this.axisZ = z;
 
-    this.rotMatrix[0][0] = 1 + (1 - cos) * (x * x - 1);
-    this.rotMatrix[1][0] = -z * sin + (1 - cos) * x * y;
-    this.rotMatrix[2][0] = y * sin + (1 - cos) * x * z;
+    this.rotMatrix[0][0] = 1 + (1 - this.cos2d) * (x * x - 1);
+    this.rotMatrix[1][0] = -z * this.sin2d + (1 - this.cos2d) * x * y;
+    this.rotMatrix[2][0] = y * this.sin2d + (1 - this.cos2d) * x * z;
 
-    this.rotMatrix[0][1] = z * sin + (1 - cos) * x * y;
-    this.rotMatrix[1][1] = 1 + (1 - cos) * (y * y - 1);
-    this.rotMatrix[2][1] = -x * sin + (1 - cos) * y * z;
+    this.rotMatrix[0][1] = z * this.sin2d + (1 - this.cos2d) * x * y;
+    this.rotMatrix[1][1] = 1 + (1 - this.cos2d) * (y * y - 1);
+    this.rotMatrix[2][1] = -x * this.sin2d + (1 - this.cos2d) * y * z;
 
-    this.rotMatrix[0][2] = -y * sin + (1 - cos) * x * z;
-    this.rotMatrix[1][2] = x * sin + (1 - cos) * y * z;
-    this.rotMatrix[2][2] = 1 + (1 - cos) * (z * z - 1);
+    this.rotMatrix[0][2] = -y * this.sin2d + (1 - this.cos2d) * x * z;
+    this.rotMatrix[1][2] = x * this.sin2d + (1 - this.cos2d) * y * z;
+    this.rotMatrix[2][2] = 1 + (1 - this.cos2d) * (z * z - 1);
   }
 
+
+  /**
+   * Sets the seed for this module.
+   * <p>
+   * Note: calling this method will override the rotation axis and angle from values derived from the seed. If you
+   * want to manually set the rotation axis and / or angle, call {@link ModuleBasisFunction#setRotationAngle(double)}
+   * or {@link ModuleBasisFunction#setRotationAngle(double, double, double, double)} after calling this method.
+   *
+   * @param seed the seed
+   */
   @Override
   public void setSeed(long seed) {
     super.setSeed(seed);
@@ -220,10 +250,8 @@ public class ModuleBasisFunction extends
     ax /= len;
     ay /= len;
     az /= len;
-    this.setRotationAngle(ax, ay, az, lcg.get01() * 3.141592 * 2.0);
     double angle = lcg.get01() * 3.141592 * 2.0;
-    this.cos2d = Math.cos(angle);
-    this.sin2d = Math.sin(angle);
+    this.setRotationAngle(ax, ay, az, angle);
   }
 
   @Override
@@ -326,8 +354,11 @@ public class ModuleBasisFunction extends
     ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
     modulePropertyMap
         .writeEnum("basis", this.getBasisType())
-        .writeEnum("interpolation", this.getInterpolationType());
-
+        .writeEnum("interpolation", this.getInterpolationType())
+        .writeDouble("axisX", this.axisX)
+        .writeDouble("axisY", this.axisY)
+        .writeDouble("axisZ", this.axisZ)
+        .writeDouble("axisAngle", this.axisAngle);
     this.writeSeed(modulePropertyMap);
     moduleMap.put(this.getId(), modulePropertyMap);
   }
@@ -337,6 +368,14 @@ public class ModuleBasisFunction extends
     this.setType(modulePropertyMap.readEnum("basis", BasisType.class));
     this.setInterpolation(modulePropertyMap.readEnum("interpolation", InterpolationType.class));
     this.readSeed(modulePropertyMap);
+
+    // set this after the seed to override derived values with user values
+    double axisX = modulePropertyMap.readDouble("axisX");
+    double axisY = modulePropertyMap.readDouble("axisY");
+    double axisZ = modulePropertyMap.readDouble("axisZ");
+    double axisAngle = modulePropertyMap.readDouble("axisAngle");
+    this.setRotationAngle(axisX, axisY, axisZ, axisAngle);
+
     return this;
   }
 
