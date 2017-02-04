@@ -17,12 +17,12 @@ public class SplitCanvas extends JPanel {
   private BufferedImage image;
   private List<LabelProperties> labelPropertiesList;
 
-  class LabelProperties {
+  private class LabelProperties {
     String text;
     int x;
     int y;
 
-    public LabelProperties(String text, int x, int y) {
+    LabelProperties(String text, int x, int y) {
       this.text = text;
       this.x = x;
       this.y = y;
@@ -41,11 +41,11 @@ public class SplitCanvas extends JPanel {
     int width = this.image.getWidth();
     int height = this.image.getHeight();
 
-    draw(module, 0, width, 0, height, width, height);
+    this.draw(module, 0, width, 0, height, width, height);
 
     this.labelPropertiesList.add(new LabelProperties(label, 0, 0));
 
-    repaint();
+    this.repaint();
   }
 
   public void updateImage(
@@ -55,13 +55,13 @@ public class SplitCanvas extends JPanel {
     int width = this.image.getWidth();
     int height = this.image.getHeight();
 
-    draw(leftModule, 0, width >> 1, 0, height, width, height);
-    draw(rightModule, width >> 1, width, 0, height, width, height);
+    this.draw(leftModule, 0, width >> 1, 0, height, width, height);
+    this.draw(rightModule, width >> 1, width, 0, height, width, height);
 
     this.labelPropertiesList.add(new LabelProperties(leftLabel, 0, 0));
     this.labelPropertiesList.add(new LabelProperties(rightLabel, width >> 1, 0));
 
-    repaint();
+    this.repaint();
   }
 
   public void updateImage(
@@ -72,15 +72,15 @@ public class SplitCanvas extends JPanel {
     int width = this.image.getWidth();
     int height = this.image.getHeight();
 
-    draw(leftTopModule, 0, width >> 1, 0, height >> 1, width, height);
-    draw(leftBottomModule, 0, width >> 1, height >> 1, height, width, height);
-    draw(rightModule, width >> 1, width, 0, height, width, height);
+    this.draw(leftTopModule, 0, width >> 1, 0, height >> 1, width, height);
+    this.draw(leftBottomModule, 0, width >> 1, height >> 1, height, width, height);
+    this.draw(rightModule, width >> 1, width, 0, height, width, height);
 
     this.labelPropertiesList.add(new LabelProperties(leftTopLabel, 0, 0));
     this.labelPropertiesList.add(new LabelProperties(leftBottomLabel, 0, height >> 1));
     this.labelPropertiesList.add(new LabelProperties(rightLabel, width >> 1, 0));
 
-    repaint();
+    this.repaint();
   }
 
   public void updateImage(
@@ -92,11 +92,11 @@ public class SplitCanvas extends JPanel {
     int width = this.image.getWidth();
     int height = this.image.getHeight();
 
-    draw(leftTopModule, 0, width >> 1, 0, height >> 1, width, height);
-    draw(leftBottomModule, 0, width >> 1, height >> 1, height, width, height);
+    this.draw(leftTopModule, 0, width >> 1, 0, height >> 1, width, height);
+    this.draw(leftBottomModule, 0, width >> 1, height >> 1, height, width, height);
 
-    draw(rightTopModule, width >> 1, width, 0, height >> 1, width, height);
-    draw(rightBottomModule, width >> 1, width, height >> 1, height, width, height);
+    this.draw(rightTopModule, width >> 1, width, 0, height >> 1, width, height);
+    this.draw(rightBottomModule, width >> 1, width, height >> 1, height, width, height);
 
     this.labelPropertiesList.add(new LabelProperties(leftTopLabel, 0, 0));
     this.labelPropertiesList.add(new LabelProperties(leftBottomLabel, 0, height >> 1));
@@ -104,7 +104,7 @@ public class SplitCanvas extends JPanel {
     this.labelPropertiesList.add(new LabelProperties(rightTopLabel, width >> 1, 0));
     this.labelPropertiesList.add(new LabelProperties(rightBottomLabel, width >> 1, height >> 1));
 
-    repaint();
+    this.repaint();
   }
 
   private void draw(Module module, int xStart, int xEnd, int yStart, int yEnd, int width, int height) {
@@ -140,7 +140,7 @@ public class SplitCanvas extends JPanel {
     g2.drawImage(this.image, null, null);
 
     for (LabelProperties labelProperties : this.labelPropertiesList) {
-      drawLabel(g2, labelProperties.text, labelProperties.x, labelProperties.y);
+      this.drawLabel(g2, labelProperties.text, labelProperties.x, labelProperties.y);
     }
 
     g2.dispose();

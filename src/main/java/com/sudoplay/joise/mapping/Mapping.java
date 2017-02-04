@@ -50,6 +50,7 @@ package com.sudoplay.joise.mapping;
 
 import com.sudoplay.joise.module.Module;
 
+@SuppressWarnings("unused")
 public final class Mapping {
 
   private static final double TWO_PI = Math.PI * 2.0;
@@ -58,9 +59,16 @@ public final class Mapping {
     // do not instantiate
   }
 
-  public static void map2D(MappingMode mode, int width, int height, Module m,
-      MappingRange range, Mapping2DWriter writer,
-      MappingUpdateListener listener, double z) {
+  public static void map2D(
+      MappingMode mappingMode,
+      int width,
+      int height,
+      Module module,
+      MappingRange range,
+      Mapping2DWriter writer,
+      MappingUpdateListener listener,
+      double z
+  ) {
 
     if (writer == null) {
       writer = Mapping2DWriter.NULL_WRITER;
@@ -86,250 +94,264 @@ public final class Mapping {
     double total = width * height;
     double current = 0;
 
-    switch (mode) {
+    switch (mappingMode) {
 
-    case NORMAL:
+      case NORMAL:
 
-      dx = range.map1.x - range.map0.x;
-      dy = range.map1.y - range.map0.y;
+        dx = range.map1.x - range.map0.x;
+        dy = range.map1.y - range.map0.y;
 
-      for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
 
-          p = (double) x * iw;
-          q = (double) y * ih;
+          for (int y = 0; y < height; y++) {
 
-          nx = range.map0.x + p * dx;
-          ny = range.map0.y + q * dy;
-          nz = z;
+            p = (double) x * iw;
+            q = (double) y * ih;
 
-          writer.write(x, y, m.get(nx, ny, nz));
-          listener.update(++current, total);
+            nx = range.map0.x + p * dx;
+            ny = range.map0.y + q * dy;
+            nz = z;
+
+            writer.write(x, y, module.get(nx, ny, nz));
+            listener.update(++current, total);
+          }
         }
-      }
-      return;
+        return;
 
-    case SEAMLESS_X:
+      case SEAMLESS_X:
 
-      dx = range.loop1.x - range.loop0.x;
-      dy = range.map1.y - range.map0.y;
+        dx = range.loop1.x - range.loop0.x;
+        dy = range.map1.y - range.map0.y;
 
-      dx_div_2pi = dx / TWO_PI;
+        dx_div_2pi = dx / TWO_PI;
 
-      for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
 
-          p = (double) x * iw;
-          q = (double) y * ih;
+          for (int y = 0; y < height; y++) {
 
-          p = p * (range.map1.x - range.map0.x) / dx;
+            p = (double) x * iw;
+            q = (double) y * ih;
 
-          nx = range.loop0.x + Math.cos(p * TWO_PI) * dx_div_2pi;
-          ny = range.loop0.x + Math.sin(p * TWO_PI) * dx_div_2pi;
-          nz = range.map0.y + q * dy;
-          nw = z;
+            p = p * (range.map1.x - range.map0.x) / dx;
 
-          writer.write(x, y, m.get(nx, ny, nz, nw));
-          listener.update(++current, total);
+            nx = range.loop0.x + Math.cos(p * TWO_PI) * dx_div_2pi;
+            ny = range.loop0.x + Math.sin(p * TWO_PI) * dx_div_2pi;
+            nz = range.map0.y + q * dy;
+            nw = z;
+
+            writer.write(x, y, module.get(nx, ny, nz, nw));
+            listener.update(++current, total);
+          }
         }
-      }
-      return;
+        return;
 
-    case SEAMLESS_Y:
+      case SEAMLESS_Y:
 
-      dx = range.map1.x - range.map0.x;
-      dy = range.loop1.y - range.loop0.y;
+        dx = range.map1.x - range.map0.x;
+        dy = range.loop1.y - range.loop0.y;
 
-      dy_div_2pi = dy / TWO_PI;
+        dy_div_2pi = dy / TWO_PI;
 
-      for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
 
-          p = (double) x * iw;
-          q = (double) y * ih;
+          for (int y = 0; y < height; y++) {
 
-          q = q * (range.map1.y - range.map0.y) / dy;
+            p = (double) x * iw;
+            q = (double) y * ih;
 
-          nx = range.map0.x + p * dx;
-          ny = range.loop0.y + Math.cos(q * TWO_PI) * dy_div_2pi;
-          nz = range.loop0.y + Math.sin(q * TWO_PI) * dy_div_2pi;
-          nw = z;
+            q = q * (range.map1.y - range.map0.y) / dy;
 
-          writer.write(x, y, m.get(nx, ny, nz, nw));
-          listener.update(++current, total);
+            nx = range.map0.x + p * dx;
+            ny = range.loop0.y + Math.cos(q * TWO_PI) * dy_div_2pi;
+            nz = range.loop0.y + Math.sin(q * TWO_PI) * dy_div_2pi;
+            nw = z;
+
+            writer.write(x, y, module.get(nx, ny, nz, nw));
+            listener.update(++current, total);
+          }
         }
-      }
-      return;
+        return;
 
-    case SEAMLESS_Z:
+      case SEAMLESS_Z:
 
-      dx = range.map1.x - range.map0.x;
-      dy = range.map1.y - range.map0.y;
-      dz = range.loop1.z - range.loop0.z;
+        dx = range.map1.x - range.map0.x;
+        dy = range.map1.y - range.map0.y;
+        dz = range.loop1.z - range.loop0.z;
 
-      r = (z - range.map0.z) / (range.map1.z - range.map0.z);
-      zval = r * (range.map1.z - range.map0.z) / dz;
+        r = (z - range.map0.z) / (range.map1.z - range.map0.z);
+        zval = r * (range.map1.z - range.map0.z) / dz;
 
-      dz_div_2pi = dz / TWO_PI;
+        dz_div_2pi = dz / TWO_PI;
 
-      for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
 
-          p = (double) x * iw;
-          q = (double) y * ih;
+          for (int y = 0; y < height; y++) {
 
-          nx = range.map0.x + p * dx;
-          ny = range.map0.y + p * dx;
+            p = (double) x * iw;
+            q = (double) y * ih;
 
-          nz = range.loop0.z + Math.cos(zval * TWO_PI) * dz_div_2pi;
-          nw = range.loop0.z + Math.sin(zval * TWO_PI) * dz_div_2pi;
+            nx = range.map0.x + p * dx;
+            ny = range.map0.y + p * dx;
 
-          writer.write(x, y, m.get(nx, ny, nz, nw));
-          listener.update(++current, total);
+            nz = range.loop0.z + Math.cos(zval * TWO_PI) * dz_div_2pi;
+            nw = range.loop0.z + Math.sin(zval * TWO_PI) * dz_div_2pi;
+
+            writer.write(x, y, module.get(nx, ny, nz, nw));
+            listener.update(++current, total);
+          }
         }
-      }
-      return;
+        return;
 
-    case SEAMLESS_XY:
+      case SEAMLESS_XY:
 
-      dx = range.loop1.x - range.loop0.x;
-      dy = range.loop1.y - range.loop0.y;
+        dx = range.loop1.x - range.loop0.x;
+        dy = range.loop1.y - range.loop0.y;
 
-      dx_div_2pi = dx / TWO_PI;
-      dy_div_2pi = dy / TWO_PI;
+        dx_div_2pi = dx / TWO_PI;
+        dy_div_2pi = dy / TWO_PI;
 
-      for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
 
-          p = (double) x * iw;
-          q = (double) y * ih;
+          for (int y = 0; y < height; y++) {
 
-          p = p * (range.map1.x - range.map0.x) / dx;
-          q = q * (range.map1.y - range.map0.y) / dy;
+            p = (double) x * iw;
+            q = (double) y * ih;
 
-          nx = range.loop0.x + Math.cos(p * TWO_PI) * dx_div_2pi;
-          ny = range.loop0.x + Math.sin(p * TWO_PI) * dx_div_2pi;
-          nz = range.loop0.y + Math.cos(q * TWO_PI) * dy_div_2pi;
-          nw = range.loop0.y + Math.sin(q * TWO_PI) * dy_div_2pi;
-          nu = z;
-          nv = 0;
+            p = p * (range.map1.x - range.map0.x) / dx;
+            q = q * (range.map1.y - range.map0.y) / dy;
 
-          writer.write(x, y, m.get(nx, ny, nz, nw, nu, nv));
-          listener.update(++current, total);
+            nx = range.loop0.x + Math.cos(p * TWO_PI) * dx_div_2pi;
+            ny = range.loop0.x + Math.sin(p * TWO_PI) * dx_div_2pi;
+            nz = range.loop0.y + Math.cos(q * TWO_PI) * dy_div_2pi;
+            nw = range.loop0.y + Math.sin(q * TWO_PI) * dy_div_2pi;
+            nu = z;
+            nv = 0;
+
+            writer.write(x, y, module.get(nx, ny, nz, nw, nu, nv));
+            listener.update(++current, total);
+          }
         }
-      }
-      return;
+        return;
 
-    case SEAMLESS_XZ:
+      case SEAMLESS_XZ:
 
-      dx = range.loop1.x - range.loop0.x;
-      dy = range.map1.y - range.map0.y;
-      dz = range.loop1.z - range.loop0.z;
+        dx = range.loop1.x - range.loop0.x;
+        dy = range.map1.y - range.map0.y;
+        dz = range.loop1.z - range.loop0.z;
 
-      dx_div_2pi = dx / TWO_PI;
-      dz_div_2pi = dz / TWO_PI;
+        dx_div_2pi = dx / TWO_PI;
+        dz_div_2pi = dz / TWO_PI;
 
-      r = (z - range.map0.z) / (range.map1.z - range.map0.z);
-      zval = r * (range.map1.z - range.map0.z) / dz;
+        r = (z - range.map0.z) / (range.map1.z - range.map0.z);
+        zval = r * (range.map1.z - range.map0.z) / dz;
 
-      for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
 
-          p = (double) x * iw;
-          q = (double) y * ih;
+          for (int y = 0; y < height; y++) {
 
-          p = p * (range.map1.x - range.map0.x) / dz;
+            p = (double) x * iw;
+            q = (double) y * ih;
 
-          nx = range.loop0.x + Math.cos(p * TWO_PI) * dx_div_2pi;
-          ny = range.loop0.x + Math.sin(p * TWO_PI) * dx_div_2pi;
-          nz = range.map0.y + q * dy;
-          nw = range.loop0.z + Math.cos(zval * TWO_PI) * dz_div_2pi;
-          nu = range.loop0.z + Math.sin(zval * TWO_PI) * dz_div_2pi;
-          nv = 0;
+            p = p * (range.map1.x - range.map0.x) / dz;
 
-          writer.write(x, y, m.get(nx, ny, nz, nw, nu, nv));
-          listener.update(++current, total);
+            nx = range.loop0.x + Math.cos(p * TWO_PI) * dx_div_2pi;
+            ny = range.loop0.x + Math.sin(p * TWO_PI) * dx_div_2pi;
+            nz = range.map0.y + q * dy;
+            nw = range.loop0.z + Math.cos(zval * TWO_PI) * dz_div_2pi;
+            nu = range.loop0.z + Math.sin(zval * TWO_PI) * dz_div_2pi;
+            nv = 0;
+
+            writer.write(x, y, module.get(nx, ny, nz, nw, nu, nv));
+            listener.update(++current, total);
+          }
         }
-      }
-      return;
+        return;
 
-    case SEAMLESS_YZ:
+      case SEAMLESS_YZ:
 
-      dx = range.map1.x - range.map0.x;
-      dy = range.loop1.y - range.loop0.y;
-      dz = range.loop1.z - range.loop0.z;
+        dx = range.map1.x - range.map0.x;
+        dy = range.loop1.y - range.loop0.y;
+        dz = range.loop1.z - range.loop0.z;
 
-      dy_div_2pi = dy / TWO_PI;
-      dz_div_2pi = dz / TWO_PI;
+        dy_div_2pi = dy / TWO_PI;
+        dz_div_2pi = dz / TWO_PI;
 
-      r = (z - range.map0.z) / (range.map1.z - range.map0.z);
-      zval = r * (range.map1.z - range.map0.z) / dz;
+        r = (z - range.map0.z) / (range.map1.z - range.map0.z);
+        zval = r * (range.map1.z - range.map0.z) / dz;
 
-      for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
 
-          p = (double) x * iw;
-          q = (double) y * ih;
+          for (int y = 0; y < height; y++) {
 
-          q = q * (range.map1.y - range.map0.y) / dy;
+            p = (double) x * iw;
+            q = (double) y * ih;
 
-          nx = range.map0.x + p * dx;
-          ny = range.loop0.y + Math.cos(q * TWO_PI) * dy_div_2pi;
-          nz = range.loop0.y + Math.sin(q * TWO_PI) * dy_div_2pi;
-          nw = range.loop0.z + Math.cos(zval * TWO_PI) * dz_div_2pi;
-          nu = range.loop0.z + Math.sin(zval * TWO_PI) * dz_div_2pi;
-          nv = 0;
+            q = q * (range.map1.y - range.map0.y) / dy;
 
-          writer.write(x, y, m.get(nx, ny, nz, nw, nu, nv));
-          listener.update(++current, total);
+            nx = range.map0.x + p * dx;
+            ny = range.loop0.y + Math.cos(q * TWO_PI) * dy_div_2pi;
+            nz = range.loop0.y + Math.sin(q * TWO_PI) * dy_div_2pi;
+            nw = range.loop0.z + Math.cos(zval * TWO_PI) * dz_div_2pi;
+            nu = range.loop0.z + Math.sin(zval * TWO_PI) * dz_div_2pi;
+            nv = 0;
+
+            writer.write(x, y, module.get(nx, ny, nz, nw, nu, nv));
+            listener.update(++current, total);
+          }
         }
-      }
-      return;
+        return;
 
-    case SEAMLESS_XYZ:
+      case SEAMLESS_XYZ:
 
-      dx = range.loop1.x - range.loop0.x;
-      dy = range.loop1.y - range.loop0.y;
-      dz = range.loop1.z - range.loop0.z;
+        dx = range.loop1.x - range.loop0.x;
+        dy = range.loop1.y - range.loop0.y;
+        dz = range.loop1.z - range.loop0.z;
 
-      dx_div_2pi = dx / TWO_PI;
-      dy_div_2pi = dy / TWO_PI;
-      dz_div_2pi = dz / TWO_PI;
+        dx_div_2pi = dx / TWO_PI;
+        dy_div_2pi = dy / TWO_PI;
+        dz_div_2pi = dz / TWO_PI;
 
-      r = (z - range.map0.z) / (range.map1.z - range.map0.z);
-      zval = r * (range.map1.z - range.map0.z) / dz;
+        r = (z - range.map0.z) / (range.map1.z - range.map0.z);
+        zval = r * (range.map1.z - range.map0.z) / dz;
 
-      for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
 
-          p = (double) x * iw;
-          q = (double) y * ih;
+          for (int y = 0; y < height; y++) {
 
-          p = p * (range.map1.x - range.map0.x) / dx;
-          q = q * (range.map1.y - range.map0.y) / dy;
+            p = (double) x * iw;
+            q = (double) y * ih;
 
-          nx = range.loop0.x + Math.cos(p * TWO_PI) * dx_div_2pi;
-          ny = range.loop0.x + Math.sin(p * TWO_PI) * dx_div_2pi;
-          nz = range.loop0.y + Math.cos(q * TWO_PI) * dy_div_2pi;
-          nw = range.loop0.y + Math.sin(q * TWO_PI) * dy_div_2pi;
-          nu = range.loop0.z + Math.cos(zval * TWO_PI) * dz_div_2pi;
-          nv = range.loop0.z + Math.sin(zval * TWO_PI) * dz_div_2pi;
+            p = p * (range.map1.x - range.map0.x) / dx;
+            q = q * (range.map1.y - range.map0.y) / dy;
 
-          writer.write(x, y, m.get(nx, ny, nz, nw, nu, nv));
-          listener.update(++current, total);
+            nx = range.loop0.x + Math.cos(p * TWO_PI) * dx_div_2pi;
+            ny = range.loop0.x + Math.sin(p * TWO_PI) * dx_div_2pi;
+            nz = range.loop0.y + Math.cos(q * TWO_PI) * dy_div_2pi;
+            nw = range.loop0.y + Math.sin(q * TWO_PI) * dy_div_2pi;
+            nu = range.loop0.z + Math.cos(zval * TWO_PI) * dz_div_2pi;
+            nv = range.loop0.z + Math.sin(zval * TWO_PI) * dz_div_2pi;
+
+            writer.write(x, y, module.get(nx, ny, nz, nw, nu, nv));
+            listener.update(++current, total);
+          }
         }
-      }
-      return;
+        return;
 
-    default:
-      throw new AssertionError();
+      default:
+        throw new AssertionError();
     }
 
   }
 
-  public static void map2DNoZ(MappingMode mode, int width, int height,
-      Module m, MappingRange range, Mapping2DWriter writer,
-      MappingUpdateListener listener) {
+  public static void map2DNoZ(
+      MappingMode mappingMode,
+      int width,
+      int height,
+      Module module,
+      MappingRange range,
+      Mapping2DWriter writer,
+      MappingUpdateListener listener
+  ) {
 
     if (writer == null) {
       writer = Mapping2DWriter.NULL_WRITER;
@@ -352,120 +374,131 @@ public final class Mapping {
     double total = width * height;
     double current = 0;
 
-    switch (mode) {
+    switch (mappingMode) {
 
-    case NORMAL:
+      case NORMAL:
 
-      dx = range.map1.x - range.map0.x;
-      dy = range.map1.y - range.map0.y;
+        dx = range.map1.x - range.map0.x;
+        dy = range.map1.y - range.map0.y;
 
-      for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
 
-          p = (double) x * iw;
-          q = (double) y * ih;
+          for (int y = 0; y < height; y++) {
 
-          nx = range.map0.x + p * dx;
-          ny = range.map0.y + q * dy;
+            p = (double) x * iw;
+            q = (double) y * ih;
 
-          writer.write(x, y, m.get(nx, ny));
-          listener.update(++current, total);
+            nx = range.map0.x + p * dx;
+            ny = range.map0.y + q * dy;
+
+            writer.write(x, y, module.get(nx, ny));
+            listener.update(++current, total);
+          }
         }
-      }
-      return;
+        return;
 
-    case SEAMLESS_X:
+      case SEAMLESS_X:
 
-      dx = range.loop1.x - range.loop0.x;
-      dy = range.map1.y - range.map0.y;
+        dx = range.loop1.x - range.loop0.x;
+        dy = range.map1.y - range.map0.y;
 
-      dx_div_2pi = dx / TWO_PI;
+        dx_div_2pi = dx / TWO_PI;
 
-      for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
 
-          p = (double) x * iw;
-          q = (double) y * ih;
+          for (int y = 0; y < height; y++) {
 
-          p = p * (range.map1.x - range.map0.x) / dx;
+            p = (double) x * iw;
+            q = (double) y * ih;
 
-          nx = range.loop0.x + Math.cos(p * TWO_PI) * dx_div_2pi;
-          ny = range.loop0.x + Math.sin(p * TWO_PI) * dx_div_2pi;
-          nz = range.map0.y + q * dy;
+            p = p * (range.map1.x - range.map0.x) / dx;
 
-          writer.write(x, y, m.get(nx, ny, nz));
-          listener.update(++current, total);
+            nx = range.loop0.x + Math.cos(p * TWO_PI) * dx_div_2pi;
+            ny = range.loop0.x + Math.sin(p * TWO_PI) * dx_div_2pi;
+            nz = range.map0.y + q * dy;
+
+            writer.write(x, y, module.get(nx, ny, nz));
+            listener.update(++current, total);
+          }
         }
-      }
-      return;
+        return;
 
-    case SEAMLESS_Y:
+      case SEAMLESS_Y:
 
-      dx = range.map1.x - range.map0.x;
-      dy = range.loop1.y - range.loop0.y;
+        dx = range.map1.x - range.map0.x;
+        dy = range.loop1.y - range.loop0.y;
 
-      dy_div_2pi = dy / TWO_PI;
+        dy_div_2pi = dy / TWO_PI;
 
-      for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
 
-          p = (double) x * iw;
-          q = (double) y * ih;
+          for (int y = 0; y < height; y++) {
 
-          q = q * (range.map1.y - range.map0.y) / dy;
+            p = (double) x * iw;
+            q = (double) y * ih;
 
-          nx = range.map0.x + p * dx;
-          ny = range.loop0.y + Math.cos(q * TWO_PI) * dy_div_2pi;
-          nz = range.loop0.y + Math.sin(q * TWO_PI) * dy_div_2pi;
+            q = q * (range.map1.y - range.map0.y) / dy;
 
-          writer.write(x, y, m.get(nx, ny, nz));
-          listener.update(++current, total);
+            nx = range.map0.x + p * dx;
+            ny = range.loop0.y + Math.cos(q * TWO_PI) * dy_div_2pi;
+            nz = range.loop0.y + Math.sin(q * TWO_PI) * dy_div_2pi;
+
+            writer.write(x, y, module.get(nx, ny, nz));
+            listener.update(++current, total);
+          }
         }
-      }
-      return;
+        return;
 
-    case SEAMLESS_XY:
+      case SEAMLESS_XY:
 
-      dx = range.loop1.x - range.loop0.x;
-      dy = range.loop1.y - range.loop0.y;
+        dx = range.loop1.x - range.loop0.x;
+        dy = range.loop1.y - range.loop0.y;
 
-      dx_div_2pi = dx / TWO_PI;
-      dy_div_2pi = dy / TWO_PI;
+        dx_div_2pi = dx / TWO_PI;
+        dy_div_2pi = dy / TWO_PI;
 
-      for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
 
-          p = (double) x * iw;
-          q = (double) y * ih;
+          for (int y = 0; y < height; y++) {
 
-          p = p * (range.map1.x - range.map0.x) / dx;
-          q = q * (range.map1.y - range.map0.y) / dy;
+            p = (double) x * iw;
+            q = (double) y * ih;
 
-          nx = range.loop0.x + Math.cos(p * TWO_PI) * dx_div_2pi;
-          ny = range.loop0.x + Math.sin(p * TWO_PI) * dx_div_2pi;
-          nz = range.loop0.y + Math.cos(q * TWO_PI) * dy_div_2pi;
-          nw = range.loop0.y + Math.sin(q * TWO_PI) * dy_div_2pi;
+            p = p * (range.map1.x - range.map0.x) / dx;
+            q = q * (range.map1.y - range.map0.y) / dy;
 
-          writer.write(x, y, m.get(nx, ny, nz, nw));
-          listener.update(++current, total);
+            nx = range.loop0.x + Math.cos(p * TWO_PI) * dx_div_2pi;
+            ny = range.loop0.x + Math.sin(p * TWO_PI) * dx_div_2pi;
+            nz = range.loop0.y + Math.cos(q * TWO_PI) * dy_div_2pi;
+            nw = range.loop0.y + Math.sin(q * TWO_PI) * dy_div_2pi;
+
+            writer.write(x, y, module.get(nx, ny, nz, nw));
+            listener.update(++current, total);
+          }
         }
-      }
-      return;
+        return;
 
-    case SEAMLESS_Z:
-    case SEAMLESS_XZ:
-    case SEAMLESS_YZ:
-    case SEAMLESS_XYZ:
-      throw new UnsupportedOperationException(mode.toString());
-    default:
-      throw new AssertionError();
+      case SEAMLESS_Z:
+      case SEAMLESS_XZ:
+      case SEAMLESS_YZ:
+      case SEAMLESS_XYZ:
+        throw new UnsupportedOperationException(mappingMode.toString());
+      default:
+        throw new AssertionError();
     }
 
   }
 
-  public static void map3D(MappingMode mode, int width, int height, int depth,
-      Module m, MappingRange range, Mapping3DWriter writer,
-      MappingUpdateListener listener) {
+  public static void map3D(
+      MappingMode mappingMode,
+      int width,
+      int height,
+      int depth,
+      Module module,
+      MappingRange range,
+      Mapping3DWriter writer,
+      MappingUpdateListener listener
+  ) {
 
     if (writer == null) {
       writer = Mapping3DWriter.NULL_WRITER;
@@ -490,263 +523,279 @@ public final class Mapping {
     double total = width * height * depth;
     double current = 0;
 
-    switch (mode) {
+    switch (mappingMode) {
 
-    case NORMAL:
+      case NORMAL:
 
-      dx = range.map1.x - range.map0.x;
-      dy = range.map1.y - range.map0.y;
-      dz = range.map1.z - range.map0.z;
+        dx = range.map1.x - range.map0.x;
+        dy = range.map1.y - range.map0.y;
+        dz = range.map1.z - range.map0.z;
 
-      for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
-          for (int z = 0; z < depth; z++) {
+        for (int x = 0; x < width; x++) {
 
-            p = (double) x * iw;
-            q = (double) y * ih;
-            r = (double) z * id;
+          for (int y = 0; y < height; y++) {
 
-            nx = range.map0.x + p * dx;
-            ny = range.map0.y + q * dy;
-            nz = range.map0.z + r * dz;
+            for (int z = 0; z < depth; z++) {
 
-            writer.write(x, y, z, m.get(nx, ny, nz));
-            listener.update(++current, total);
+              p = (double) x * iw;
+              q = (double) y * ih;
+              r = (double) z * id;
+
+              nx = range.map0.x + p * dx;
+              ny = range.map0.y + q * dy;
+              nz = range.map0.z + r * dz;
+
+              writer.write(x, y, z, module.get(nx, ny, nz));
+              listener.update(++current, total);
+            }
           }
         }
-      }
-      return;
+        return;
 
-    case SEAMLESS_X:
+      case SEAMLESS_X:
 
-      dx = range.loop1.x - range.loop0.x;
-      dy = range.map1.y - range.map0.y;
-      dz = range.map1.z - range.map0.z;
+        dx = range.loop1.x - range.loop0.x;
+        dy = range.map1.y - range.map0.y;
+        dz = range.map1.z - range.map0.z;
 
-      dx_div_2pi = dx / TWO_PI;
+        dx_div_2pi = dx / TWO_PI;
 
-      for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
-          for (int z = 0; z < depth; z++) {
+        for (int x = 0; x < width; x++) {
 
-            p = (double) x * iw;
-            q = (double) y * ih;
-            r = (double) z * id;
+          for (int y = 0; y < height; y++) {
 
-            p = p * (range.map1.x - range.map0.x) / dx;
+            for (int z = 0; z < depth; z++) {
 
-            nx = range.loop0.x + Math.cos(p * TWO_PI) * dx_div_2pi;
-            ny = range.loop0.x + Math.sin(p * TWO_PI) * dx_div_2pi;
-            nz = range.map0.y + q * dy;
-            nw = range.map0.z + r * dz;
+              p = (double) x * iw;
+              q = (double) y * ih;
+              r = (double) z * id;
 
-            writer.write(x, y, z, m.get(nx, ny, nz, nw));
-            listener.update(++current, total);
+              p = p * (range.map1.x - range.map0.x) / dx;
+
+              nx = range.loop0.x + Math.cos(p * TWO_PI) * dx_div_2pi;
+              ny = range.loop0.x + Math.sin(p * TWO_PI) * dx_div_2pi;
+              nz = range.map0.y + q * dy;
+              nw = range.map0.z + r * dz;
+
+              writer.write(x, y, z, module.get(nx, ny, nz, nw));
+              listener.update(++current, total);
+            }
           }
         }
-      }
-      return;
+        return;
 
-    case SEAMLESS_Y:
+      case SEAMLESS_Y:
 
-      dx = range.map1.x - range.map0.x;
-      dy = range.loop1.y - range.loop0.y;
-      dz = range.map1.z - range.map0.z;
+        dx = range.map1.x - range.map0.x;
+        dy = range.loop1.y - range.loop0.y;
+        dz = range.map1.z - range.map0.z;
 
-      dy_div_2pi = dy / TWO_PI;
+        dy_div_2pi = dy / TWO_PI;
 
-      for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
-          for (int z = 0; z < depth; z++) {
+        for (int x = 0; x < width; x++) {
 
-            p = (double) x * iw;
-            q = (double) y * ih;
-            r = (double) z * id;
+          for (int y = 0; y < height; y++) {
 
-            q = q * (range.map1.y - range.map0.y) / dy;
+            for (int z = 0; z < depth; z++) {
 
-            nx = range.map0.x + p * dx;
-            ny = range.loop0.y + Math.cos(q * TWO_PI) * dy_div_2pi;
-            nz = range.loop0.y + Math.sin(q * TWO_PI) * dy_div_2pi;
-            nw = range.map0.z + r * dz;
+              p = (double) x * iw;
+              q = (double) y * ih;
+              r = (double) z * id;
 
-            writer.write(x, y, z, m.get(nx, ny, nz, nw));
-            listener.update(++current, total);
+              q = q * (range.map1.y - range.map0.y) / dy;
+
+              nx = range.map0.x + p * dx;
+              ny = range.loop0.y + Math.cos(q * TWO_PI) * dy_div_2pi;
+              nz = range.loop0.y + Math.sin(q * TWO_PI) * dy_div_2pi;
+              nw = range.map0.z + r * dz;
+
+              writer.write(x, y, z, module.get(nx, ny, nz, nw));
+              listener.update(++current, total);
+            }
           }
         }
-      }
-      return;
+        return;
 
-    case SEAMLESS_Z:
+      case SEAMLESS_Z:
 
-      dx = range.map1.x - range.map0.x;
-      dy = range.map1.y - range.map0.y;
-      dz = range.loop1.z - range.loop0.z;
+        dx = range.map1.x - range.map0.x;
+        dy = range.map1.y - range.map0.y;
+        dz = range.loop1.z - range.loop0.z;
 
-      dz_div_2pi = dz / TWO_PI;
+        dz_div_2pi = dz / TWO_PI;
 
-      for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
-          for (int z = 0; z < depth; z++) {
+        for (int x = 0; x < width; x++) {
 
-            p = (double) x * iw;
-            q = (double) y * ih;
-            r = (double) z * id;
+          for (int y = 0; y < height; y++) {
 
-            r = r * (range.map1.z - range.map0.z) / dz;
+            for (int z = 0; z < depth; z++) {
 
-            nx = range.map0.x + p * dx;
-            ny = range.map0.y + q * dy;
-            nz = range.loop0.z + Math.cos(r * TWO_PI) * dz_div_2pi;
-            nw = range.loop0.z + Math.sin(r * TWO_PI) * dz_div_2pi;
+              p = (double) x * iw;
+              q = (double) y * ih;
+              r = (double) z * id;
 
-            writer.write(x, y, z, m.get(nx, ny, nz, nw));
-            listener.update(++current, total);
+              r = r * (range.map1.z - range.map0.z) / dz;
+
+              nx = range.map0.x + p * dx;
+              ny = range.map0.y + q * dy;
+              nz = range.loop0.z + Math.cos(r * TWO_PI) * dz_div_2pi;
+              nw = range.loop0.z + Math.sin(r * TWO_PI) * dz_div_2pi;
+
+              writer.write(x, y, z, module.get(nx, ny, nz, nw));
+              listener.update(++current, total);
+            }
           }
         }
-      }
-      return;
+        return;
 
-    case SEAMLESS_XY:
+      case SEAMLESS_XY:
 
-      dx = range.loop1.x - range.loop0.x;
-      dy = range.loop1.y - range.loop0.y;
-      dz = range.map1.z - range.map0.z;
+        dx = range.loop1.x - range.loop0.x;
+        dy = range.loop1.y - range.loop0.y;
+        dz = range.map1.z - range.map0.z;
 
-      dx_div_2pi = dx / TWO_PI;
-      dy_div_2pi = dy / TWO_PI;
+        dx_div_2pi = dx / TWO_PI;
+        dy_div_2pi = dy / TWO_PI;
 
-      for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
-          for (int z = 0; z < depth; z++) {
+        for (int x = 0; x < width; x++) {
 
-            p = (double) x * iw;
-            q = (double) y * ih;
-            r = (double) z * id;
+          for (int y = 0; y < height; y++) {
 
-            p = p * (range.map1.x - range.map0.x) / dx;
-            q = q * (range.map1.y - range.map0.y) / dy;
+            for (int z = 0; z < depth; z++) {
 
-            nx = range.loop0.x + Math.cos(p * TWO_PI) * dx_div_2pi;
-            ny = range.loop0.x + Math.sin(p * TWO_PI) * dx_div_2pi;
-            nz = range.loop0.y + Math.cos(q * TWO_PI) * dy_div_2pi;
-            nw = range.loop0.y + Math.sin(q * TWO_PI) * dy_div_2pi;
-            nu = range.map0.z + r * dz;
-            nv = 0;
+              p = (double) x * iw;
+              q = (double) y * ih;
+              r = (double) z * id;
 
-            writer.write(x, y, z, m.get(nx, ny, nz, nw, nu, nv));
-            listener.update(++current, total);
+              p = p * (range.map1.x - range.map0.x) / dx;
+              q = q * (range.map1.y - range.map0.y) / dy;
+
+              nx = range.loop0.x + Math.cos(p * TWO_PI) * dx_div_2pi;
+              ny = range.loop0.x + Math.sin(p * TWO_PI) * dx_div_2pi;
+              nz = range.loop0.y + Math.cos(q * TWO_PI) * dy_div_2pi;
+              nw = range.loop0.y + Math.sin(q * TWO_PI) * dy_div_2pi;
+              nu = range.map0.z + r * dz;
+              nv = 0;
+
+              writer.write(x, y, z, module.get(nx, ny, nz, nw, nu, nv));
+              listener.update(++current, total);
+            }
           }
         }
-      }
-      return;
+        return;
 
-    case SEAMLESS_XZ:
+      case SEAMLESS_XZ:
 
-      dx = range.loop1.x - range.loop0.x;
-      dy = range.map1.y - range.map0.y;
-      dz = range.loop1.z - range.loop0.z;
+        dx = range.loop1.x - range.loop0.x;
+        dy = range.map1.y - range.map0.y;
+        dz = range.loop1.z - range.loop0.z;
 
-      dx_div_2pi = dx / TWO_PI;
-      dz_div_2pi = dz / TWO_PI;
+        dx_div_2pi = dx / TWO_PI;
+        dz_div_2pi = dz / TWO_PI;
 
-      for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
-          for (int z = 0; z < depth; z++) {
+        for (int x = 0; x < width; x++) {
 
-            p = (double) x * iw;
-            q = (double) y * ih;
-            r = (double) z * id;
+          for (int y = 0; y < height; y++) {
 
-            p = p * (range.map1.x - range.map0.x) / dx;
-            r = r * (range.map1.z - range.map0.z) / dz;
+            for (int z = 0; z < depth; z++) {
 
-            nx = range.loop0.x + Math.cos(p * TWO_PI) * dx_div_2pi;
-            ny = range.loop0.x + Math.sin(p * TWO_PI) * dx_div_2pi;
-            nz = range.map0.y + q * dy;
-            nw = range.loop0.z + Math.cos(r * TWO_PI) * dz_div_2pi;
-            nu = range.loop0.z + Math.sin(r * TWO_PI) * dz_div_2pi;
-            nv = 0;
+              p = (double) x * iw;
+              q = (double) y * ih;
+              r = (double) z * id;
 
-            writer.write(x, y, z, m.get(nx, ny, nz, nw, nu, nv));
-            listener.update(++current, total);
+              p = p * (range.map1.x - range.map0.x) / dx;
+              r = r * (range.map1.z - range.map0.z) / dz;
+
+              nx = range.loop0.x + Math.cos(p * TWO_PI) * dx_div_2pi;
+              ny = range.loop0.x + Math.sin(p * TWO_PI) * dx_div_2pi;
+              nz = range.map0.y + q * dy;
+              nw = range.loop0.z + Math.cos(r * TWO_PI) * dz_div_2pi;
+              nu = range.loop0.z + Math.sin(r * TWO_PI) * dz_div_2pi;
+              nv = 0;
+
+              writer.write(x, y, z, module.get(nx, ny, nz, nw, nu, nv));
+              listener.update(++current, total);
+            }
           }
         }
-      }
-      return;
+        return;
 
-    case SEAMLESS_YZ:
+      case SEAMLESS_YZ:
 
-      dx = range.map1.x - range.map0.x;
-      dy = range.loop1.y - range.loop0.y;
-      dz = range.loop1.z - range.loop0.z;
+        dx = range.map1.x - range.map0.x;
+        dy = range.loop1.y - range.loop0.y;
+        dz = range.loop1.z - range.loop0.z;
 
-      dy_div_2pi = dy / TWO_PI;
-      dz_div_2pi = dz / TWO_PI;
+        dy_div_2pi = dy / TWO_PI;
+        dz_div_2pi = dz / TWO_PI;
 
-      for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
-          for (int z = 0; z < depth; z++) {
+        for (int x = 0; x < width; x++) {
 
-            p = (double) x * iw;
-            q = (double) y * ih;
-            r = (double) z * id;
+          for (int y = 0; y < height; y++) {
 
-            q = q * (range.map1.y - range.map0.y) / dy;
-            r = r * (range.map1.z - range.map0.z) / dz;
+            for (int z = 0; z < depth; z++) {
 
-            nx = range.map0.x + p * dx;
-            ny = range.loop0.y + Math.cos(q * TWO_PI) * dy_div_2pi;
-            nz = range.loop0.y + Math.sin(q * TWO_PI) * dy_div_2pi;
-            nw = range.loop0.z + Math.cos(r * TWO_PI) * dz_div_2pi;
-            nu = range.loop0.z + Math.sin(r * TWO_PI) * dz_div_2pi;
-            nv = 0;
+              p = (double) x * iw;
+              q = (double) y * ih;
+              r = (double) z * id;
 
-            writer.write(x, y, z, m.get(nx, ny, nz, nw, nu, nv));
-            listener.update(++current, total);
+              q = q * (range.map1.y - range.map0.y) / dy;
+              r = r * (range.map1.z - range.map0.z) / dz;
+
+              nx = range.map0.x + p * dx;
+              ny = range.loop0.y + Math.cos(q * TWO_PI) * dy_div_2pi;
+              nz = range.loop0.y + Math.sin(q * TWO_PI) * dy_div_2pi;
+              nw = range.loop0.z + Math.cos(r * TWO_PI) * dz_div_2pi;
+              nu = range.loop0.z + Math.sin(r * TWO_PI) * dz_div_2pi;
+              nv = 0;
+
+              writer.write(x, y, z, module.get(nx, ny, nz, nw, nu, nv));
+              listener.update(++current, total);
+            }
           }
         }
-      }
-      return;
+        return;
 
-    case SEAMLESS_XYZ:
+      case SEAMLESS_XYZ:
 
-      dx = range.loop1.x - range.loop0.x;
-      dy = range.loop1.y - range.loop0.y;
-      dz = range.loop1.z - range.loop0.z;
+        dx = range.loop1.x - range.loop0.x;
+        dy = range.loop1.y - range.loop0.y;
+        dz = range.loop1.z - range.loop0.z;
 
-      dx_div_2pi = dx / TWO_PI;
-      dy_div_2pi = dy / TWO_PI;
-      dz_div_2pi = dz / TWO_PI;
+        dx_div_2pi = dx / TWO_PI;
+        dy_div_2pi = dy / TWO_PI;
+        dz_div_2pi = dz / TWO_PI;
 
-      for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
-          for (int z = 0; z < depth; z++) {
+        for (int x = 0; x < width; x++) {
 
-            p = (double) x * iw;
-            q = (double) y * ih;
-            r = (double) z * id;
+          for (int y = 0; y < height; y++) {
 
-            p = p * (range.map1.x - range.map0.x) / dx;
-            q = q * (range.map1.y - range.map0.y) / dy;
-            r = r * (range.map1.z - range.map0.z) / dz;
+            for (int z = 0; z < depth; z++) {
 
-            nx = range.loop0.x + Math.cos(p * TWO_PI) * dx_div_2pi;
-            ny = range.loop0.x + Math.sin(p * TWO_PI) * dx_div_2pi;
-            nz = range.loop0.y + Math.cos(q * TWO_PI) * dy_div_2pi;
-            nw = range.loop0.y + Math.sin(q * TWO_PI) * dy_div_2pi;
-            nu = range.loop0.z + Math.cos(r * TWO_PI) * dz_div_2pi;
-            nv = range.loop0.z + Math.sin(r * TWO_PI) * dz_div_2pi;
+              p = (double) x * iw;
+              q = (double) y * ih;
+              r = (double) z * id;
 
-            writer.write(x, y, z, m.get(nx, ny, nz, nw, nu, nv));
-            listener.update(++current, total);
+              p = p * (range.map1.x - range.map0.x) / dx;
+              q = q * (range.map1.y - range.map0.y) / dy;
+              r = r * (range.map1.z - range.map0.z) / dz;
+
+              nx = range.loop0.x + Math.cos(p * TWO_PI) * dx_div_2pi;
+              ny = range.loop0.x + Math.sin(p * TWO_PI) * dx_div_2pi;
+              nz = range.loop0.y + Math.cos(q * TWO_PI) * dy_div_2pi;
+              nw = range.loop0.y + Math.sin(q * TWO_PI) * dy_div_2pi;
+              nu = range.loop0.z + Math.cos(r * TWO_PI) * dz_div_2pi;
+              nv = range.loop0.z + Math.sin(r * TWO_PI) * dz_div_2pi;
+
+              writer.write(x, y, z, module.get(nx, ny, nz, nw, nu, nv));
+              listener.update(++current, total);
+            }
           }
         }
-      }
-      return;
+        return;
 
-    default:
-      throw new AssertionError();
+      default:
+        throw new AssertionError();
     }
   }
 

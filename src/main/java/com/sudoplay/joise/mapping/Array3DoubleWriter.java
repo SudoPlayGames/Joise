@@ -48,7 +48,9 @@
 
 package com.sudoplay.joise.mapping;
 
-public class Array3DoubleWriter implements Mapping3DWriter {
+@SuppressWarnings("unused")
+public class Array3DoubleWriter implements
+    Mapping3DWriter {
 
   private Array3Double data;
 
@@ -56,17 +58,18 @@ public class Array3DoubleWriter implements Mapping3DWriter {
     this(new Array3Double(x, y, z));
   }
 
+  @SuppressWarnings("WeakerAccess")
   public Array3DoubleWriter(Array3Double data) {
     this.data = data;
   }
 
   public Array3Double getData() {
-    return data;
+    return this.data;
   }
 
   @Override
   public void write(int x, int y, int z, double value) {
-    data.set(x, y, z, value);
+    this.data.set(x, y, z, value);
   }
 
 }

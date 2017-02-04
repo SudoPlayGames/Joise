@@ -1,7 +1,6 @@
 package com.sudoplay.joise.examples;
 
 import javax.swing.*;
-import java.awt.*;
 
 public abstract class AbstractExample {
 
@@ -16,7 +15,6 @@ public abstract class AbstractExample {
     int height = 480;
 
     JFrame frame = new JFrame(this.getWindowTitle());
-    //frame.setPreferredSize(new Dimension(width, height));
 
     SplitCanvas canvas = new SplitCanvas(width, height);
     frame.add(canvas);

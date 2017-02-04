@@ -48,11 +48,12 @@
 
 package com.sudoplay.joise.mapping;
 
+@SuppressWarnings("WeakerAccess")
 public interface MappingUpdateListener {
 
-  public void update(double current, double total);
+  void update(double current, double total);
 
-  public static final MappingUpdateListener NULL_LISTENER = new MappingUpdateListener() {
+  MappingUpdateListener NULL_LISTENER = new MappingUpdateListener() {
     @Override
     public void update(double current, double total) {
       // do nothing

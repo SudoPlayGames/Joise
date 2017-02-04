@@ -48,49 +48,51 @@
 
 package com.sudoplay.joise.mapping;
 
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class Array2Double {
 
-  public static final byte X = 0;
-  public static final byte Y = 1;
+  private static final byte X = 0;
+  private static final byte Y = 1;
 
   private int[] size = new int[2];
   private double[] data;
 
-  @SuppressWarnings("unused")
-  private Array2Double() {}
+  private Array2Double() {
+    //
+  }
 
   public Array2Double(int x, int y) {
     this(x, y, new double[x * y]);
   }
 
   public Array2Double(int x, int y, double[] data) {
-    size[X] = x;
-    size[Y] = y;
+    this.size[X] = x;
+    this.size[Y] = y;
     this.data = data;
   }
 
   public void set(int x, int y, double v) {
-    data[x + size[X] * y] = v;
+    this.data[x + this.size[X] * y] = v;
   }
 
   public double get(int x, int y) {
-    return data[x + size[X] * y];
+    return this.data[x + this.size[X] * y];
   }
 
   public double[] getData() {
-    return data;
+    return this.data;
   }
 
   public int[] getSize() {
-    return size;
+    return this.size;
   }
 
   public int getWidth() {
-    return size[X];
+    return this.size[X];
   }
 
   public int getHeight() {
-    return size[Y];
+    return this.size[Y];
   }
 
 }

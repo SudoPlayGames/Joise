@@ -48,7 +48,9 @@
 
 package com.sudoplay.joise.mapping;
 
-public class Array2DoubleWriter implements Mapping2DWriter {
+@SuppressWarnings("unused")
+public class Array2DoubleWriter implements
+    Mapping2DWriter {
 
   private Array2Double data;
 
@@ -56,17 +58,18 @@ public class Array2DoubleWriter implements Mapping2DWriter {
     this(new Array2Double(x, y));
   }
 
+  @SuppressWarnings("WeakerAccess")
   public Array2DoubleWriter(Array2Double data) {
     this.data = data;
   }
 
   public Array2Double getData() {
-    return data;
+    return this.data;
   }
 
   @Override
   public void write(int x, int y, double value) {
-    data.set(x, y, value);
+    this.data.set(x, y, value);
   }
 
 }

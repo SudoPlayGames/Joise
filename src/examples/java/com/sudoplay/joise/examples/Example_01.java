@@ -1,14 +1,13 @@
 package com.sudoplay.joise.examples;
 
-import java.awt.Dimension;
-
-import javax.swing.*;
-
 import com.sudoplay.joise.module.ModuleAutoCorrect;
 import com.sudoplay.joise.module.ModuleBasisFunction.BasisType;
 import com.sudoplay.joise.module.ModuleBasisFunction.InterpolationType;
 import com.sudoplay.joise.module.ModuleFractal;
 import com.sudoplay.joise.module.ModuleFractal.FractalType;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class Example_01 {
 
@@ -51,7 +50,7 @@ public class Example_01 {
                        // double value; see specific module for details)
     ac.setRange(0.0f, 1.0f); // set the range to auto-correct to
     ac.setSamples(10000); // set how many samples to take
-    ac.calculate(); // perform the caclulations
+    ac.calculate2D(); // perform the calculations
 
     /*
      * ... draw it.

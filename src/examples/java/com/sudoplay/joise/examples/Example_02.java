@@ -119,7 +119,7 @@ public class Example_02 {
     // lowland_autocorrect
     ModuleAutoCorrect lowlandAutoCorrect = new ModuleAutoCorrect(0, 1);
     lowlandAutoCorrect.setSource(lowlandShapeFractal);
-    lowlandAutoCorrect.calculate();
+    lowlandAutoCorrect.calculate2D();
 
     // lowland_scale
     ModuleScaleOffset lowlandScale = new ModuleScaleOffset();
@@ -150,7 +150,7 @@ public class Example_02 {
     // highland_autocorrect
     ModuleAutoCorrect highlandAutoCorrect = new ModuleAutoCorrect(-1, 1);
     highlandAutoCorrect.setSource(highlandShapeFractal);
-    highlandAutoCorrect.calculate();
+    highlandAutoCorrect.calculate2D();
 
     // highland_scale
     ModuleScaleOffset highlandScale = new ModuleScaleOffset();
@@ -181,7 +181,7 @@ public class Example_02 {
     // mountain_autocorrect
     ModuleAutoCorrect mountainAutoCorrect = new ModuleAutoCorrect(-1, 1);
     mountainAutoCorrect.setSource(mountainShapeFractal);
-    mountainAutoCorrect.calculate();
+    mountainAutoCorrect.calculate2D();
 
     // mountain_scale
     ModuleScaleOffset mountainScale = new ModuleScaleOffset();
@@ -212,7 +212,7 @@ public class Example_02 {
     // terrain_autocorrect
     ModuleAutoCorrect terrainAutoCorrect = new ModuleAutoCorrect(0, 1);
     terrainAutoCorrect.setSource(terrainTypeFractal);
-    terrainAutoCorrect.calculate();
+    terrainAutoCorrect.calculate2D();
 
     // terrain_type_y_scale
     ModuleScaleDomain terrainTypeYScale = new ModuleScaleDomain();

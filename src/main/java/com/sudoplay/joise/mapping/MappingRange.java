@@ -50,6 +50,7 @@ package com.sudoplay.joise.mapping;
 
 import com.sudoplay.joise.noise.Util.Vector3d;
 
+@SuppressWarnings("WeakerAccess")
 public class MappingRange {
   public Vector3d map0 = new Vector3d(-1, -1, -1);
   public Vector3d map1 = new Vector3d(1, 1, 1);

@@ -48,11 +48,12 @@
 
 package com.sudoplay.joise.mapping;
 
+@SuppressWarnings("WeakerAccess")
 public interface Mapping3DWriter {
 
-  public void write(int x, int y, int z, double value);
+  void write(int x, int y, int z, double value);
 
-  public static final Mapping3DWriter NULL_WRITER = new Mapping3DWriter() {
+  Mapping3DWriter NULL_WRITER = new Mapping3DWriter() {
     @Override
     public void write(int x, int y, int z, double value) {
       // do nothing

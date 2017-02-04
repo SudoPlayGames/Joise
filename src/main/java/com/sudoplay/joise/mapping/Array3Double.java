@@ -48,53 +48,55 @@
 
 package com.sudoplay.joise.mapping;
 
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class Array3Double {
 
-  public static final byte X = 0;
-  public static final byte Y = 1;
-  public static final byte Z = 2;
-  public static final byte XY = 3;
+  private static final byte X = 0;
+  private static final byte Y = 1;
+  private static final byte Z = 2;
+  private static final byte XY = 3;
 
   private int[] size = new int[4];
   private double[] data;
 
-  @SuppressWarnings("unused")
-  private Array3Double() {}
+  private Array3Double() {
+    //
+  }
 
   public Array3Double(int x, int y, int z) {
-    size[X] = x;
-    size[Y] = y;
-    size[Z] = z;
-    size[XY] = x * y;
-    data = new double[x * y * z];
+    this.size[X] = x;
+    this.size[Y] = y;
+    this.size[Z] = z;
+    this.size[XY] = x * y;
+    this.data = new double[x * y * z];
   }
 
   public void set(int x, int y, int z, double v) {
-    data[x + (size[X] * y) + (size[XY] * z)] = v;
+    this.data[x + (this.size[X] * y) + (this.size[XY] * z)] = v;
   }
 
   public double get(int x, int y, int z) {
-    return data[x + (size[X] * y) + (size[XY] * z)];
+    return this.data[x + (this.size[X] * y) + (this.size[XY] * z)];
   }
 
   public double[] getData() {
-    return data;
+    return this.data;
   }
 
   public int[] getSize() {
-    return size;
+    return this.size;
   }
 
   public int getWidth() {
-    return size[X];
+    return this.size[X];
   }
 
   public int getHeight() {
-    return size[Y];
+    return this.size[Y];
   }
 
   public int getDepth() {
-    return size[Z];
+    return this.size[Z];
   }
 
 }

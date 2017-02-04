@@ -48,6 +48,7 @@
 
 package com.sudoplay.joise.mapping;
 
+@SuppressWarnings("WeakerAccess")
 public enum MappingMode {
   NORMAL, SEAMLESS_X, SEAMLESS_Y, SEAMLESS_Z, SEAMLESS_XY, SEAMLESS_XZ, SEAMLESS_YZ, SEAMLESS_XYZ
 }
