@@ -109,19 +109,20 @@ public class Noise {
     }
   }
 
+  @SuppressWarnings("WeakerAccess")
   private static class SVectorOrdering implements
       Comparable<SVectorOrdering> {
     public double val;
     public int axis;
 
     public SVectorOrdering(double v, int a) {
-      val = v;
-      axis = a;
+      this.val = v;
+      this.axis = a;
     }
 
     @Override
     public int compareTo(SVectorOrdering o) {
-      if (val > o.val) {
+      if (this.val > o.val) {
         return 1;
       }
       return -1;
@@ -145,8 +146,8 @@ public class Noise {
 
   public static int fnv32ABuf(byte[] buf) {
     long hval = INIT32;
-    for (int i = 0; i < buf.length; i++) {
-      hval ^= buf[i];
+    for (byte aBuf : buf) {
+      hval ^= aBuf;
       hval *= PRIME32;
     }
     return (int) (hval & 0x00000000ffffffffL);
@@ -283,20 +284,4 @@ public class Noise {
     double val2 = interpolateXYZWU6(x, y, z, w, u, v, xs, ys, zs, ws, us, x0, x1, y0, y1, z0, z1, w0, w1, u0, u1, v1, seed, noisefunc);
     return lerp(vs, val1, val2);
   }
-
-  // ==========================================================================
-  // = Cellular functions
-  // ==========================================================================
-
-
-  public static double intValueNoise3D(int x, int y, int z, int seed) {
-    int n = (1619 * x + 31337 * y + 6971 * z + 1013 * seed) & 0x7fffffff;
-    n = (n >> 13) ^ n;
-    return (n * (n * n * 60493 + 19990303) + 1376312589) & 0x7fffffff;
-  }
-
-  public static double valueNoise3D(int x, int y, int z, int seed) {
-    return 1.0 - (intValueNoise3D(x, y, z, seed) / 1073741824.0);
-  }
-
 }

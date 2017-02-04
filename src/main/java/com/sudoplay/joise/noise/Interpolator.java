@@ -50,34 +50,34 @@ package com.sudoplay.joise.noise;
 
 public interface Interpolator {
 
-  public static final Interpolator NONE = new Interpolator() {
+  Interpolator NONE = new Interpolator() {
     @Override
     public double interpolate(double t) {
       return 0;
     }
   };
 
-  public static final Interpolator LINEAR = new Interpolator() {
+  Interpolator LINEAR = new Interpolator() {
     @Override
     public double interpolate(double t) {
       return t;
     }
   };
 
-  public static final Interpolator HERMITE = new Interpolator() {
+  Interpolator HERMITE = new Interpolator() {
     @Override
     public double interpolate(double t) {
       return (t * t * (3 - 2 * t));
     }
   };
 
-  public static final Interpolator QUINTIC = new Interpolator() {
+  Interpolator QUINTIC = new Interpolator() {
     @Override
     public double interpolate(double t) {
       return t * t * t * (t * (t * 6 - 15) + 10);
     }
   };
 
-  public double interpolate(double t);
+  double interpolate(double t);
 
 }

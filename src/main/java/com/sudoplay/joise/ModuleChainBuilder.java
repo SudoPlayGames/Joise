@@ -5,13 +5,12 @@ import com.sudoplay.joise.module.*;
 import java.util.Iterator;
 import java.util.Map;
 
-/**
- * Created by codetaylor on 2/2/2017.
- */
+@SuppressWarnings("WeakerAccess")
 public class ModuleChainBuilder {
 
   private ModuleFactoryRegistry moduleFactoryRegistry;
 
+  @SuppressWarnings("WeakerAccess")
   public ModuleChainBuilder() {
     this.moduleFactoryRegistry = new ModuleFactoryRegistry();
 
@@ -57,6 +56,7 @@ public class ModuleChainBuilder {
    * @param moduleFactory the module factory
    * @param <M>           extends {@link Module}
    */
+  @SuppressWarnings("unused")
   public <M extends Module> ModuleChainBuilder registerModuleFactory(
       Class<M> moduleClass,
       IModuleFactory<M> moduleFactory
@@ -71,6 +71,7 @@ public class ModuleChainBuilder {
    * @param moduleMap the module map
    * @return the last module in the chain
    */
+  @SuppressWarnings("WeakerAccess")
   public Module build(ModuleMap moduleMap) {
     return this.build(moduleMap, this.moduleFactoryRegistry);
   }
