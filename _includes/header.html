@@ -1,0 +1,64 @@
+<!-- Fixed navbar -->
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <img class="brand-logo hidden-sm hidden-xs" src="/assets/logo-small.png" />
+      <img class="brand-logo visible-sm-inline visible-xs-inline" src="/assets/logo-xs.png" />
+      <a class="brand-text" href="/">
+        SudoPlay Games
+      </a>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <!-- Home -->
+        {% if page.url == "/index.html" %}<li class="active">{% else %}<li>{% endif %}
+          <a href="/">
+          <i class="fa fa-home fa-lg" aria-hidden="true"></i>&nbsp;&nbsp;Home</a>
+        </li>
+
+        <!-- Forum -->
+        <!--<li>
+          <a href="http://discourse.sudoplaygames.com">
+          <i class="fa fa-comments fa-lg"></i>&nbsp;&nbsp;Forum</a>
+        </li>-->
+
+        <!-- Quick Start -->
+        {% if page.url == "/quick-start/" %}<li class="active">{% else %}<li>{% endif %}
+          <a href="/quick-start/">
+          <i class="fa fa-rocket fa-lg" aria-hidden="true"></i>&nbsp;&nbsp;Quick Start</a>
+        </li>
+
+        <!-- Guide -->
+        {% if page.url == "/guide/" %}<li class="active">{% else %}<li>{% endif %}
+          <a href="/guide/">
+          <i class="fa fa-book fa-lg" aria-hidden="true"></i>&nbsp;&nbsp;Guide</a>
+        </li>
+
+        <!-- Modules -->
+        {% if page.url == "/modules/" %}<li class="active">{% else %}<li>{% endif %}
+          <a href="/modules/">
+          <i class="fa fa-cubes fa-lg" aria-hidden="true"></i>&nbsp;&nbsp;Modules</a>
+        </li>
+
+        <!-- Source -->
+        <li class="active"><li>
+          <a href="https://github.com/SudoPlayGames/Joise">
+          <i class="fa fa-github fa-lg" aria-hidden="true"></i>&nbsp;&nbsp;Source</a>
+        </li>
+
+        <!-- About -->
+        {% if page.url == "/about/" %}<li class="active">{% else %}<li>{% endif %}
+          <a href="/about/">
+          <i class="fa fa-info-circle fa-lg" aria-hidden="true"></i>&nbsp;&nbsp;About</a>
+        </li>
+
+      </ul>
+    </div><!--/.navbar-collapse -->
+  </div>
+</div>

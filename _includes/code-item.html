@@ -1,0 +1,25 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">{{ codeitem.title }}</h3>
+    {% if codeitem.lang %}
+    <span class="badge">{{ codeitem.lang }}</span>
+    {% endif %}
+    {% if codeitem.license %}
+    <span class="badge">{{ codeitem.license }}</span>
+    {% endif %}
+  </div>
+  <div class="panel-body">{{ codeitem.desc }}</div>
+  <div class="panel-footer">
+    {% if codeitem.url %}
+    <a class="btn btn-default" href="{{ codeitem.url }}">
+      <i class="fa fa-github fa-lg"></i>&nbsp;Fork
+    </a>
+    {% endif %}
+    {% if codeitem.bugs %}
+    <a class="btn btn-default" href="{{ codeitem.bugs }}">
+      <i class="fa fa-bug fa-lg"></i>&nbsp;Bugs
+    </a>
+    {% endif %}
+    <div class="clearfix"></div>
+  </div>
+</div>

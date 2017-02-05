@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<!--<html manifest="/manifest.appcache">-->
+
+  {% include head.html %}
+
+    <body data-spy="scroll" data-target="#toc">
+
+    {% include header.html %}
+
+    {% if page.url == "/index.html" %}
+
+    {{ content }}
+
+    {% else %}
+
+    <div class="main-container">
+      <div class="wrap row">
+      {{ content }}
+      </div>
+    </div>
+
+    {% endif %}
+
+    {% include footer.html %}
+
+    </body>
+</html>

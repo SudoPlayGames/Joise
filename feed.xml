@@ -1,0 +1,26 @@
+---
+layout: null
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>{{ site.title | xml_escape }}</title>
+  <subtitle>{{ site.description | xml_escape }}</subtitle>
+  <id>{{ site.url }}{{ site.baseurl }}/</id>
+  <link href="{{ site.url }}{{ site.baseurl }}/"/>
+  <link href="{{ "/feed.xml" | prepend: site.baseurl | prepend: site.url }}" rel="self" type="application/rss+xml" />
+  <updated>{{ site.time | date_to_rfc822 }}</updated>
+  <author><name>SudoPlay Games</name></author>
+  {% for post in site.posts limit:10 %}
+  <entry>
+    <title>{{ post.title | xml_escape }}</title>
+    <link rel="alternate" href="{{ post.url | prepend: site.baseurl | prepend: site.url }}"/>
+    <id>{{ post.url | prepend: site.baseurl | prepend: site.url }}</id>
+    <published>{{ post.date | date_to_rfc822 }}</published>
+    <updated>{{ post.date | date_to_rfc822 }}</updated>
+    <author><name>{{ post.author }}</name></author>
+    <forumUser>{% if post.forumuser %}{{ post.forumuser }}{% else %}spgbot{% endif %}</forumUser>
+    <summary type="html">{{ post.excerpt | xml_escape }}</summary>
+    <content type="html">{{ post.content | xml_escape }}</content>
+  </entry>
+  {% endfor %}
+</feed>

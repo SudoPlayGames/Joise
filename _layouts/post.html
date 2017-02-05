@@ -1,0 +1,50 @@
+---
+layout: default
+---
+<div class="post">
+
+  <header class="post-header">
+    <h1>{{ page.title }}</h1>
+    <p class="meta">
+      {{ page.date | date: "%b %-d, %Y" }}
+      {% if page.author %}
+        {% if page.forumuser %}
+          &nbsp;•&nbsp;
+          <a href="http://discourse.sudoplaygames.com/users/{{ page.forumuser }}/activity">
+          {{ page.author }}
+          </a>
+        {% else %}
+          &nbsp;•&nbsp;{{ page.author }}
+        {% endif %}
+      {% endif %}
+      {% if page.meta %}
+        &nbsp;•&nbsp;{{ page.meta }}
+      {% endif %}
+      {% if page.categories %}
+      <span class="categories">
+        &nbsp;•&nbsp;
+        {% for category in page.categories %}
+          {% if category != "blog" %}
+            <span class="badge">{{ category }}</span>
+          {% endif %}
+        {% endfor %}
+      </span>
+      {% endif %}
+    </p>
+  </header>
+
+  <article class="post-content">
+  {{ content }}
+  </article>
+
+  <div id="post-nav">
+    {% if page.previous %}
+      <a id="post-prev" class="btn" href="{{ page.previous.url }}"><i class="fa fa-angle-left"></i>&nbsp;{{ page.previous.title }}</a>
+    {% endif %}
+    {% if page.next %}
+      <a id="post-next" class="btn" href="{{ page.next.url }}">{{ page.next.title }}&nbsp;<i class="fa fa-angle-right"></i></a>
+    {% endif %}
+    <div class="clearfix"></div>
+  </div>
+
+</div>

@@ -1,0 +1,12 @@
+# Site settings
+title: SudoPlay Games
+email: business@sudoplaygames.com
+description: "SudoPlay Games is a small, independent game studio located in Oregon, USA."
+baseurl: ""
+url: "http://www.sudoplaygames.com"
+twitter_username: sudoplaygames
+github_username:  sudoplaygames
+
+# Build settings
+markdown: redcarpet
+permalink: /blog/:year/:month/:day/:title.html
