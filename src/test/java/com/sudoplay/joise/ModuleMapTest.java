@@ -370,7 +370,10 @@ public class ModuleMapTest {
 
   @Test
   public void testSeedName() {
-    this.testWithSeedName(func2);
+    this.testWithSeedName(new ModuleBasisFunction(BasisType.SIMPLEX, InterpolationType.CUBIC), null);
+    this.testWithSeedName(new ModuleFractal(FractalType.FBM, BasisType.SIMPLEX, InterpolationType.CUBIC), null);
+    ModuleCellGen moduleCellGen = new ModuleCellGen();
+    this.testWithSeedName(moduleCellGen, new ModuleCellular(moduleCellGen));
   }
 
   private void test(Module module) {
@@ -387,10 +390,14 @@ public class ModuleMapTest {
     }
   }
 
-  private void testWithSeedName(SeededModule module) {
-    module.setSeedName("externalSeed");
+  private void testWithSeedName(SeededModule seededModule, Module sampledModule) {
+    seededModule.setSeedName("externalSeed");
 
-    ModuleMap moduleMap = module.getModuleMap();
+    if (sampledModule == null) {
+      sampledModule = seededModule;
+    }
+
+    ModuleMap moduleMap = sampledModule.getModuleMap();
     Module copiedModule = new ModuleChainBuilder().build(moduleMap);
     LCG lcg = new LCG();
     lcg.setSeedTime();
@@ -401,10 +408,10 @@ public class ModuleMapTest {
       y = lcg.get01() * 8.0;
 
       seed = lcg.get();
-      module.setSeed(seed);
+      seededModule.setSeed(seed);
       copiedModule.setSeed("externalSeed", seed);
 
-      assertEquals(module.get(x, y), copiedModule.get(x, y), 1e-15);
+      assertEquals(sampledModule.get(x, y), copiedModule.get(x, y), 1e-15);
     }
   }
 

@@ -63,6 +63,11 @@ public class ModuleCellular extends
     this.setCoefficients(1, 0, 0, 0);
   }
 
+  public ModuleCellular(ModuleCellGen generator) {
+    this();
+    this.generator = generator;
+  }
+
   public void setCellularSource(ModuleCellGen generator) {
     this.generator = generator;
   }

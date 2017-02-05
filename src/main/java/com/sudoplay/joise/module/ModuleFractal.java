@@ -54,9 +54,10 @@ import com.sudoplay.joise.ModulePropertyMap;
 import com.sudoplay.joise.module.ModuleBasisFunction.BasisType;
 import com.sudoplay.joise.module.ModuleBasisFunction.InterpolationType;
 import com.sudoplay.joise.noise.Util;
+import com.sudoplay.joise.util.Checked;
 
 public class ModuleFractal extends
-    Module {
+    SeededModule {
 
   private static final int MAX_OCTAVES = 10;
 
@@ -90,6 +91,7 @@ public class ModuleFractal extends
     this(DEFAULT_FRACTAL_TYPE, DEFAULT_BASIS_TYPE, DEFAULT_INTERPOLATION_TYPE);
   }
 
+  @SuppressWarnings("WeakerAccess")
   public ModuleFractal(
       FractalType type,
       BasisType basisType,
@@ -108,12 +110,9 @@ public class ModuleFractal extends
     this.resetAllSources();
   }
 
-  public void setNumOctaves(long n) {
-
-    if (n > MAX_OCTAVES) {
-      throw new IllegalArgumentException("number of octaves must be <= " + MAX_OCTAVES);
-    }
-    this.numOctaves = (int) n;
+  public void setNumOctaves(int n) {
+    this.assertIndexWithinBounds(n);
+    this.numOctaves = n;
   }
 
   @SuppressWarnings("WeakerAccess")
@@ -127,19 +126,19 @@ public class ModuleFractal extends
     this.calcWeights();
   }
 
-  @SuppressWarnings("WeakerAccess")
+  @SuppressWarnings({"WeakerAccess", "unused"})
   public void setGain(double g) {
     this.gain = g;
     this.calcWeights();
   }
 
-  @SuppressWarnings("WeakerAccess")
+  @SuppressWarnings({"WeakerAccess", "unused"})
   public void setOffset(double o) {
     this.offset = o;
     this.calcWeights();
   }
 
-  @SuppressWarnings("WeakerAccess")
+  @SuppressWarnings({"WeakerAccess", "unused"})
   public void setH(double h) {
     this.H = h;
     this.calcWeights();
@@ -191,6 +190,14 @@ public class ModuleFractal extends
     this.calcWeights();
   }
 
+  /**
+   * Sets the {@link BasisType} and {@link InterpolationType} for all internal {@link ModuleBasisFunction}.
+   * <p>
+   * Sources set with {@link ModuleFractal#overrideSource(int, Module)} will not be affected.
+   *
+   * @param basisType         the {@link BasisType}
+   * @param interpolationType the {@link InterpolationType}
+   */
   @SuppressWarnings("WeakerAccess")
   public void setAllSourceTypes(
       BasisType basisType,
@@ -203,6 +210,13 @@ public class ModuleFractal extends
     }
   }
 
+  /**
+   * Sets the {@link BasisType} for all internal {@link ModuleBasisFunction}.
+   * <p>
+   * Sources set with {@link ModuleFractal#overrideSource(int, Module)} will not be affected.
+   *
+   * @param basisType the {@link BasisType}
+   */
   @SuppressWarnings("WeakerAccess")
   public void setAllSourceBasisTypes(BasisType basisType) {
 
@@ -211,6 +225,13 @@ public class ModuleFractal extends
     }
   }
 
+  /**
+   * Sets the {@link InterpolationType} for all internal {@link ModuleBasisFunction}.
+   * <p>
+   * Sources set with {@link ModuleFractal#overrideSource(int, Module)} will not be affected.
+   *
+   * @param interpolationType the {@link InterpolationType}
+   */
   @SuppressWarnings("WeakerAccess")
   public void setAllSourceInterpolationTypes(InterpolationType interpolationType) {
 
@@ -219,13 +240,23 @@ public class ModuleFractal extends
     }
   }
 
+  /**
+   * Sets the {@link BasisType} and {@link InterpolationType} for the internal {@link ModuleBasisFunction} assigned
+   * to the index given.
+   * <p>
+   * Sources set with {@link ModuleFractal#overrideSource(int, Module)} will not be affected.
+   *
+   * @param index             the index
+   * @param basisType         the {@link BasisType}
+   * @param interpolationType the {@link InterpolationType}
+   */
   @SuppressWarnings({"WeakerAccess", "unused"})
   public void setSourceType(
       int index,
       BasisType basisType,
       InterpolationType interpolationType
   ) {
-    this.assertMaxSources(index);
+    this.assertIndexWithinBounds(index);
     this.basis[index].setType(basisType);
     this.basis[index].setInterpolation(interpolationType);
   }
@@ -240,26 +271,67 @@ public class ModuleFractal extends
     this.derivativeSpacing[index] = derivativeSpacing;
   }
 
+  /**
+   * Allows overriding internal sources with custom sources.
+   *
+   * @param index  the index of the source to override
+   * @param source the source to override with
+   */
   @SuppressWarnings({"WeakerAccess", "unused"})
   public void overrideSource(int index, Module source) {
-
-    if (index < 0 || index >= MAX_OCTAVES) {
-      throw new IllegalArgumentException("expecting index < " + MAX_OCTAVES + " but was " + index);
-    }
+    this.assertIndexWithinBounds(index);
     this.source[index] = source;
   }
 
+  /**
+   * Resets a source overridden with {@link ModuleFractal#overrideSource(int, Module)} at the provided index.
+   *
+   * @param index the index of the overridden source
+   */
   @SuppressWarnings({"WeakerAccess", "unused"})
   public void resetSource(int index) {
-    this.assertMaxSources(index);
+    this.assertIndexWithinBounds(index);
     this.source[index] = this.basis[index];
   }
 
+  /**
+   * Resets all sources overridden with {@link ModuleFractal#overrideSource(int, Module)}.
+   */
   @SuppressWarnings("WeakerAccess")
   public void resetAllSources() {
     System.arraycopy(this.basis, 0, this.source, 0, MAX_OCTAVES);
   }
 
+  /**
+   * Iterates through all currently assigned sources and calls {@link SeededModule#setSeedName(String)} on each if
+   * the source is an instance of {@link SeededModule}.
+   * <p>
+   * If {@link ModuleFractal#overrideSource(int, Module)} is called after calling this method, the new source will
+   * not contain the seed name set here.
+   *
+   * @param name the seed name
+   */
+  @Override
+  public void setSeedName(String name) {
+    super.setSeedName(name);
+
+    for (int i = 0; i < MAX_OCTAVES; i++) {
+
+      if (this.source[i] instanceof SeededModule) {
+        ((SeededModule) this.source[i]).setSeedName(name);
+      }
+    }
+  }
+
+  /**
+   * Iterates through all currently assigned sources and calls {@link SeededModule#setSeed(long)} on each if the
+   * source is an instance of {@link SeededModule}.
+   * <p>
+   * If {@link ModuleFractal#overrideSource(int, Module)} is called after calling this method, the new source will
+   * not contain the seed set here.
+   *
+   * @param seed the seed
+   */
   public void setSeed(long seed) {
 
     for (int i = 0; i < MAX_OCTAVES; i++) {
@@ -270,9 +342,30 @@ public class ModuleFractal extends
     }
   }
 
+  /**
+   * Iterates through all currently assigned sources and calls {@link Module#setSeed(String, long)}.
+   * <p>
+   * If {@link ModuleFractal#overrideSource(int, Module)} is called after calling this method, the new source will
+   * not contain the seed set here.
+   *
+   * @param seedName the seed name
+   * @param seed     the seed
+   */
+  @Override
+  public void setSeed(String seedName, long seed) {
+
+    for (int i = 0; i < MAX_OCTAVES; i++) {
+      this.source[i].setSeed(seedName, seed);
+    }
+  }
+
+  /**
+   * @param index the basis function index
+   * @return the internal {@link ModuleBasisFunction} assigned to the index given
+   */
   @SuppressWarnings({"WeakerAccess", "unused"})
   public ModuleBasisFunction getBasis(int index) {
-    this.assertMaxSources(index);
+    this.assertIndexWithinBounds(index);
     return this.basis[index];
   }
 
@@ -1211,14 +1304,6 @@ public class ModuleFractal extends
   }
 
   @Override
-  public void setSeed(String seedName, long seed) {
-
-    for (int i = 0; i < this.numOctaves; i++) {
-      this.source[i].setSeed(seedName, seed);
-    }
-  }
-
-  @Override
   public void writeToMap(ModuleMap moduleMap) {
     ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
 
@@ -1247,7 +1332,7 @@ public class ModuleFractal extends
   public Module buildFromPropertyMap(ModulePropertyMap modulePropertyMap, ModuleInstanceMap moduleInstanceMap) {
 
     this.type = modulePropertyMap.readEnum("type", FractalType.class);
-    this.setNumOctaves(modulePropertyMap.readLong("octaves"));
+    this.setNumOctaves(Checked.safeLongToInt(modulePropertyMap.readLong("octaves")));
     this.setFrequency(modulePropertyMap.readDouble("frequency"));
     this.lacunarity = modulePropertyMap.readDouble("lacunarity");
     this.gain = modulePropertyMap.readDouble("gain");
@@ -1275,7 +1360,7 @@ public class ModuleFractal extends
    *
    * @param index the index to test bounds
    */
-  private void assertMaxSources(int index) {
+  private void assertIndexWithinBounds(int index) {
 
     if (index < 0 || index >= MAX_OCTAVES) {
       throw new IllegalArgumentException("expected index < " + MAX_OCTAVES + ", got " + index);
