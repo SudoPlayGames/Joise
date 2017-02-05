@@ -20,6 +20,7 @@
   * fixed ModuleBasisFunction rotation axis and angle are not written to or read from the ModuleMap (#22)
   * removed unused scale and offset fields and associated method from `ModuleBasisFunction` class; fixes #20
   * removed old util package from gwt xml
+  * fixed can't set seed name with ModuleFractal (#25)
 
 #### 1.0.5
 

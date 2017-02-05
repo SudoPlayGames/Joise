@@ -10,7 +10,7 @@ Joise is derived from Joshua Tippetts' [Accidental Noise Library](http://acciden
 ```
 groupId=com.sudoplay.joise
 artifactId=joise
-version=1.1.0-RC1
+version=1.1.0-RC2
 ```
 
 ### Why Joise?
@@ -59,6 +59,7 @@ The following packages are provided separately to reduce dependencies:
   * fixed ModuleBasisFunction rotation axis and angle are not written to or read from the ModuleMap (#22)
   * removed unused scale and offset fields and associated method from `ModuleBasisFunction` class; fixes #20
   * removed old util package from gwt xml
+  * fixed can't set seed name with ModuleFractal (#25)
 
 [View Entire Changelog](CHANGELOG.md)
 
