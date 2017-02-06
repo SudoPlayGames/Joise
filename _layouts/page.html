@@ -1,14 +1,12 @@
 ---
 layout: default
 ---
-<div class="page">
+<div class="page container">
+
+<div class="row">
 
   <div class="col-md-9">
     
-    <header class="page-header">
-      <h1>{{ page.title }}</h1>
-    </header>
-
     <article class="page-content">
       {{ content }}
     </article>
@@ -16,7 +14,8 @@ layout: default
   </div>
 
   <div class="col-md-3">
-    <nav id="toc" class="hidden-print hidden-sm hidden-xs affix-top" data-spy="affix" data-toggle="toc"></nav>
+    <nav id="toc" class="hidden-print hidden-sm hidden-xs affix" data-spy="affix" data-toggle="toc" data-offset-top="128"></nav>
   </div>
 
+</div>
 </div>

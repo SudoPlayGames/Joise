@@ -10,3 +10,5 @@ github_username:  sudoplaygames
 # Build settings
 markdown: redcarpet
 permalink: /blog/:year/:month/:day/:title.html
+
+joise_version: "1.1.0-RC2"

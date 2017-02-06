@@ -1,13 +1,23 @@
 ---
 layout: page
 title: Quick Start
+description: Get up and running rapidly with our quick start guide.
 permalink: /quick-start/
 ---
+
+## Download
+
+<a href="/guide#download" class="btn btn-outline btn-default btn-lg">
+  <i class="fa fa-download fa-lg" aria-hidden="true"></i>
+  Download Joise
+</a>
+
+## How does Joise work?
 
 Joise works by chaining stand-alone mathematical functions together to create more complex and unique noise functions. These stand-alone functions are referred to as modules.
 
 
-## Chaining Modules
+## Chaining modules
 
 Most modules accept one or more sources. Sources can either be a module or a double value.
 
@@ -18,7 +28,7 @@ basis.setSeed(42);
 
 ModuleAutoCorrect correct = new ModuleAutoCorrect();
 correct.setSource(basis);
-correct.calculate();
+correct.calculateAll();
 
 ModuleScaleDomain scaleDomain = new ModuleScaleDomain();
 scaleDomain.setSource(correct);
@@ -27,7 +37,7 @@ scaleDomain.setScaleY(4.0);
 ```
 
 
-## Sampling Chained Modules
+## Sampling chained modules
 
 A module chain can be sampled in either two, three, four or six dimensions. Four and six dimensional noise is used for creating seamless two and three dimensional noise, respectively.
 
@@ -39,7 +49,7 @@ lastModuleInChain.get(x, y, z, w, u, v);
 ```
 
 
-## Exporting a Module Chain
+## Exporting a module chain
 
 Module chains can be converted to a `ModuleMap` by calling `ModuleMap#getModuleMap()` on the last module in the chain. Convert the module map back to a module again by calling `ModuleChainBuilder#build(ModuleMap)`.
 
@@ -57,7 +67,7 @@ module.get(x, y, z);
 ```
 
 
-## Naming Seeds
+## Naming seeds
 
 Seeds can be named by calling `SeededModule#setSeedName(String)`. This is convenient if you want to load a module chain from an external format, and set seeds programatically.
 

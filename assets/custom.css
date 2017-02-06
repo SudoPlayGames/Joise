@@ -8,10 +8,6 @@ a.btn-primary {
   color: #000;
 }
 
-a.btn-default:hover {
-  color: #000;
-}
-
 pre {
   overflow: auto;
 }
@@ -157,6 +153,103 @@ code {
  * =================================================================
  */
 
+.bs-callout {
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-radius: 3px;
+}
+.bs-callout h4 {
+    margin-top: 0;
+    padding-top: 0;
+    margin-bottom: 5px;
+}
+.bs-callout p:last-child {
+    margin-bottom: 0;
+}
+.bs-callout code {
+    border-radius: 3px;
+}
+.bs-callout+.bs-callout {
+    margin-top: -5px;
+}
+.bs-callout-default {
+    border-left-color: #777;
+}
+.bs-callout-default h4 {
+    color: #777;
+}
+.bs-callout-primary {
+    border-left-color: #428bca;
+}
+.bs-callout-primary h4 {
+    color: #428bca;
+}
+.bs-callout-success {
+    border-left-color: #5cb85c;
+}
+.bs-callout-success h4 {
+    color: #5cb85c;
+}
+.bs-callout-danger {
+    border-left-color: #d9534f;
+}
+.bs-callout-danger h4 {
+    color: #d9534f;
+}
+.bs-callout-warning {
+    border-left-color: #f0ad4e;
+}
+.bs-callout-warning h4 {
+    color: #f0ad4e;
+}
+.bs-callout-info {
+    border-left-color: #5bc0de;
+}
+.bs-callout-info h4 {
+    color: #5bc0de;
+}
+
+/*
+ * =================================================================
+ */
+
+.affix {
+  top: 80px;
+}
+
+.title {
+  font-weight: bold;
+  text-align: center;
+}
+
+.btn-outline {
+  border-color: #4362A8;
+  background-color: #E8EEFC;
+  color: #4362A8;
+}
+
+.btn-outline:hover {
+  border-color: #4362A8;
+  background-color: #4362A8;
+  color: #fff;
+}
+
+.lead.download {
+  margin-bottom: 0px;
+  font-weight: 500;
+  font-size: 24px;
+}
+
+.lead.download.row2 {
+  margin-top: 16px;
+}
+
+.btn i {
+  margin-right: 6px;
+}
+
 #toc .active a, #toc a:hover {
   color: #4362A8;
   border-left-color: #4362A8;
@@ -168,6 +261,7 @@ code {
   padding-top: 48px;
   padding-bottom: 128px;
   color: #E8EEFC;
+  text-align: center;
 }
 
 #home #logo {
@@ -191,32 +285,48 @@ code {
   color: #B9CAF1;
 }
 
-#home button {
+#home .btn {
   font-size: 20px;
   margin: 0 auto;
-  text-align: center;
-  display: block;
   margin-top: 32px;
   color: #E8EEFC;
   background-color: #4362A8;
   border-color: #E8EEFC;
 }
 
-#home button:hover {
+#home .btn:hover {
   color: #4362A8;
   background-color: #B9CAF1;
   border-color: #B9CAF1;
+}
+
+#features {
+  background-color: #E8EEFC;
+  text-align: center;
+  border-bottom: 1px solid #B9CAF1;
+  padding-top: 64px;
+  padding-bottom: 128px;
+}
+
+#features h3 {
+  margin-top: 16px;
+}
+
+#features .lead {
+  max-width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#features .row {
+  padding-top: 64px;
+  padding-bottom: 64px;
 }
 
 #showcase {
   background-color: #E8EEFC;
   padding-top: 64px;
   padding-bottom: 128px;
-}
-
-#showcase .title {
-  font-weight: bold;
-  text-align: center;
 }
 
 #showcase p.lead {

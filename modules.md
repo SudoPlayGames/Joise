@@ -1,6 +1,7 @@
 ---
 layout: page
 title: Modules
+description: In-depth analysis of how each module works.
 permalink: /modules/
 ---
 
