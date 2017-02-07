@@ -72,7 +72,7 @@ The repo contains the following packages:
   * `com.sudoplay.joise.noise` - the core noise functions
   * `com.sudoplay.joise.util` - common utility classes
 
-## Compiling Jar
+## Compiling a .jar
 
 Joise uses Gradle for its build system.
 
@@ -87,7 +87,7 @@ Joise uses Gradle for its build system.
 
 ## Sampling
 
-Joise works by chaining stand-alone mathematical functions together to create more complex and unique noise functions. These stand-alone functions are referred to as modules.
+Joise works by chaining stand-alone mathematical functions together to create more complex and unique noise functions. These stand-alone functions are referred to as modules. All of Joise's built-in modules can be found in the `com.sudoplay.joise.module` package.
 
 ### Chaining modules
 
@@ -100,7 +100,7 @@ basis.setSeed(42);
 
 ModuleAutoCorrect correct = new ModuleAutoCorrect();
 correct.setSource(basis);
-correct.calculate();
+correct.calculateAll();
 
 ModuleScaleDomain scaleDomain = new ModuleScaleDomain();
 scaleDomain.setSource(correct);
@@ -221,14 +221,118 @@ It creates an obvious seam in the middle. To overcome this, instead of sampling 
 
 This guarantees that your line of noise is tileable because it starts where it stops. This is the same for higher dimensional noise like two and three dimensional. Each axis sampled requires two dimensions to be sampled in a circle.
 
+Joise provides some [optional utility classes](#sampling-utilities) that can assist in sampling seamless noise.
+
 ### Sampling utilities
 
-<p class="lead">Joise provides some utility classes to assist in sampling and mapping noise to arrays.</p>
+<p class="lead">Joise provides optional utilities to assist in sampling and mapping noise.</p>
 
-<div class="bs-callout bs-callout-danger">
-  <h4>TODO</h4>
-  Provide examples demonstrating the use of the utility classes.
+The following utility classes, found in the `com.sudoplay.joise.mapping` package, are provided to assist in sampling module chains:
+
+#### Core Mapping Classes
+
+| Class | Description |
+| --- | --- |
+| Mapping | This is the core mapping class. It contains static mapping methods for 2D and 3D noise. |
+| MappingMode | This is an enumeration of the different mapping modes, which is passed into method calls on the Mapping class. |
+| MappingRange | This defines the noise sampling bounds, passed into method calls on the Mapping class. This is the range used for sampling the noise, not the size of the final output. |
+| Array2Double | This is a one-dimensional array wrapper for 2D noise. It contains convenience methods for reading and writing 2D noise in a one-dimensional array. |
+| Array3Double | This is a one-dimensional array wrapper for 3D noise. It contains convenience methods for reading and writing 3D noise in a one-dimensional array. |
+
+#### Interfaces
+
+| Class | Description |
+| --- | --- |
+| IMapping2DWriter | This interface is responsible for writing the sampled 2D noise. An implementation must be passed into method calls on the Mapping class. |
+| IMapping3DWriter | This interface is responsible for writing the sampled 3D noise. An implementation must be passed into method calls on the Mapping class. |
+| IMappingUpdateListener | The update method in this interface is called each time a value is sampled. It is useful for status updates. |
+
+#### Default Interface Implementations
+
+| Class | Description |
+| --- | --- |
+| Array2DoubleWriter | This is a default implementation of the IMapping2DWriter interface that writes sampled noise to an Array2Double. |
+| Array3DoubleWriter | This is a default implementation of the IMapping3DWriter interface that writes sampled noise to an Array3Double |
+  
+<div class="bs-callout bs-callout-warning">
+  <h4>The Mapping class may sample in more dimensions than expected.</h4>
+  If you use an auto-correction module in your module chain, make sure to call the calculate method that corresponds to the number of dimensions that the mapper will use.
 </div>
+
+#### Mapping#map2D
+
+The following table describes the differences between mapping modes for `Mapping#map2D`.
+
+| MappingMode  | Dimensions | Description |
+| ------------ |:----------:| --- |
+| NORMAL       | 3          | This mode will sample in three dimensions, on the X and Y axes, with the provided fixed value for Z. The resulting noise will not be seamless. |
+| SEAMLESS_X   | 4          | This mode will sample in four dimensions, on the X and Y axes in a circle and on the Z axis, with the provided fixed value for W. The resulting noise will be seamless on the X axis. |
+| SEAMLESS_Y   | 4          | This mode will sample in four dimensions, on the X axis and on the Y and Z axes in a circle, with the provided fixed value for W. The resulting noise will be seamless on the Y axis. |
+| SEAMLESS_Z   | 4          | This mode will sample in four dimensions, on the X and Y axes and on the Z and W axes in a cirlce. The provided fixed value is used to select the Z axis slice. The resulting noise will be seamless on the Z axis. |
+| SEAMLESS_XY  | 6          | This mode will sample in six dimensions, on the X and Y axes in a circle and on the Z and W axes in a circle, with the provided fixed value for U. The resulting noise will be seamless on the X and Y axes. |
+| SEAMLESS_XZ  | 6          | This mode will sample in six dimensions, on the X and Y axes in a circle, on the Z axis, and on the W and U axes in a circle. The provided fixed value is used to select the Z axis slice. The resulting noise will be seamless on the X and Z axes. |
+| SEAMLESS_YZ  | 6          | This mode will sample in six dimensions, on the X axis, on the Y and Z axes in a circle, and on the W and U axes in a circle. The provided fixed value is used to select the Z axis slice. The resulting noise will be seamless on the Y and Z axes. |
+| SEAMLESS_XYZ | 6          | This mode will sample in six dimensions, on the X and Y axes in a circle, on the Z and W axes in a circle, and on the U and V axes in a circle. The provided fixed value is used to select the Z axis slice. The resulting noise will be seamless on the X, Y and Z axes. |
+
+#### Example
+
+Here is a snippet illustrating how to use the Mapping class:
+
+```java
+...
+
+int width = 640;
+int height = 480;
+
+Array2Double data = new Array2Double(width, height);
+Array2DoubleWriter writer = new Array2DoubleWriter(data);
+
+// map2D samples in 3D with a fixed z value
+Mapping.map2D(
+    MappingMode.NORMAL, // the mapping mode
+    width, // the width of the final output
+    height, // the height of the final output
+    module, // the module to sample
+    MappingRange.DEFAULT, // the range to sample from the noise
+    writer, // the IMapping2DWriter implementation
+    IMappingUpdateListener.NULL_LISTENER, // the IMappingUpdateListener implementation
+    0.5 // fixed Z value
+);
+
+// do something with the resulting data object here ...
+
+...
+```
+
+This example uses the `Mapping` class to sample noise in the range [-1,1] and map it to an array in the range [640,480]. The method called samples the noise in 3D and uses the last parameter, the 0.5 double, to indicate where to slice a 2D cross section out of the 3D noise. This value could, for example, be incremented in each frame of an animation to essentially move the 2D slice through the 3D noise, animating the noise in a visually coherent fashion.
+
+#### Mapping#map2DNoZ
+
+The `map2DNoZ` method is almost the same as the `map2D` method above, except it does not accept a parameter for a fixed Z value.
+
+The following table describes the differences between mapping modes for `Mapping#map2DNoZ`.
+
+| MappingMode  | Dimensions | Description |
+| ------------ |:----------:| --- |
+| NORMAL       | 2          | This mode will sample in two dimensions, on the X and Y axes. The resulting noise will not be seamless. |
+| SEAMLESS_X   | 3          | This mode will sample in three dimensions, on the X and Y axes in a circle and on the Z axis. The resulting noise will be seamless on the X axis. |
+| SEAMLESS_Y   | 3          | This mode will sample in three dimensions, on the X axis and on the Y and Z axes in a circle. The resulting noise will be seamless on the Y axis. |
+| SEAMLESS_XY  | 4          | This mode will sample in four dimensions, on the X and Y axes in a circle and on the Z and W axes in a circle. The resulting noise will be seamless on the X and Y axes. |
+
+#### Mapping#map3D
+
+The following table describes the differences between mapping modes for `Mapping#map3D`.
+
+| MappingMode  | Dimensions | Description |
+| ------------ |:----------:| --- |
+| NORMAL       | 3          | This mode will sample in three dimensions, on the X, Y and Z axes. The resulting noise will not be seamless. |
+| SEAMLESS_X   | 4          | This mode will sample in four dimensions, on the X and Y axes in a circle and on the Z and W axes. The resulting noise will be seamless on the X axis. |
+| SEAMLESS_Y   | 4          | This mode will sample in four dimensions, on the X axis, on the Y and Z axes in a circle, and on the W axis. The resulting noise will be seamless on the Y axis. |
+| SEAMLESS_Z   | 4          | This mode will sample in four dimensions, on the X and Y axes and on the Z and W axes in a cirlce. The resulting noise will be seamless on the Z axis. |
+| SEAMLESS_XY  | 6          | This mode will sample in six dimensions, on the X and Y axes in a circle, on the Z and W axes in a circle, and on the U axis. The resulting noise will be seamless on the X and Y axes. |
+| SEAMLESS_XZ  | 6          | This mode will sample in six dimensions, on the X and Y axes in a circle, on the Z axis, and on the W and U axes in a circle. The resulting noise will be seamless on the X and Z axes. |
+| SEAMLESS_YZ  | 6          | This mode will sample in six dimensions, on the X axis, on the Y and Z axes in a circle, and on the W and U axes in a circle. The resulting noise will be seamless on the Y and Z axes. |
+| SEAMLESS_XYZ | 6          | This mode will sample in six dimensions, on the X and Y axes in a circle, on the Z and W axes in a circle, and on the U and V axes in a circle. The resulting noise will be seamless on the X, Y and Z axes. |
 
 ### Multi-threaded sampling
 
@@ -237,7 +341,7 @@ This guarantees that your line of noise is tileable because it starts where it s
   A module chain that is sampled from multiple threads concurrently will produce errors.
 </div>
 
-If you create a module chain and sample that chain from multiple threads concurrently, the output will not be accurate. This is due to how some Joise classes, specifically the PRNGs, ModuleCache and ModuleCellGen, use mutable state in their calculations.
+If you create a module chain and sample that chain from multiple threads concurrently, the output will not be accurate. This is due to how some Joise classes, specifically the PRNGs, `ModuleCache` and `ModuleCellGen`, use mutable state in their calculations.
 
 To use Joise in a multi-threaded application, use separate instances of your module chain in each thread that will be sampling it.
 
@@ -292,9 +396,7 @@ All modules extend one of three classes: `Module`, `SourcedModule`, or `SeededMo
 
 ### Module
 
-<div class="bs-callout bs-callout-success">
-  <h4>Module is the base class which all modules extend.</h4>
-</div>
+<p class="lead">Module is the base class which all modules extend.</p>
 
 Here is an example of a module that simply returns a predetermined value for all `get` calls:
 
@@ -404,9 +506,7 @@ This method is used to read values from the provided `ModulePropertyMap` and `Mo
 
 ### SourcedModule
 
-<div class="bs-callout bs-callout-success">
-  <h4>SourcedModule is a convenience class for subclasses that require only one source.</h4>
-</div>
+<p class="lead">SourcedModule is a convenience class for subclasses that require only one source.</p>
 
 Here is the `ModuleAbs` class as an example of a simple `SourcedModule`:
 
@@ -471,9 +571,7 @@ public void setSeed(String seedName, long seed) {
 
 ### SeededModule
 
-<div class="bs-callout bs-callout-success">
-  <h4>SeededModule is the base class for all modules that require a seed.</h4>
-</div>
+<p class="lead">SeededModule is the base class for all modules that require a seed.</p>
 
 The following is an example class to demonstrate a `SeededModule` subclass:
 
@@ -563,6 +661,7 @@ Here are a few things to keep in mind when submitting a PR:
   * A PR should be focused on content, meaning a PR in which the majority of the changes are syntax changes will not be accepted.
   * Ensure that your change isn't already being developed, or hasn't been previously rejected.
   * Ensure that your changes are on the `develop` branch.
+  * Ensure that your changes are compatible with [GWT's subset of the JRE](http://www.gwtproject.org/doc/latest/RefJreEmulation.html).
   * Use the file you are editing as a style guide.
 
 ### Getting started
