@@ -56,10 +56,10 @@ import com.sudoplay.joise.noise.worker.WorkerNoise2Value;
 import com.sudoplay.joise.noise.worker.WorkerNoise3Value;
 import com.sudoplay.joise.noise.worker.WorkerNoise4Value;
 import com.sudoplay.joise.noise.worker.WorkerNoise6Value;
-import com.sudoplay.joise.noise.worker.spi.WorkerNoise2;
-import com.sudoplay.joise.noise.worker.spi.WorkerNoise3;
-import com.sudoplay.joise.noise.worker.spi.WorkerNoise4;
-import com.sudoplay.joise.noise.worker.spi.WorkerNoise6;
+import com.sudoplay.joise.noise.worker.spi.IWorkerNoise2;
+import com.sudoplay.joise.noise.worker.spi.IWorkerNoise3;
+import com.sudoplay.joise.noise.worker.spi.IWorkerNoise4;
+import com.sudoplay.joise.noise.worker.spi.IWorkerNoise6;
 import com.sudoplay.joise.util.ModuleID;
 
 public class ModuleCellGen extends
@@ -67,10 +67,10 @@ public class ModuleCellGen extends
 
   private final String id;
 
-  private WorkerNoise2 workerNoise2;
-  private WorkerNoise3 workerNoise3;
-  private WorkerNoise4 workerNoise4;
-  private WorkerNoise6 workerNoise6;
+  private IWorkerNoise2 workerNoise2;
+  private IWorkerNoise3 workerNoise3;
+  private IWorkerNoise4 workerNoise4;
+  private IWorkerNoise6 workerNoise6;
 
   /* package */ class CellularCache {
     double[] f = new double[4];

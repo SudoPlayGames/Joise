@@ -50,7 +50,7 @@ package com.sudoplay.joise.mapping;
 
 @SuppressWarnings("unused")
 public class Array3DoubleWriter implements
-    Mapping3DWriter {
+    IMapping3DWriter {
 
   private Array3Double data;
 

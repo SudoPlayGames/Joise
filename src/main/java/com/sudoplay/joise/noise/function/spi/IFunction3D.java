@@ -48,9 +48,9 @@
 
 package com.sudoplay.joise.noise.function.spi;
 
-import com.sudoplay.joise.noise.Interpolator;
+import com.sudoplay.joise.noise.IInterpolator;
 
-public interface Function4D {
+public interface IFunction3D {
 
-  double get(double x, double y, double z, double w, long seed, Interpolator interpolator);
+  double get(double x, double y, double z, long seed, IInterpolator interpolator);
 }

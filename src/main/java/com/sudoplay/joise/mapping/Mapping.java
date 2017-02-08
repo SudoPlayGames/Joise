@@ -50,7 +50,6 @@ package com.sudoplay.joise.mapping;
 
 import com.sudoplay.joise.module.Module;
 
-@SuppressWarnings("unused")
 public final class Mapping {
 
   private static final double TWO_PI = Math.PI * 2.0;
@@ -65,17 +64,17 @@ public final class Mapping {
       int height,
       Module module,
       MappingRange range,
-      Mapping2DWriter writer,
-      MappingUpdateListener listener,
+      IMapping2DWriter writer,
+      IMappingUpdateListener listener,
       double z
   ) {
 
     if (writer == null) {
-      writer = Mapping2DWriter.NULL_WRITER;
+      writer = IMapping2DWriter.NULL_WRITER;
     }
 
     if (listener == null) {
-      listener = MappingUpdateListener.NULL_LISTENER;
+      listener = IMappingUpdateListener.NULL_LISTENER;
     }
 
     double p, q;
@@ -175,7 +174,6 @@ public final class Mapping {
       case SEAMLESS_Z:
 
         dx = range.map1.x - range.map0.x;
-        dy = range.map1.y - range.map0.y;
         dz = range.loop1.z - range.loop0.z;
 
         r = (z - range.map0.z) / (range.map1.z - range.map0.z);
@@ -188,7 +186,6 @@ public final class Mapping {
           for (int y = 0; y < height; y++) {
 
             p = (double) x * iw;
-            q = (double) y * ih;
 
             nx = range.map0.x + p * dx;
             ny = range.map0.y + p * dx;
@@ -343,22 +340,23 @@ public final class Mapping {
 
   }
 
+  @SuppressWarnings("unused")
   public static void map2DNoZ(
       MappingMode mappingMode,
       int width,
       int height,
       Module module,
       MappingRange range,
-      Mapping2DWriter writer,
-      MappingUpdateListener listener
+      IMapping2DWriter writer,
+      IMappingUpdateListener listener
   ) {
 
     if (writer == null) {
-      writer = Mapping2DWriter.NULL_WRITER;
+      writer = IMapping2DWriter.NULL_WRITER;
     }
 
     if (listener == null) {
-      listener = MappingUpdateListener.NULL_LISTENER;
+      listener = IMappingUpdateListener.NULL_LISTENER;
     }
 
     double p, q;
@@ -489,6 +487,7 @@ public final class Mapping {
 
   }
 
+  @SuppressWarnings("unused")
   public static void map3D(
       MappingMode mappingMode,
       int width,
@@ -496,16 +495,16 @@ public final class Mapping {
       int depth,
       Module module,
       MappingRange range,
-      Mapping3DWriter writer,
-      MappingUpdateListener listener
+      IMapping3DWriter writer,
+      IMappingUpdateListener listener
   ) {
 
     if (writer == null) {
-      writer = Mapping3DWriter.NULL_WRITER;
+      writer = IMapping3DWriter.NULL_WRITER;
     }
 
     if (listener == null) {
-      listener = MappingUpdateListener.NULL_LISTENER;
+      listener = IMappingUpdateListener.NULL_LISTENER;
     }
 
     double p, q, r;

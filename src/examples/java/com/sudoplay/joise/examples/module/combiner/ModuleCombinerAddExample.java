@@ -1,6 +1,6 @@
 package com.sudoplay.joise.examples.module.combiner;
 
-import com.sudoplay.joise.examples.AbstractExample;
+import com.sudoplay.joise.examples.AbstractSplitExample;
 import com.sudoplay.joise.examples.SplitCanvas;
 import com.sudoplay.joise.module.*;
 
@@ -8,7 +8,7 @@ import com.sudoplay.joise.module.*;
  * Created by codetaylor on 1/8/2017.
  */
 public class ModuleCombinerAddExample extends
-    AbstractExample {
+    AbstractSplitExample {
 
   static {
     EXAMPLE_CLASS = ModuleCombinerAddExample.class;

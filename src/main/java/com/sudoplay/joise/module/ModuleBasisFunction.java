@@ -52,12 +52,12 @@ import com.sudoplay.joise.ModuleInstanceMap;
 import com.sudoplay.joise.ModuleMap;
 import com.sudoplay.joise.ModulePropertyMap;
 import com.sudoplay.joise.generator.LCG;
-import com.sudoplay.joise.noise.Interpolator;
+import com.sudoplay.joise.noise.IInterpolator;
 import com.sudoplay.joise.noise.function.*;
-import com.sudoplay.joise.noise.function.spi.Function2D;
-import com.sudoplay.joise.noise.function.spi.Function3D;
-import com.sudoplay.joise.noise.function.spi.Function4D;
-import com.sudoplay.joise.noise.function.spi.Function6D;
+import com.sudoplay.joise.noise.function.spi.IFunction2D;
+import com.sudoplay.joise.noise.function.spi.IFunction3D;
+import com.sudoplay.joise.noise.function.spi.IFunction4D;
+import com.sudoplay.joise.noise.function.spi.IFunction6D;
 
 public class ModuleBasisFunction extends
     SeededModule {
@@ -74,12 +74,12 @@ public class ModuleBasisFunction extends
   private double cos2d, sin2d;
   private double axisX, axisY, axisZ, axisAngle;
 
-  private Function2D func2D;
-  private Function3D func3D;
-  private Function4D func4D;
-  private Function6D func6D;
+  private IFunction2D func2D;
+  private IFunction3D func3D;
+  private IFunction4D func4D;
+  private IFunction6D func6D;
 
-  private Interpolator interpolator;
+  private IInterpolator interpolator;
   private BasisType basisType;
   private InterpolationType interpolationType;
 
@@ -154,19 +154,19 @@ public class ModuleBasisFunction extends
 
     switch (type) {
       case CUBIC:
-        this.interpolator = Interpolator.HERMITE;
+        this.interpolator = IInterpolator.HERMITE;
         break;
 
       case LINEAR:
-        this.interpolator = Interpolator.LINEAR;
+        this.interpolator = IInterpolator.LINEAR;
         break;
 
       case NONE:
-        this.interpolator = Interpolator.NONE;
+        this.interpolator = IInterpolator.NONE;
         break;
 
       default:
-        this.interpolator = Interpolator.QUINTIC;
+        this.interpolator = IInterpolator.QUINTIC;
         break;
     }
   }

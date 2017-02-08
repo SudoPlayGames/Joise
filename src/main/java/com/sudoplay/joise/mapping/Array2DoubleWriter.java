@@ -50,7 +50,7 @@ package com.sudoplay.joise.mapping;
 
 @SuppressWarnings("unused")
 public class Array2DoubleWriter implements
-    Mapping2DWriter {
+    IMapping2DWriter {
 
   private Array2Double data;
 

@@ -48,14 +48,14 @@
 
 package com.sudoplay.joise.noise.function;
 
-import com.sudoplay.joise.noise.Interpolator;
+import com.sudoplay.joise.noise.IInterpolator;
 import com.sudoplay.joise.noise.Noise;
 import com.sudoplay.joise.noise.NoiseLUT;
-import com.sudoplay.joise.noise.function.spi.Function6D;
+import com.sudoplay.joise.noise.function.spi.IFunction6D;
 import com.sudoplay.joise.util.Bits;
 
 public class Function6DSimplex implements
-    Function6D {
+    IFunction6D {
 
   private byte[] buffer;
 
@@ -64,7 +64,7 @@ public class Function6DSimplex implements
   }
 
   @Override
-  public double get(double x, double y, double z, double w, double u, double v, long seed, Interpolator interpolator) {
+  public double get(double x, double y, double z, double w, double u, double v, long seed, IInterpolator interpolator) {
     double F4 = (Math.sqrt(7.0) - 1.0) / 6.0;
     double G4 = F4 / (1.0 + 6.0 * F4);
 

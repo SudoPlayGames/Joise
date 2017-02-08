@@ -1,6 +1,6 @@
 package com.sudoplay.joise.examples.module;
 
-import com.sudoplay.joise.examples.AbstractExample;
+import com.sudoplay.joise.examples.AbstractSplitExample;
 import com.sudoplay.joise.examples.SplitCanvas;
 import com.sudoplay.joise.module.ModuleAutoCorrect;
 import com.sudoplay.joise.module.ModuleCellGen;
@@ -11,7 +11,7 @@ import com.sudoplay.joise.module.ModuleScaleDomain;
  * Created by codetaylor on 1/9/2017.
  */
 public class ModuleCellGenExample extends
-    AbstractExample {
+    AbstractSplitExample {
 
   static {
     EXAMPLE_CLASS = ModuleCellGenExample.class;

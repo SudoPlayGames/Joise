@@ -48,14 +48,14 @@
 
 package com.sudoplay.joise.noise.function;
 
-import com.sudoplay.joise.noise.Interpolator;
-import com.sudoplay.joise.noise.function.spi.Function3D;
+import com.sudoplay.joise.noise.IInterpolator;
+import com.sudoplay.joise.noise.function.spi.IFunction3D;
 
 public class Function3DGradVal implements
-    Function3D {
+    IFunction3D {
 
-  private Function3D function3DValue;
-  private Function3D function3DGradient;
+  private IFunction3D function3DValue;
+  private IFunction3D function3DGradient;
 
   public Function3DGradVal() {
     this.function3DValue = new Function3DValue();
@@ -63,7 +63,7 @@ public class Function3DGradVal implements
   }
 
   @Override
-  public double get(double x, double y, double z, long seed, Interpolator interpolator) {
+  public double get(double x, double y, double z, long seed, IInterpolator interpolator) {
     return this.function3DValue.get(x, y, z, seed, interpolator)
         + this.function3DGradient.get(x, y, z, seed, interpolator);
   }

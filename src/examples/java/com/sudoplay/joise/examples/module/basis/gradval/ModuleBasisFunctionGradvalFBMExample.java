@@ -1,6 +1,6 @@
 package com.sudoplay.joise.examples.module.basis.gradval;
 
-import com.sudoplay.joise.examples.AbstractExample;
+import com.sudoplay.joise.examples.AbstractSplitExample;
 import com.sudoplay.joise.examples.SplitCanvas;
 import com.sudoplay.joise.module.ModuleAutoCorrect;
 import com.sudoplay.joise.module.ModuleBasisFunction;
@@ -10,7 +10,7 @@ import com.sudoplay.joise.module.ModuleFractal;
  * Created by codetaylor on 1/9/2017.
  */
 public class ModuleBasisFunctionGradvalFBMExample extends
-    AbstractExample {
+    AbstractSplitExample {
 
   static {
     EXAMPLE_CLASS = ModuleBasisFunctionGradvalFBMExample.class;

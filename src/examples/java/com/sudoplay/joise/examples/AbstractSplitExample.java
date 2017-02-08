@@ -2,9 +2,9 @@ package com.sudoplay.joise.examples;
 
 import javax.swing.*;
 
-public abstract class AbstractExample {
+public abstract class AbstractSplitExample {
 
-  protected static Class<? extends AbstractExample> EXAMPLE_CLASS;
+  protected static Class<? extends AbstractSplitExample> EXAMPLE_CLASS;
 
   protected abstract void run(SplitCanvas canvas);
 
@@ -30,7 +30,7 @@ public abstract class AbstractExample {
   }
 
   public static void main(String[] args) throws IllegalAccessException, InstantiationException {
-    AbstractExample example = EXAMPLE_CLASS.newInstance();
+    AbstractSplitExample example = EXAMPLE_CLASS.newInstance();
     example._run();
   }
 

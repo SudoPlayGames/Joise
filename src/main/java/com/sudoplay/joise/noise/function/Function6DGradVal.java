@@ -48,14 +48,14 @@
 
 package com.sudoplay.joise.noise.function;
 
-import com.sudoplay.joise.noise.Interpolator;
-import com.sudoplay.joise.noise.function.spi.Function6D;
+import com.sudoplay.joise.noise.IInterpolator;
+import com.sudoplay.joise.noise.function.spi.IFunction6D;
 
 public class Function6DGradVal implements
-    Function6D {
+    IFunction6D {
 
-  private Function6D function6DValue;
-  private Function6D function6DGradient;
+  private IFunction6D function6DValue;
+  private IFunction6D function6DGradient;
 
   public Function6DGradVal() {
     this.function6DValue = new Function6DValue();
@@ -63,7 +63,7 @@ public class Function6DGradVal implements
   }
 
   @Override
-  public double get(double x, double y, double z, double w, double u, double v, long seed, Interpolator interpolator) {
+  public double get(double x, double y, double z, double w, double u, double v, long seed, IInterpolator interpolator) {
     return this.function6DValue.get(x, y, z, w, u, v, seed, interpolator)
         + this.function6DGradient.get(x, y, z, w, u, v, seed, interpolator);
   }

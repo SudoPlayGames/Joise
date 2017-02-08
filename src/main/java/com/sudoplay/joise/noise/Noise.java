@@ -48,10 +48,10 @@
 
 package com.sudoplay.joise.noise;
 
-import com.sudoplay.joise.noise.worker.spi.WorkerNoise2;
-import com.sudoplay.joise.noise.worker.spi.WorkerNoise3;
-import com.sudoplay.joise.noise.worker.spi.WorkerNoise4;
-import com.sudoplay.joise.noise.worker.spi.WorkerNoise6;
+import com.sudoplay.joise.noise.worker.spi.IWorkerNoise2;
+import com.sudoplay.joise.noise.worker.spi.IWorkerNoise3;
+import com.sudoplay.joise.noise.worker.spi.IWorkerNoise4;
+import com.sudoplay.joise.noise.worker.spi.IWorkerNoise6;
 
 import java.util.Arrays;
 
@@ -162,7 +162,7 @@ public class Noise {
   // ==========================================================================
 
   private static double interpolateX2(double x, double y, double xs, int x0,
-                                      int x1, int iy, long seed, WorkerNoise2 noisefunc) {
+                                      int x1, int iy, long seed, IWorkerNoise2 noisefunc) {
     double v1 = noisefunc.calculate(x, y, x0, iy, seed);
     double v2 = noisefunc.calculate(x, y, x1, iy, seed);
     return lerp(xs, v1, v2);
@@ -170,14 +170,14 @@ public class Noise {
 
   public static double interpolateXY2(double x, double y, double xs,
                                       double ys, int x0, int x1, int y0, int y1, long seed,
-                                      WorkerNoise2 noisefunc) {
+                                      IWorkerNoise2 noisefunc) {
     double v1 = interpolateX2(x, y, xs, x0, x1, y0, seed, noisefunc);
     double v2 = interpolateX2(x, y, xs, x0, x1, y1, seed, noisefunc);
     return lerp(ys, v1, v2);
   }
 
   private static double interpolateX3(double x, double y, double z, double xs,
-                                      int x0, int x1, int iy, int iz, long seed, WorkerNoise3 noisefunc) {
+                                      int x0, int x1, int iy, int iz, long seed, IWorkerNoise3 noisefunc) {
     double v1 = noisefunc.calculate(x, y, z, x0, iy, iz, seed);
     double v2 = noisefunc.calculate(x, y, z, x1, iy, iz, seed);
     return lerp(xs, v1, v2);
@@ -185,7 +185,7 @@ public class Noise {
 
   private static double interpolateXY3(double x, double y, double z, double xs,
                                        double ys, int x0, int x1, int y0, int y1, int iz, long seed,
-                                       WorkerNoise3 noisefunc) {
+                                       IWorkerNoise3 noisefunc) {
     double v1 = interpolateX3(x, y, z, xs, x0, x1, y0, iz, seed, noisefunc);
     double v2 = interpolateX3(x, y, z, xs, x0, x1, y1, iz, seed, noisefunc);
     return lerp(ys, v1, v2);
@@ -193,7 +193,7 @@ public class Noise {
 
   public static double interpolateXYZ3(double x, double y, double z,
                                        double xs, double ys, double zs, int x0, int x1, int y0, int y1, int z0,
-                                       int z1, long seed, WorkerNoise3 noisefunc) {
+                                       int z1, long seed, IWorkerNoise3 noisefunc) {
     double v1 = interpolateXY3(x, y, z, xs, ys, x0, x1, y0, y1, z0, seed, noisefunc);
     double v2 = interpolateXY3(x, y, z, xs, ys, x0, x1, y0, y1, z1, seed, noisefunc);
     return lerp(zs, v1, v2);
@@ -201,7 +201,7 @@ public class Noise {
 
   private static double interpolateX4(double x, double y, double z, double w,
                                       double xs, int x0, int x1, int iy, int iz, int iw, long seed,
-                                      WorkerNoise4 noisefunc) {
+                                      IWorkerNoise4 noisefunc) {
     double v1 = noisefunc.calculate(x, y, z, w, x0, iy, iz, iw, seed);
     double v2 = noisefunc.calculate(x, y, z, w, x1, iy, iz, iw, seed);
     return lerp(xs, v1, v2);
@@ -209,7 +209,7 @@ public class Noise {
 
   private static double interpolateXY4(double x, double y, double z, double w,
                                        double xs, double ys, int x0, int x1, int y0, int y1, int iz, int iw,
-                                       long seed, WorkerNoise4 noisefunc) {
+                                       long seed, IWorkerNoise4 noisefunc) {
     double v1 = interpolateX4(x, y, z, w, xs, x0, x1, y0, iz, iw, seed, noisefunc);
     double v2 = interpolateX4(x, y, z, w, xs, x0, x1, y1, iz, iw, seed, noisefunc);
     return lerp(ys, v1, v2);
@@ -217,7 +217,7 @@ public class Noise {
 
   private static double interpolateXYZ4(double x, double y, double z, double w,
                                         double xs, double ys, double zs, int x0, int x1, int y0, int y1, int z0,
-                                        int z1, int iw, long seed, WorkerNoise4 noisefunc) {
+                                        int z1, int iw, long seed, IWorkerNoise4 noisefunc) {
     double v1 = interpolateXY4(x, y, z, w, xs, ys, x0, x1, y0, y1, z0, iw, seed, noisefunc);
     double v2 = interpolateXY4(x, y, z, w, xs, ys, x0, x1, y0, y1, z1, iw, seed, noisefunc);
     return lerp(zs, v1, v2);
@@ -226,7 +226,7 @@ public class Noise {
   public static double interpolateXYZW4(double x, double y, double z,
                                         double w, double xs, double ys, double zs, double ws, int x0, int x1,
                                         int y0, int y1, int z0, int z1, int w0, int w1, long seed,
-                                        WorkerNoise4 noisefunc) {
+                                        IWorkerNoise4 noisefunc) {
     double v1 = interpolateXYZ4(x, y, z, w, xs, ys, zs, x0, x1, y0, y1, z0, z1, w0, seed, noisefunc);
     double v2 = interpolateXYZ4(x, y, z, w, xs, ys, zs, x0, x1, y0, y1, z0, z1, w1, seed, noisefunc);
     return lerp(ws, v1, v2);
@@ -234,7 +234,7 @@ public class Noise {
 
   private static double interpolateX6(double x, double y, double z, double w,
                                       double u, double v, double xs, int x0, int x1, int iy, int iz, int iw,
-                                      int iu, int iv, long seed, WorkerNoise6 noisefunc) {
+                                      int iu, int iv, long seed, IWorkerNoise6 noisefunc) {
     double v1 = noisefunc.calculate(x, y, z, w, u, v, x0, iy, iz, iw, iu, iv, seed);
     double v2 = noisefunc.calculate(x, y, z, w, u, v, x1, iy, iz, iw, iu, iv, seed);
     return lerp(xs, v1, v2);
@@ -242,7 +242,7 @@ public class Noise {
 
   private static double interpolateXY6(double x, double y, double z, double w,
                                        double u, double v, double xs, double ys, int x0, int x1, int y0, int y1,
-                                       int iz, int iw, int iu, int iv, long seed, WorkerNoise6 noisefunc) {
+                                       int iz, int iw, int iu, int iv, long seed, IWorkerNoise6 noisefunc) {
     double v1 = interpolateX6(x, y, z, w, u, v, xs, x0, x1, y0, iz, iw, iu, iv, seed, noisefunc);
     double v2 = interpolateX6(x, y, z, w, u, v, xs, x0, x1, y1, iz, iw, iu, iv, seed, noisefunc);
     return lerp(ys, v1, v2);
@@ -251,7 +251,7 @@ public class Noise {
   private static double interpolateXYZ6(double x, double y, double z, double w,
                                         double u, double v, double xs, double ys, double zs, int x0, int x1,
                                         int y0, int y1, int z0, int z1, int iw, int iu, int iv, long seed,
-                                        WorkerNoise6 noisefunc) {
+                                        IWorkerNoise6 noisefunc) {
     double v1 = interpolateXY6(x, y, z, w, u, v, xs, ys, x0, x1, y0, y1, z0, iw, iu, iv, seed, noisefunc);
     double v2 = interpolateXY6(x, y, z, w, u, v, xs, ys, x0, x1, y0, y1, z1, iw, iu, iv, seed, noisefunc);
     return lerp(zs, v1, v2);
@@ -260,7 +260,7 @@ public class Noise {
   private static double interpolateXYZW6(double x, double y, double z,
                                          double w, double u, double v, double xs, double ys, double zs, double ws,
                                          int x0, int x1, int y0, int y1, int z0, int z1, int w0, int w1, int iu,
-                                         int iv, long seed, WorkerNoise6 noisefunc) {
+                                         int iv, long seed, IWorkerNoise6 noisefunc) {
     double v1 = interpolateXYZ6(x, y, z, w, u, v, xs, ys, zs, x0, x1, y0, y1, z0, z1, w0, iu, iv, seed, noisefunc);
     double v2 = interpolateXYZ6(x, y, z, w, u, v, xs, ys, zs, x0, x1, y0, y1, z0, z1, w1, iu, iv, seed, noisefunc);
     return lerp(ws, v1, v2);
@@ -269,7 +269,7 @@ public class Noise {
   private static double interpolateXYZWU6(double x, double y, double z,
                                           double w, double u, double v, double xs, double ys, double zs, double ws,
                                           double us, int x0, int x1, int y0, int y1, int z0, int z1, int w0,
-                                          int w1, int u0, int u1, int iv, long seed, WorkerNoise6 noisefunc) {
+                                          int w1, int u0, int u1, int iv, long seed, IWorkerNoise6 noisefunc) {
     double v1 = interpolateXYZW6(x, y, z, w, u, v, xs, ys, zs, ws, x0, x1, y0, y1, z0, z1, w0, w1, u0, iv, seed, noisefunc);
     double v2 = interpolateXYZW6(x, y, z, w, u, v, xs, ys, zs, ws, x0, x1, y0, y1, z0, z1, w0, w1, u1, iv, seed, noisefunc);
     return lerp(us, v1, v2);
@@ -279,7 +279,7 @@ public class Noise {
                                           double w, double u, double v, double xs, double ys, double zs, double ws,
                                           double us, double vs, int x0, int x1, int y0, int y1, int z0, int z1,
                                           int w0, int w1, int u0, int u1, int v0, int v1, long seed,
-                                          WorkerNoise6 noisefunc) {
+                                          IWorkerNoise6 noisefunc) {
     double val1 = interpolateXYZWU6(x, y, z, w, u, v, xs, ys, zs, ws, us, x0, x1, y0, y1, z0, z1, w0, w1, u0, u1, v0, seed, noisefunc);
     double val2 = interpolateXYZWU6(x, y, z, w, u, v, xs, ys, zs, ws, us, x0, x1, y0, y1, z0, z1, w0, w1, u0, u1, v1, seed, noisefunc);
     return lerp(vs, val1, val2);

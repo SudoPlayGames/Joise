@@ -1,6 +1,6 @@
 package com.sudoplay.joise.examples.module;
 
-import com.sudoplay.joise.examples.AbstractExample;
+import com.sudoplay.joise.examples.AbstractSplitExample;
 import com.sudoplay.joise.examples.SplitCanvas;
 import com.sudoplay.joise.module.ModuleAutoCorrect;
 import com.sudoplay.joise.module.ModuleBasisFunction;
@@ -11,7 +11,7 @@ import com.sudoplay.joise.module.ModuleFractal;
  * Created by codetaylor on 1/8/2017.
  */
 public class ModuleBiasExample extends
-    AbstractExample {
+    AbstractSplitExample {
 
   static {
     EXAMPLE_CLASS = ModuleBiasExample.class;

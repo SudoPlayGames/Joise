@@ -48,23 +48,23 @@
 
 package com.sudoplay.joise.noise.function;
 
-import com.sudoplay.joise.noise.Interpolator;
+import com.sudoplay.joise.noise.IInterpolator;
 import com.sudoplay.joise.noise.Noise;
-import com.sudoplay.joise.noise.function.spi.Function2D;
+import com.sudoplay.joise.noise.function.spi.IFunction2D;
 import com.sudoplay.joise.noise.worker.WorkerNoise2Value;
-import com.sudoplay.joise.noise.worker.spi.WorkerNoise2;
+import com.sudoplay.joise.noise.worker.spi.IWorkerNoise2;
 
 public class Function2DValue implements
-    Function2D {
+    IFunction2D {
 
-  private WorkerNoise2 worker;
+  private IWorkerNoise2 worker;
 
   public Function2DValue() {
     this.worker = new WorkerNoise2Value();
   }
 
   @Override
-  public double get(double x, double y, long seed, Interpolator interpolator) {
+  public double get(double x, double y, long seed, IInterpolator interpolator) {
     int x0 = Noise.fastFloor(x);
     int y0 = Noise.fastFloor(y);
     int x1 = x0 + 1;

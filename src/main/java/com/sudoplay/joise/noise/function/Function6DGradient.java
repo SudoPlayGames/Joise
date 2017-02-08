@@ -48,23 +48,23 @@
 
 package com.sudoplay.joise.noise.function;
 
-import com.sudoplay.joise.noise.Interpolator;
+import com.sudoplay.joise.noise.IInterpolator;
 import com.sudoplay.joise.noise.Noise;
-import com.sudoplay.joise.noise.function.spi.Function6D;
+import com.sudoplay.joise.noise.function.spi.IFunction6D;
 import com.sudoplay.joise.noise.worker.WorkerNoise6Gradient;
-import com.sudoplay.joise.noise.worker.spi.WorkerNoise6;
+import com.sudoplay.joise.noise.worker.spi.IWorkerNoise6;
 
 public class Function6DGradient implements
-    Function6D {
+    IFunction6D {
 
-  private WorkerNoise6 worker;
+  private IWorkerNoise6 worker;
 
   public Function6DGradient() {
     this.worker = new WorkerNoise6Gradient();
   }
 
   @Override
-  public double get(double x, double y, double z, double w, double u, double v, long seed, Interpolator interpolator) {
+  public double get(double x, double y, double z, double w, double u, double v, long seed, IInterpolator interpolator) {
     int x0 = Noise.fastFloor(x);
     int y0 = Noise.fastFloor(y);
     int z0 = Noise.fastFloor(z);

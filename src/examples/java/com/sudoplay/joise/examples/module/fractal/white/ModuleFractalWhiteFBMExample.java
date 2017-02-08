@@ -1,6 +1,6 @@
 package com.sudoplay.joise.examples.module.fractal.white;
 
-import com.sudoplay.joise.examples.AbstractExample;
+import com.sudoplay.joise.examples.AbstractSplitExample;
 import com.sudoplay.joise.examples.SplitCanvas;
 import com.sudoplay.joise.module.ModuleAutoCorrect;
 import com.sudoplay.joise.module.ModuleFractal;
@@ -13,7 +13,7 @@ import static com.sudoplay.joise.module.ModuleFractal.FractalType;
  * Created by codetaylor on 1/9/2017.
  */
 public class ModuleFractalWhiteFBMExample extends
-    AbstractExample {
+    AbstractSplitExample {
 
   static {
     EXAMPLE_CLASS = ModuleFractalWhiteFBMExample.class;

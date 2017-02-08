@@ -49,11 +49,11 @@
 package com.sudoplay.joise.noise.worker;
 
 import com.sudoplay.joise.noise.Noise;
-import com.sudoplay.joise.noise.worker.spi.WorkerNoise6;
+import com.sudoplay.joise.noise.worker.spi.IWorkerNoise6;
 import com.sudoplay.joise.util.Bits;
 
 public class WorkerNoise6Value implements
-    WorkerNoise6 {
+    IWorkerNoise6 {
 
   private byte[] buffer;
 

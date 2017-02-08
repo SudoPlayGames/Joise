@@ -21,6 +21,8 @@
   * removed unused scale and offset fields and associated method from `ModuleBasisFunction` class; fixes #20
   * removed old util package from gwt xml
   * fixed can't set seed name with ModuleFractal (#25)
+  * added more examples
+  * changed interface naming convention: all interfaces are now prefixed with I to indicate interface
 
 #### 1.0.5
 

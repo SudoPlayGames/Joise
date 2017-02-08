@@ -1,6 +1,6 @@
 package com.sudoplay.joise.examples.module;
 
-import com.sudoplay.joise.examples.AbstractExample;
+import com.sudoplay.joise.examples.AbstractSplitExample;
 import com.sudoplay.joise.examples.SplitCanvas;
 import com.sudoplay.joise.module.*;
 
@@ -8,7 +8,7 @@ import com.sudoplay.joise.module.*;
  * Created by codetaylor on 1/11/2017.
  */
 public class ModuleNormalizedCoordsExample extends
-    AbstractExample {
+    AbstractSplitExample {
 
   static {
     EXAMPLE_CLASS = ModuleNormalizedCoordsExample.class;

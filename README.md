@@ -31,7 +31,7 @@ The repo contains the following packages:
 * `com.sudoplay.joise.mapping` - classes to assist in mapping noise to arrays
 * `com.sudoplay.joise.module` - all the noise function modules
 * `com.sudoplay.joise.noise` - the core noise functions
-* `com.sudoplay.util` - common utility classes
+* `com.sudoplay.joise.util` - common utility classes
 
 The following packages are provided separately to reduce dependencies:
 * [JoisePlugin-TMLConverter](https://github.com/codetaylor/JoisePlugin-TMLConverter) converts module chains to and from TML using [Juple](https://github.com/codetaylor/Juple).
@@ -60,6 +60,8 @@ The following packages are provided separately to reduce dependencies:
   * removed unused scale and offset fields and associated method from `ModuleBasisFunction` class; fixes #20
   * removed old util package from gwt xml
   * fixed can't set seed name with ModuleFractal (#25)
+  * added more examples
+  * changed interface naming convention: all interfaces are now prefixed with I to indicate interface
 
 [View Entire Changelog](CHANGELOG.md)
 

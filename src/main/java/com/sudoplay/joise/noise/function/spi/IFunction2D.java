@@ -46,9 +46,11 @@
  *   3. This notice may not be removed or altered from any source distribution.
  */
 
-package com.sudoplay.joise.noise.worker.spi;
+package com.sudoplay.joise.noise.function.spi;
 
-public interface WorkerNoise6 {
+import com.sudoplay.joise.noise.IInterpolator;
 
-  double calculate(double x, double y, double z, double w, double u, double v, int ix, int iy, int iz, int iw, int iu, int iv, long seed);
+public interface IFunction2D {
+
+  double get(double x, double y, long seed, IInterpolator interpolator);
 }

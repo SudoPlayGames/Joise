@@ -46,38 +46,18 @@
  *   3. This notice may not be removed or altered from any source distribution.
  */
 
-package com.sudoplay.joise.noise;
+package com.sudoplay.joise.mapping;
 
-public interface Interpolator {
+@SuppressWarnings("WeakerAccess")
+public interface IMappingUpdateListener {
 
-  Interpolator NONE = new Interpolator() {
+  void update(double current, double total);
+
+  IMappingUpdateListener NULL_LISTENER = new IMappingUpdateListener() {
     @Override
-    public double interpolate(double t) {
-      return 0;
+    public void update(double current, double total) {
+      // do nothing
     }
   };
-
-  Interpolator LINEAR = new Interpolator() {
-    @Override
-    public double interpolate(double t) {
-      return t;
-    }
-  };
-
-  Interpolator HERMITE = new Interpolator() {
-    @Override
-    public double interpolate(double t) {
-      return (t * t * (3 - 2 * t));
-    }
-  };
-
-  Interpolator QUINTIC = new Interpolator() {
-    @Override
-    public double interpolate(double t) {
-      return t * t * t * (t * (t * 6 - 15) + 10);
-    }
-  };
-
-  double interpolate(double t);
 
 }
