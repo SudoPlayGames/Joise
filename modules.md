@@ -5,203 +5,224 @@ description: In-depth analysis of how each module works.
 permalink: /modules/
 ---
 
-## Generators
-
-<p class="lead">Generators are modules that create noise.</p>
-
-### ModuleBasisFunction
-
-The `ModuleBasisFunction` generates noise using one of five different BasisTypes and one of four different InterpolationTypes.
-
-These examples illustrate each basis type with the four differnent interpolation types and can be found in the source in the following location:
+All of the illustrations below are from examples that can be found in the source in the following location:
 
 ```
-/src/examples/java/com/sudoplay/joise/examples/module/basis
+/src/examples/java/com/sudoplay/joise/examples/
 ```
 
-#### BasisType.GRADIENT
+## ModuleBasisFunction
 
-![](/assets/examples/module/basis/gradient.png)
+The ModuleBasisFunction generates noise using one of five different BasisTypes and one of four different InterpolationTypes.
 
-#### BasisType.GRADVAL
+These examples illustrate each basis type with the four differnent interpolation types.
 
-![](/assets/examples/module/basis/gradval.png)
+This module is derived from <a href="http://accidentalnoise.sourceforge.net/implicit.html#BasisFunction" target="_blank">CImplicitBasisFunction</a>.
 
-#### BasisType.SIMPLEX
+### BasisType.GRADIENT
 
-![](/assets/examples/module/basis/simplex.png)
+Gradient noise is essentially Perlin's original noise function. This implementation of gradient noise will return the value 0 at the lattice points, therefore sampling at integer intervals (ie. 0, 1, 2, 3, etc.) will result in a consistent output of 0. This noise, depending on the application, may suffer from visually significant directional artifacts or grid-oriented artifacts.
 
-Because simplex noise does not use interpolation, there is no difference between the four interpolation types.
+<img src="/assets/examples/module/basis/gradient.png" class="img-responsive">
 
-#### BasisType.VALUE
+### BasisType.GRADVAL
 
-![](/assets/examples/module/basis/value.png)
+Gradval noise is an addition of gradient and value noise designed to reduce the visual artifacts apparent in gradient noise. Since both gradient and value noise is bound to the grid, artifacts can still occur.
 
-#### BasisType.WHITE
+<img src="/assets/examples/module/basis/gradval.png" class="img-responsive">
 
-![](/assets/examples/module/basis/white.png)
+### BasisType.SIMPLEX
 
-### ModuleCellGen
+Simplex noise is a form of Perlin's improved noise function.
 
-![](/assets/examples/module/cellGen.png)
+This module ignores the interpolation parameter, therefore there is no resulting difference between the four interpolation types.
 
-### ModuleCellular
+For more information, see: [Simplex Noise](https://en.wikipedia.org/wiki/Simplex_noise).
+
+<img src="/assets/examples/module/basis/simplex.png" class="img-responsive">
+
+### BasisType.VALUE
+
+Value noise creates a lattice of points which are assigned random values, then returns an interpolated value based on the values of the lattice points surrounding the input coordinates.
+
+<img src="/assets/examples/module/basis/value.png" class="img-responsive">
+
+### BasisType.WHITE
+
+White noise generates no pattern whatsoever.
+
+<img src="/assets/examples/module/basis/white.png" class="img-responsive">
+
+## ModuleCellGen
 
 <div class="bs-callout bs-callout-warning">
   <h4>This module can't be sampled directly.</h4>
-  The ModuleCellular acts as input to the ModuleCellGen module and therefore can't be sampled directly.
+  The ModuleCellGen acts as input to the ModuleCellular module and therefore can't be sampled directly.
 </div>
 
+The ModuleCellGen acts a source for the ModuleCellular module. It can be shared between more than one ModuleCellular and will cache sampled values in order to improve performance.
 
-### ModuleFractal - Billow
+This module is derived from <a href="http://accidentalnoise.sourceforge.net/implicit.html#CellularGenerator" target="_blank">CCellularGenerator</a>.
 
-#### BasisType.GRADIENT
+## ModuleCellular
 
-![](/assets/examples/module/fractal/gradient/billow.png)
+ModuleCellular is used in conjunction with the ModuleCellGen to provide values based on [Worley noise](https://en.wikipedia.org/wiki/Worley_noise).
 
-#### BasisType.GRADVAL
+This module is derived from <a href="http://accidentalnoise.sourceforge.net/implicit.html#Cellular" target="_blank">CImplicitCellular</a>.
 
-![](/assets/examples/module/fractal/gradval/billow.png)
+<img src="/assets/examples/module/cellGen.png" class="img-responsive">
 
-#### BasisType.SIMPLEX
+## ModuleFractal
 
-![](/assets/examples/module/fractal/simplex/billow.png)
-
-#### BasisType.VALUE
-
-![](/assets/examples/module/fractal/value/billow.png)
-
-
-### ModuleFractal - deCarpentierSwiss
+### Billow
 
 #### BasisType.GRADIENT
 
-![](/assets/examples/module/fractal/gradient/deCarpentierSwiss.png)
+<img src="/assets/examples/module/fractal/gradient/billow.png" class="img-responsive">
 
 #### BasisType.GRADVAL
 
-![](/assets/examples/module/fractal/gradval/deCarpentierSwiss.png)
+<img src="/assets/examples/module/fractal/gradval/billow.png" class="img-responsive">
 
 #### BasisType.SIMPLEX
 
-![](/assets/examples/module/fractal/simplex/deCarpentierSwiss.png)
+<img src="/assets/examples/module/fractal/simplex/billow.png" class="img-responsive">
 
 #### BasisType.VALUE
 
-![](/assets/examples/module/fractal/value/deCarpentierSwiss.png)
+<img src="/assets/examples/module/fractal/value/billow.png" class="img-responsive">
 
 
-### ModuleFractal - FBM
+### deCarpentierSwiss
 
 #### BasisType.GRADIENT
 
-![](/assets/examples/module/fractal/gradient/fbm.png)
+<img src="/assets/examples/module/fractal/gradient/deCarpentierSwiss.png" class="img-responsive">
 
 #### BasisType.GRADVAL
 
-![](/assets/examples/module/fractal/gradval/fbm.png)
+<img src="/assets/examples/module/fractal/gradval/deCarpentierSwiss.png" class="img-responsive">
 
 #### BasisType.SIMPLEX
 
-![](/assets/examples/module/fractal/simplex/fbm.png)
+<img src="/assets/examples/module/fractal/simplex/deCarpentierSwiss.png" class="img-responsive">
 
 #### BasisType.VALUE
 
-![](/assets/examples/module/fractal/value/fbm.png)
+<img src="/assets/examples/module/fractal/value/deCarpentierSwiss.png" class="img-responsive">
 
 
-### ModuleFractal - HybridMulti
+### FBM
 
 #### BasisType.GRADIENT
 
-![](/assets/examples/module/fractal/gradient/hybridMulti.png)
+<img src="/assets/examples/module/fractal/gradient/fbm.png" class="img-responsive">
 
 #### BasisType.GRADVAL
 
-![](/assets/examples/module/fractal/gradval/hybridMulti.png)
+<img src="/assets/examples/module/fractal/gradval/fbm.png" class="img-responsive">
 
 #### BasisType.SIMPLEX
 
-![](/assets/examples/module/fractal/simplex/hybridMulti.png)
+<img src="/assets/examples/module/fractal/simplex/fbm.png" class="img-responsive">
 
 #### BasisType.VALUE
 
-![](/assets/examples/module/fractal/value/hybridMulti.png)
+<img src="/assets/examples/module/fractal/value/fbm.png" class="img-responsive">
 
 
-### ModuleFractal - Multi
+### HybridMulti
 
 #### BasisType.GRADIENT
 
-![](/assets/examples/module/fractal/gradient/multi.png)
+<img src="/assets/examples/module/fractal/gradient/hybridMulti.png" class="img-responsive">
 
 #### BasisType.GRADVAL
 
-![](/assets/examples/module/fractal/gradval/multi.png)
+<img src="/assets/examples/module/fractal/gradval/hybridMulti.png" class="img-responsive">
 
 #### BasisType.SIMPLEX
 
-![](/assets/examples/module/fractal/simplex/multi.png)
+<img src="/assets/examples/module/fractal/simplex/hybridMulti.png" class="img-responsive">
 
 #### BasisType.VALUE
 
-![](/assets/examples/module/fractal/value/multi.png)
+<img src="/assets/examples/module/fractal/value/hybridMulti.png" class="img-responsive">
 
 
-### ModuleFractal - RidgeMulti
+### Multi
 
 #### BasisType.GRADIENT
 
-![](/assets/examples/module/fractal/gradient/ridgeMulti.png)
+<img src="/assets/examples/module/fractal/gradient/multi.png" class="img-responsive">
 
 #### BasisType.GRADVAL
 
-![](/assets/examples/module/fractal/gradval/ridgeMulti.png)
+<img src="/assets/examples/module/fractal/gradval/multi.png" class="img-responsive">
 
 #### BasisType.SIMPLEX
 
-![](/assets/examples/module/fractal/simplex/ridgeMulti.png)
+<img src="/assets/examples/module/fractal/simplex/multi.png" class="img-responsive">
 
 #### BasisType.VALUE
 
-![](/assets/examples/module/fractal/value/ridgeMulti.png)
+<img src="/assets/examples/module/fractal/value/multi.png" class="img-responsive">
+
+
+### RidgeMulti
+
+#### BasisType.GRADIENT
+
+<img src="/assets/examples/module/fractal/gradient/ridgeMulti.png" class="img-responsive">
+
+#### BasisType.GRADVAL
+
+<img src="/assets/examples/module/fractal/gradval/ridgeMulti.png" class="img-responsive">
+
+#### BasisType.SIMPLEX
+
+<img src="/assets/examples/module/fractal/simplex/ridgeMulti.png" class="img-responsive">
+
+#### BasisType.VALUE
+
+<img src="/assets/examples/module/fractal/value/ridgeMulti.png" class="img-responsive">
 
 
 
-### ModuleFractal - BasisType.WHITE
+### BasisType.WHITE
 
 #### FractalType.BILLOW
 
-![](/assets/examples/module/fractal/white/billow.png)
+<img src="/assets/examples/module/fractal/white/billow.png" class="img-responsive">
 
 #### FractalType.DECARPENTIERSWISS
 
-![](/assets/examples/module/fractal/white/deCarpentierSwiss.png)
+<img src="/assets/examples/module/fractal/white/deCarpentierSwiss.png" class="img-responsive">
 
 #### FractalType.FBM
 
-![](/assets/examples/module/fractal/white/fbm.png)
+<img src="/assets/examples/module/fractal/white/fbm.png" class="img-responsive">
 
 #### FractalType.HYBRIDMULTI
 
-![](/assets/examples/module/fractal/white/hybridMulti.png)
+<img src="/assets/examples/module/fractal/white/hybridMulti.png" class="img-responsive">
 
 #### FractalType.MULTI
 
-![](/assets/examples/module/fractal/white/multi.png)
+<img src="/assets/examples/module/fractal/white/multi.png" class="img-responsive">
 
 #### FractalType.RIDGEMULTI
 
-![](/assets/examples/module/fractal/white/ridgeMulti.png)
+<img src="/assets/examples/module/fractal/white/ridgeMulti.png" class="img-responsive">
 
 
 ### ModuleGradient
 
-![](/assets/examples/module/gradient.png)
+<img src="/assets/examples/module/gradient.png" class="img-responsive">
 
 ### ModuleSphere
 
-![](/assets/examples/module/sphere.png)
+<img src="/assets/examples/module/sphere.png" class="img-responsive">
 
 
 ## Simple Manipulators
@@ -210,31 +231,31 @@ Simple manipulators are modules that take a single source and perform a fairly s
 
 ### ModuleAbs
 
-![](/assets/examples/module/abs.png)
+<img src="/assets/examples/module/abs.png" class="img-responsive">
 
 ### ModuleClamp
 
-![](/assets/examples/module/clamp.png)
+<img src="/assets/examples/module/clamp.png" class="img-responsive">
 
 ### ModuleCos
 
-![](/assets/examples/module/cos.png)
+<img src="/assets/examples/module/cos.png" class="img-responsive">
 
 ### ModuleFloor
 
-![](/assets/examples/module/floor.png)
+<img src="/assets/examples/module/floor.png" class="img-responsive">
 
 ### ModuleInvert
 
-![](/assets/examples/module/invert.png)
+<img src="/assets/examples/module/invert.png" class="img-responsive">
 
 ### ModulePow
 
-![](/assets/examples/module/pow.png)
+<img src="/assets/examples/module/pow.png" class="img-responsive">
 
 ### ModuleSin
 
-![](/assets/examples/module/sin.png)
+<img src="/assets/examples/module/sin.png" class="img-responsive">
 
 
 ## Complex Manipulators
@@ -243,19 +264,19 @@ Complex manipulators are modules that take one or more sources and perform mathe
 
 ### ModuleAutoCorrect
 
-![](/assets/examples/module/autoCorrect.png)
+<img src="/assets/examples/module/autoCorrect.png" class="img-responsive">
 
 ### ModuleBias
 
-![](/assets/examples/module/bias.png)
+<img src="/assets/examples/module/bias.png" class="img-responsive">
 
 ### ModuleBlend
 
-![](/assets/examples/module/blend.png)
+<img src="/assets/examples/module/blend.png" class="img-responsive">
 
 ### ModuleBrightContrast
 
-![](/assets/examples/module/brightContrast.png)
+<img src="/assets/examples/module/brightContrast.png" class="img-responsive">
 
 ### ModuleCache
 
@@ -267,68 +288,68 @@ Complex manipulators are modules that take one or more sources and perform mathe
 
 #### Add
 
-![](/assets/examples/module/combiner/add.png)
+<img src="/assets/examples/module/combiner/add.png" class="img-responsive">
 
 #### Avg
 
-![](/assets/examples/module/combiner/avg.png)
+<img src="/assets/examples/module/combiner/avg.png" class="img-responsive">
 
 #### Max
 
-![](/assets/examples/module/combiner/max.png)
+<img src="/assets/examples/module/combiner/max.png" class="img-responsive">
 
 #### Min
 
-![](/assets/examples/module/combiner/min.png)
+<img src="/assets/examples/module/combiner/min.png" class="img-responsive">
 
 #### Mult
 
-![](/assets/examples/module/combiner/mult.png)
+<img src="/assets/examples/module/combiner/mult.png" class="img-responsive">
 
 ### ModuleFunctionGradient
 
-![](/assets/examples/module/functionGradient.png)
+<img src="/assets/examples/module/functionGradient.png" class="img-responsive">
 
 ### ModuleGain
 
-![](/assets/examples/module/gain.png)
+<img src="/assets/examples/module/gain.png" class="img-responsive">
 
 ### ModuleMagnitude
 
-![](/assets/examples/module/magnitude.png)
+<img src="/assets/examples/module/magnitude.png" class="img-responsive">
 
 ### ModuleNormalizedCoords
 
-![](/assets/examples/module/normalizedCoords.png)
+<img src="/assets/examples/module/normalizedCoords.png" class="img-responsive">
 
 ### ModuleRotateDomain
 
-![](/assets/examples/module/rotateDomain.png)
+<img src="/assets/examples/module/rotateDomain.png" class="img-responsive">
 
 ### ModuleSawtooth
 
-![](/assets/examples/module/sawtooth.png)
+<img src="/assets/examples/module/sawtooth.png" class="img-responsive">
 
 ### ModuleScaleDomain
 
-![](/assets/examples/module/scaleDomain.png)
+<img src="/assets/examples/module/scaleDomain.png" class="img-responsive">
 
 ### ModuleScaleOffset
 
-![](/assets/examples/module/scaleOffset.png)
+<img src="/assets/examples/module/scaleOffset.png" class="img-responsive">
 
 ### ModuleSelect
 
-![](/assets/examples/module/select.png)
+<img src="/assets/examples/module/select.png" class="img-responsive">
 
 ### ModuleTiers
 
-![](/assets/examples/module/tiers.png)
+<img src="/assets/examples/module/tiers.png" class="img-responsive">
 
 ### ModuleTranslateDomain
 
-![](/assets/examples/module/translateDomain.png)
+<img src="/assets/examples/module/translateDomain.png" class="img-responsive">
 
 ### ModuleTriangle
 
-![](/assets/examples/module/triangle.png)
+<img src="/assets/examples/module/triangle.png" class="img-responsive">
