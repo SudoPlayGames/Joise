@@ -10,7 +10,7 @@ Joise is derived from Joshua Tippetts' [Accidental Noise Library](http://acciden
 ```
 groupId=com.sudoplay.joise
 artifactId=joise
-version=1.1.0-RC2
+version=1.1.0-RC3
 ```
 
 ### Why Joise?
@@ -63,7 +63,7 @@ The following packages are provided separately to reduce dependencies:
   * added more examples
   * changed interface naming convention: all interfaces are now prefixed with I to indicate interface
 
-[View Entire Changelog](CHANGELOG.md)
+[View changelog for all versions](CHANGELOG.md)
 
 ## Examples
 
