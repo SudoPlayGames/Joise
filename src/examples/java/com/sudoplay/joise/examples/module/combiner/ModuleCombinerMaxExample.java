@@ -36,7 +36,7 @@ public class ModuleCombinerMaxExample extends
     ModuleAutoCorrect lowSource = new ModuleAutoCorrect();
     lowSource.setSource(gen1);
     lowSource.setSamples(100000);
-    lowSource.calculate();
+    lowSource.calculate2D();
 
     ModuleFractal gen2 = new ModuleFractal();
     gen2.setAllSourceBasisTypes(ModuleBasisFunction.BasisType.GRADVAL);
@@ -49,7 +49,7 @@ public class ModuleCombinerMaxExample extends
     ModuleAutoCorrect highSource = new ModuleAutoCorrect();
     highSource.setSource(gen2);
     highSource.setSamples(100000);
-    highSource.calculate();
+    highSource.calculate2D();
 
     ModuleCombiner moduleCombiner = new ModuleCombiner();
     moduleCombiner.setType(ModuleCombiner.CombinerType.MAX);

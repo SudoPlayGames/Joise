@@ -55,7 +55,7 @@ public class ModuleCellGenExample extends
     ModuleAutoCorrect source = new ModuleAutoCorrect(0, 1);
     source.setSource(moduleScaleDomain);
     source.setSamples(10000);
-    source.calculate();
+    source.calculate2D();
     return source;
   }
 }

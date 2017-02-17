@@ -56,7 +56,7 @@ public class ModuleFractalGradientMultiExample extends
     ModuleAutoCorrect source = new ModuleAutoCorrect(0, 1);
     source.setSource(gen);
     source.setSamples(10000);
-    source.calculate();
+    source.calculate2D();
     return source;
   }
 }
