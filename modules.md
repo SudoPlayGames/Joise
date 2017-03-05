@@ -11,13 +11,13 @@ All of the illustrations below are from examples that can be found in the source
 /src/examples/java/com/sudoplay/joise/examples/
 ```
 
+These are the core modules of the Joise library. All modules have been ported from <a href="http://accidentalnoise.sourceforge.net/implicit.html" target="_blank">Joshua Tippetts' C++ Accidental Noise Library</a>.
+
 ## ModuleBasisFunction
 
-The ModuleBasisFunction generates noise using one of five different BasisTypes and one of four different InterpolationTypes.
+The `ModuleBasisFunction` generates noise using one of five different `BasisTypes` and one of four different `InterpolationTypes`.
 
 These examples illustrate each basis type with the four differnent interpolation types.
-
-This module is derived from <a href="http://accidentalnoise.sourceforge.net/implicit.html#BasisFunction" target="_blank">CImplicitBasisFunction</a>.
 
 ### BasisType.GRADIENT
 
@@ -49,7 +49,7 @@ Value noise creates a lattice of points which are assigned random values, then r
 
 ### BasisType.WHITE
 
-White noise generates no pattern whatsoever.
+White noise generates no coherent pattern whatsoever.
 
 <img src="/assets/examples/module/basis/white.png" class="img-responsive">
 
@@ -57,7 +57,7 @@ White noise generates no pattern whatsoever.
 
 <div class="bs-callout bs-callout-warning">
   <h4>This module can't be sampled directly.</h4>
-  The ModuleCellGen acts as input to the ModuleCellular module and therefore can't be sampled directly.
+  The <code>ModuleCellGen</code> acts as input to the <code>ModuleCellular</code> module and therefore can't be sampled directly.
 </div>
 
 The ModuleCellGen acts a source for the ModuleCellular module. It can be shared between more than one ModuleCellular and will cache sampled values in order to improve performance.
@@ -216,11 +216,11 @@ This module is derived from <a href="http://accidentalnoise.sourceforge.net/impl
 <img src="/assets/examples/module/fractal/white/ridgeMulti.png" class="img-responsive">
 
 
-### ModuleGradient
+## ModuleGradient
 
 <img src="/assets/examples/module/gradient.png" class="img-responsive">
 
-### ModuleSphere
+## ModuleSphere
 
 <img src="/assets/examples/module/sphere.png" class="img-responsive">
 
