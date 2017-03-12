@@ -68,11 +68,21 @@ This module is derived from <a href="http://accidentalnoise.sourceforge.net/impl
 
 ModuleCellular is used in conjunction with the ModuleCellGen to provide values based on [Worley noise](https://en.wikipedia.org/wiki/Worley_noise).
 
-This module is derived from <a href="http://accidentalnoise.sourceforge.net/implicit.html#Cellular" target="_blank">CImplicitCellular</a>.
+The parameters `F1`, `F2`, `F3`, and `F4` are coefficients multiplied by the distances to the first, second, third, and fourth closest feature points, respectively. By default, the value for each of these coefficients is zero.
+
+Here is an excerpt from <a href="http://www.rhythmiccanvas.com/research/papers/worley.pdf" target="_blank">Worley's original paper</a>: 
+
+> We can define a new basis function based on the idea of random feature points. Imagine points randomly distributed through all of R3. For any location x, there is some feature point which lies closer to x than any other feature point. Define F1(x) as the distance from x to that closest feature point. As x is varied, F1 varies smoothly since the distance between the sample location and the fixed feature point varies smoothly. However, at certain cusp locations, the point x will be equidistant between two feature points. Here, the value of F1(x) is still well defined, since the value is the same no matter which feature point is chosen to calculate the distance. Varying the position of x will return values of F1 that are still continuous, though the derivative of F1 will change discontinuously as the distance calculation “switches” from one feature point to its neighbor.
+
+> It can be seen that the locations where the function F1 “switches” from one feature point to the next (where its derivative is discontinuous) are along the equidistance planes that separate two points in R3. These planes are exactly the planes that are computed by a Voronoi diagram, which by definition partitions space into cellular regions where all the points within each region are closer to its defining point than any other point.
+
+> The function F2(x) can be defined as the distance between the location x and the feature point which is the second closest to the x. With similar arguments as before, F2 is continuous everywhere, but its derivative is not at those locations where the second-closest point swaps with either the first-closest or third-closest. Similarly, we can define Fn(x) as the distance between x and the nth closest feature point.
 
 <img src="/assets/examples/module/cellGen.png" class="img-responsive">
 
 ## ModuleFractal
+
+The fractal module combines up to ten sources, either the default sources or custom sources set by calling the `ModuleFractal#overrideSource(int, Module)` method. The basis type and interpolation type can be set for all or individual default sources by calling the appropriate methods.
 
 ### Billow
 
@@ -191,6 +201,8 @@ This module is derived from <a href="http://accidentalnoise.sourceforge.net/impl
 
 ### BasisType.WHITE
 
+The white noise basis types for `ModuleFractal` have been grouped below for visual comparison.
+
 #### FractalType.BILLOW
 
 <img src="/assets/examples/module/fractal/white/billow.png" class="img-responsive">
@@ -217,6 +229,8 @@ This module is derived from <a href="http://accidentalnoise.sourceforge.net/impl
 
 
 ## ModuleGradient
+
+The `ModuleGradient` generates a linear gradient with output values ranging from 0 to 1.
 
 <img src="/assets/examples/module/gradient.png" class="img-responsive">
 
