@@ -236,6 +236,8 @@ The `ModuleGradient` generates a linear gradient with output values ranging from
 
 ## ModuleSphere
 
+The `ModuleSphere` generates a spherical gradient with output values ranging from 0 to 1.
+
 <img src="/assets/examples/module/sphere.png" class="img-responsive">
 
 
@@ -245,29 +247,65 @@ Simple manipulators are modules that take a single source and perform a fairly s
 
 ### ModuleAbs
 
+```
+y = |x|
+```
+
+Negative values are displayed in red for clarity.
+
 <img src="/assets/examples/module/abs.png" class="img-responsive">
 
 ### ModuleClamp
+
+```
+y = min(hi, max(lo, x))
+```
 
 <img src="/assets/examples/module/clamp.png" class="img-responsive">
 
 ### ModuleCos
 
+```
+y = cos(x)
+```
+
 <img src="/assets/examples/module/cos.png" class="img-responsive">
 
 ### ModuleFloor
+
+```
+y = floor(x)
+```
+
+In the example below, the original source is multiplied by 8, `y = 8x`, before applying the floor function. The final output is auto-corrected back into the range [0,1].
+
+Values above 1 are displayed in blue for clarity.
 
 <img src="/assets/examples/module/floor.png" class="img-responsive">
 
 ### ModuleInvert
 
+```
+y = -x
+```
+
+Negative values are displayed in red for clarity.
+
 <img src="/assets/examples/module/invert.png" class="img-responsive">
 
 ### ModulePow
 
+```
+y = x^pow
+```
+
 <img src="/assets/examples/module/pow.png" class="img-responsive">
 
 ### ModuleSin
+
+```
+y = sin(x)
+```
 
 <img src="/assets/examples/module/sin.png" class="img-responsive">
 

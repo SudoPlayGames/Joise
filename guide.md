@@ -82,7 +82,7 @@ Joise uses Gradle for its build system.
   2. After cloning, navigate to the project folder: `cd Joise`.
   3. Next, checkout the version you want to compile, ie. `git checkout tags/{{ site.joise_version }}`.
     * You can list the version tags using `git tag -l`.
-  4. Finally, compile by running `gradlew build` on windows and `gradle build` on others.
+  4. Finally, compile by running `gradlew build`.
     * The compiled source will be located in `<project folder>/build/libs`.
 
 ## Sampling
