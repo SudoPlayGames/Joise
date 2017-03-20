@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Modules
-description: In-depth analysis of how each module works.
+description: A deeper analysis of how to use each module.
 permalink: /modules/
 ---
 
@@ -17,41 +17,79 @@ These are the core modules of the Joise library. All modules have been ported fr
 
 The `ModuleBasisFunction` generates noise using one of five different `BasisTypes` and one of four different `InterpolationTypes`.
 
-These examples illustrate each basis type with the four differnent interpolation types.
+The following examples illustrate each basis type with the four differnent interpolation types.
 
 ### BasisType.GRADIENT
 
-Gradient noise is essentially Perlin's original noise function. This implementation of gradient noise will return the value 0 at the lattice points, therefore sampling at integer intervals (ie. 0, 1, 2, 3, etc.) will result in a consistent output of 0. This noise, depending on the application, may suffer from visually significant directional artifacts or grid-oriented artifacts.
-
 <img src="/assets/examples/module/basis/gradient.png" class="img-responsive">
+
+Gradient noise is essentially Perlin's original noise function. This implementation of gradient noise will return the value 0 at the lattice points, therefore sampling at integer intervals (ie. 0, 1, 2, 3, etc.) will result in a consistent output of 0. This noise, depending on the application, may suffer from visually significant directional artifacts or grid-oriented artifacts.
 
 ### BasisType.GRADVAL
 
-Gradval noise is an addition of gradient and value noise designed to reduce the visual artifacts apparent in gradient noise. Since both gradient and value noise is bound to the grid, artifacts can still occur.
-
 <img src="/assets/examples/module/basis/gradval.png" class="img-responsive">
+
+Gradval noise is an addition of gradient and value noise designed to reduce the visual artifacts apparent in gradient noise. Since both gradient and value noise is bound to the grid, artifacts can still occur.
 
 ### BasisType.SIMPLEX
 
-Simplex noise is a form of Perlin's improved noise function.
+<img src="/assets/examples/module/basis/simplex.png" class="img-responsive">
 
-This module ignores the interpolation parameter, therefore there is no resulting difference between the four interpolation types.
+Simplex noise is a form of Perlin's improved noise function.
 
 For more information, see: [Simplex Noise](https://en.wikipedia.org/wiki/Simplex_noise).
 
-<img src="/assets/examples/module/basis/simplex.png" class="img-responsive">
-
 ### BasisType.VALUE
-
-Value noise creates a lattice of points which are assigned random values, then returns an interpolated value based on the values of the lattice points surrounding the input coordinates.
 
 <img src="/assets/examples/module/basis/value.png" class="img-responsive">
 
+Value noise creates a lattice of points which are assigned random values, then returns an interpolated value based on the values of the lattice points surrounding the input coordinates.
+
 ### BasisType.WHITE
+
+<img src="/assets/examples/module/basis/white.png" class="img-responsive">
 
 White noise generates no coherent pattern whatsoever.
 
-<img src="/assets/examples/module/basis/white.png" class="img-responsive">
+### Example Code
+
+Here is a snippet from the example:
+
+```java
+...
+
+  protected Module createModuleBasisFunction(
+      ModuleBasisFunction.BasisType basisType,
+      ModuleBasisFunction.InterpolationType interpolationType
+  ) {
+
+    ModuleBasisFunction moduleBasisFunction = new ModuleBasisFunction();
+    moduleBasisFunction.setType(basisType);
+    moduleBasisFunction.setInterpolation(interpolationType);
+    moduleBasisFunction.setSeed(42);
+
+    /**
+     * We auto-correct into the range [0, 1].
+     */
+    ModuleAutoCorrect moduleAutoCorrect = new ModuleAutoCorrect(0, 1);
+    moduleAutoCorrect.setSource(moduleBasisFunction);
+    moduleAutoCorrect.setSamples(10000);
+    moduleAutoCorrect.calculate2D();
+
+    /**
+     * We scale the domain to see more of the noise.
+     */
+    ModuleScaleDomain moduleScaleDomain = new ModuleScaleDomain();
+    moduleScaleDomain.setSource(moduleAutoCorrect);
+    moduleScaleDomain.setScaleX(16.0);
+    moduleScaleDomain.setScaleY(16.0);
+
+    return moduleScaleDomain;
+  }
+
+...
+```
+
 
 ## ModuleCellGen
 
@@ -62,11 +100,11 @@ White noise generates no coherent pattern whatsoever.
 
 The ModuleCellGen acts a source for the ModuleCellular module. It can be shared between more than one ModuleCellular and will cache sampled values in order to improve performance.
 
-This module is derived from <a href="http://accidentalnoise.sourceforge.net/implicit.html#CellularGenerator" target="_blank">CCellularGenerator</a>.
-
 ## ModuleCellular
 
-ModuleCellular is used in conjunction with the ModuleCellGen to provide values based on [Worley noise](https://en.wikipedia.org/wiki/Worley_noise).
+<img src="/assets/examples/module/cellGen.png" class="img-responsive">
+
+ModuleCellular is used in conjunction with the ModuleCellGen to provide values based on [Worley noise](/assets-3rd-party/Worley_noise).
 
 The parameters `F1`, `F2`, `F3`, and `F4` are coefficients multiplied by the distances to the first, second, third, and fourth closest feature points, respectively. By default, the value for each of these coefficients is zero.
 
@@ -78,7 +116,52 @@ Here is an excerpt from <a href="http://www.rhythmiccanvas.com/research/papers/w
 
 > The function F2(x) can be defined as the distance between the location x and the feature point which is the second closest to the x. With similar arguments as before, F2 is continuous everywhere, but its derivative is not at those locations where the second-closest point swaps with either the first-closest or third-closest. Similarly, we can define Fn(x) as the distance between x and the nth closest feature point.
 
-<img src="/assets/examples/module/cellGen.png" class="img-responsive">
+### Example Code
+
+Here is a snippet from the example:
+
+```java
+...
+
+  @Override
+  protected void run(SplitCanvas canvas) {
+
+    ModuleCellGen moduleCellGen = new ModuleCellGen();
+    moduleCellGen.setSeed(42);
+
+    canvas.updateImage(
+        "F1 = 1", getSource(moduleCellGen, 1, 0, 0, 0),
+        "F2 = 1", getSource(moduleCellGen, 0, 1, 0, 0),
+        "F1 = 1, F2 = -1", getSource(moduleCellGen, 1, -1, 0, 0),
+        "F4 = 1", getSource(moduleCellGen, 0, 0, 0, 1)
+    );
+  }
+
+  private Module getSource(ModuleCellGen moduleCellGen, int a, int b, int c, int d) {
+    ModuleCellular moduleCellular = new ModuleCellular();
+    moduleCellular.setCellularSource(moduleCellGen);
+    moduleCellular.setCoefficients(a, b, c, d);
+
+    /**
+     * We scale the domain to visualize more of the noise.
+     */
+    ModuleScaleDomain moduleScaleDomain = new ModuleScaleDomain();
+    moduleScaleDomain.setSource(moduleCellular);
+    moduleScaleDomain.setScaleX(8);
+    moduleScaleDomain.setScaleY(8);
+
+    /**
+     * We auto-correct into the range [0, 1].
+     */
+    ModuleAutoCorrect source = new ModuleAutoCorrect(0, 1);
+    source.setSource(moduleScaleDomain);
+    source.setSamples(10000);
+    source.calculate2D();
+    return source;
+  }
+
+...
+```
 
 ## ModuleFractal
 
@@ -227,18 +310,113 @@ The white noise basis types for `ModuleFractal` have been grouped below for visu
 
 <img src="/assets/examples/module/fractal/white/ridgeMulti.png" class="img-responsive">
 
+### Example Code
+
+Here is a snippet from the example:
+
+```java
+...
+
+  @Override
+  protected void run(SplitCanvas canvas) {
+    BasisType basisType = BasisType.SIMPLEX;
+    FractalType fractalType = FractalType.HYBRIDMULTI;
+
+    canvas.updateImage(
+        "none", getModule(basisType, InterpolationType.NONE, fractalType),
+        "linear", getModule(basisType, InterpolationType.LINEAR, fractalType),
+        "cubic", getModule(basisType, InterpolationType.CUBIC, fractalType),
+        "quintic", getModule(basisType, InterpolationType.QUINTIC, fractalType)
+    );
+  }
+
+  private ModuleAutoCorrect getModule(
+      BasisType basisType,
+      InterpolationType interpolationType,
+      FractalType fractalType
+  ) {
+    ModuleFractal gen = new ModuleFractal();
+    gen.setAllSourceBasisTypes(basisType);
+    gen.setAllSourceInterpolationTypes(interpolationType);
+    gen.setNumOctaves(5);
+    gen.setFrequency(2.34);
+    gen.setType(fractalType);
+    gen.setSeed(42);
+
+    /**
+     * We auto-correct into the range [0, 1], performing 10,000 samples 
+     * to calculate the auto-correct values.
+     */
+    ModuleAutoCorrect source = new ModuleAutoCorrect(0, 1);
+    source.setSource(gen);
+    source.setSamples(10000);
+    source.calculate2D();
+    return source;
+  }
+
+...
+```
+
 
 ## ModuleGradient
 
+<img src="/assets/examples/module/gradient.png" class="img-responsive">
+
 The `ModuleGradient` generates a linear gradient with output values ranging from 0 to 1.
 
-<img src="/assets/examples/module/gradient.png" class="img-responsive">
+### Example Code
+
+Here is a snippet from the example:
+
+```java
+...
+
+  @Override
+  protected void run(SplitCanvas canvas) {
+
+    canvas.updateImage(
+        "(0, 0) -> (0, 1)", getModule(0, 0, 0, 1),
+        "(0.5, 0) -> (1, 1)", getModule(0.5, 1, 0, 1)
+    );
+  }
+
+  private ModuleGradient getModule(double x1, double x2, double y1, double y2) {
+    ModuleGradient moduleGradient = new ModuleGradient();
+    moduleGradient.setGradient(x1, x2, y1, y2);
+    return moduleGradient;
+  }
+
+...
+```
 
 ## ModuleSphere
 
+<img src="/assets/examples/module/sphere.png" class="img-responsive">
+
 The `ModuleSphere` generates a spherical gradient with output values ranging from 0 to 1.
 
-<img src="/assets/examples/module/sphere.png" class="img-responsive">
+### Example Code
+
+Here is a snippet from the example:
+
+```java
+...
+
+  @Override
+  protected void run(SplitCanvas canvas) {
+
+    ModuleSphere moduleSphere = new ModuleSphere();
+    moduleSphere.setCenterX(0.5);
+    moduleSphere.setCenterY(0.5);
+    moduleSphere.setRadius(0.5);
+
+    canvas.updateImage(
+        "source", moduleSphere
+    );
+  }
+
+...
+```
 
 
 ## Simple Manipulators
@@ -247,68 +425,392 @@ Simple manipulators are modules that take a single source and perform a fairly s
 
 ### ModuleAbs
 
+<img src="/assets/examples/module/abs.png" class="img-responsive">
+
+The absolute value module returns the absolute value of the sampled value.
+
+Negative values are displayed in red for clarity.
+
 ```
 y = |x|
 ```
 
-Negative values are displayed in red for clarity.
+#### Example Code
 
-<img src="/assets/examples/module/abs.png" class="img-responsive">
+Here is a snippet from the example:
+
+```java
+...
+
+  @Override
+  protected void run(SplitCanvas canvas) {
+
+    ModuleFractal gen = new ModuleFractal();
+    gen.setAllSourceBasisTypes(ModuleBasisFunction.BasisType.SIMPLEX);
+    gen.setAllSourceInterpolationTypes(ModuleBasisFunction.InterpolationType.CUBIC);
+    gen.setNumOctaves(5);
+    gen.setFrequency(2.34);
+    gen.setType(ModuleFractal.FractalType.RIDGEMULTI);
+    gen.setSeed(42);
+
+    /**
+     * We auto-correct into the range [-1, 1] to ensure we have some negative values 
+     * for the abs module.
+     */
+    ModuleAutoCorrect source = new ModuleAutoCorrect(-1, 1);
+    source.setSource(gen);
+    source.setSamples(10000);
+    source.calculate();
+
+    /**
+     * Performs the absolute value function on the noise.
+     */
+    ModuleAbs moduleAbs = new ModuleAbs();
+    moduleAbs.setSource(source);
+
+    canvas.updateImage(
+        "source", source,
+        "moduleAbs", moduleAbs
+    );
+  }
+
+...
+```
 
 ### ModuleClamp
+
+<img src="/assets/examples/module/clamp.png" class="img-responsive">
+
+The clamp module restricts the sampled value to the range `[lo,hi]`.
 
 ```
 y = min(hi, max(lo, x))
 ```
 
-<img src="/assets/examples/module/clamp.png" class="img-responsive">
+#### Example Code
+
+Here is a snippet from the example:
+
+```java
+...
+
+  @Override
+  protected void run(SplitCanvas canvas) {
+
+    ModuleFractal gen = new ModuleFractal();
+    gen.setAllSourceBasisTypes(ModuleBasisFunction.BasisType.SIMPLEX);
+    gen.setAllSourceInterpolationTypes(ModuleBasisFunction.InterpolationType.CUBIC);
+    gen.setNumOctaves(5);
+    gen.setFrequency(2.34);
+    gen.setType(ModuleFractal.FractalType.RIDGEMULTI);
+    gen.setSeed(42);
+
+    /**
+     * We auto-correct into the range [0, 1], performing 10,000 samples to 
+     * calculate the auto-correct values.
+     */
+    ModuleAutoCorrect source = new ModuleAutoCorrect(0, 1);
+    source.setSource(gen);
+    source.setSamples(10000);
+    source.calculate();
+
+    ModuleClamp moduleClamp = new ModuleClamp();
+    moduleClamp.setSource(source);
+    moduleClamp.setLow(0.25);
+    moduleClamp.setHigh(0.5);
+
+    canvas.updateImage(
+        "source", source,
+        "moduleClamp", moduleClamp
+    );
+  }
+
+...
+```
 
 ### ModuleCos
+
+<img src="/assets/examples/module/cos.png" class="img-responsive">
+
+The cosine module passes the sampled value through a cosine function.
 
 ```
 y = cos(x)
 ```
 
-<img src="/assets/examples/module/cos.png" class="img-responsive">
+#### Example Code
+
+Here is a snippet from the example:
+
+```java
+...
+
+  @Override
+  protected void run(SplitCanvas canvas) {
+
+    ModuleFractal gen = new ModuleFractal();
+    gen.setAllSourceBasisTypes(ModuleBasisFunction.BasisType.SIMPLEX);
+    gen.setAllSourceInterpolationTypes(ModuleBasisFunction.InterpolationType.CUBIC);
+    gen.setNumOctaves(5);
+    gen.setFrequency(2.34);
+    gen.setType(ModuleFractal.FractalType.RIDGEMULTI);
+    gen.setSeed(42);
+
+    /**
+     * We auto-correct into the range [0, 1], performing 10,000 samples to 
+     * calculate the auto-correct values.
+     */
+    ModuleAutoCorrect source = new ModuleAutoCorrect(0, 1);
+    source.setSource(gen);
+    source.setSamples(10000);
+    source.calculate();
+
+    ModuleCos moduleCos = new ModuleCos();
+    moduleCos.setSource(source);
+
+    canvas.updateImage(
+        "source", source,
+        "moduleCos", moduleCos
+    );
+  }
+
+...
+```
 
 ### ModuleFloor
+
+<img src="/assets/examples/module/floor.png" class="img-responsive">
+
+This module returns the largest integer value equal to or smaller than the value sampled.
+
+In this example, the original source is multiplied by 8, `y = 8x`, before applying the floor function. The final output is auto-corrected back into the range [0,1].
+
+Values above 1 are displayed in blue for clarity.
 
 ```
 y = floor(x)
 ```
 
-In the example below, the original source is multiplied by 8, `y = 8x`, before applying the floor function. The final output is auto-corrected back into the range [0,1].
+#### Example Code
 
-Values above 1 are displayed in blue for clarity.
+Here is a snippet from the example:
 
-<img src="/assets/examples/module/floor.png" class="img-responsive">
+```java
+...
+
+  @Override
+  protected void run(SplitCanvas canvas) {
+
+    ModuleFractal gen = new ModuleFractal();
+    gen.setAllSourceBasisTypes(ModuleBasisFunction.BasisType.SIMPLEX);
+    gen.setAllSourceInterpolationTypes(ModuleBasisFunction.InterpolationType.CUBIC);
+    gen.setNumOctaves(5);
+    gen.setFrequency(2.34);
+    gen.setType(ModuleFractal.FractalType.RIDGEMULTI);
+    gen.setSeed(42);
+
+    /**
+     * We auto-correct into the range [0, 1], performing 10,000 samples to 
+     * calculate the auto-correct values.
+     */
+    ModuleAutoCorrect moduleAutoCorrect = new ModuleAutoCorrect(0, 1);
+    moduleAutoCorrect.setSource(gen);
+    moduleAutoCorrect.setSamples(10000);
+    moduleAutoCorrect.calculate();
+
+    /**
+     * Since ModuleFloor returns the largest integer value smaller than the value sampled, 
+     * we need to use the ModuleCombiner to multiply the sampled values by a number in 
+     * order to have a larger range that contains more possible integer values.
+     */
+    ModuleCombiner source = new ModuleCombiner();
+    source.setType(ModuleCombiner.CombinerType.MULT);
+    source.setSource(0, moduleAutoCorrect);
+    source.setSource(1, 8.0);
+
+    ModuleFloor moduleFloor = new ModuleFloor();
+    moduleFloor.setSource(source);
+
+    /**
+     * We auto-correct from the range [0, 8] back into the range of [0, 1] to be 
+     * able to visualize the results.
+     */
+    ModuleAutoCorrect moduleFloorAutoCorrect = new ModuleAutoCorrect();
+    moduleFloorAutoCorrect.setSource(moduleFloor);
+    moduleFloorAutoCorrect.setSamples(10000);
+    moduleFloorAutoCorrect.calculate();
+
+    canvas.updateImage(
+        "original source", moduleAutoCorrect,
+        "source (x8)", source,
+        "moduleFloor (auto-corrected)", moduleFloorAutoCorrect
+    );
+  }
+
+...
+```
 
 ### ModuleInvert
+
+<img src="/assets/examples/module/invert.png" class="img-responsive">
+
+The invert module changes positive values to negative and negative values to positive.
+
+Negative values are displayed in red for clarity.
 
 ```
 y = -x
 ```
 
-Negative values are displayed in red for clarity.
+#### Example Code
 
-<img src="/assets/examples/module/invert.png" class="img-responsive">
+Here is a snippet from the example:
+
+```java
+...
+
+  @Override
+  protected void run(SplitCanvas canvas) {
+
+    ModuleFractal gen = new ModuleFractal();
+    gen.setAllSourceBasisTypes(ModuleBasisFunction.BasisType.SIMPLEX);
+    gen.setAllSourceInterpolationTypes(ModuleBasisFunction.InterpolationType.CUBIC);
+    gen.setNumOctaves(5);
+    gen.setFrequency(2.34);
+    gen.setType(ModuleFractal.FractalType.RIDGEMULTI);
+    gen.setSeed(42);
+
+    /**
+     * We auto-correct into the range [0, 1], performing 10,000 samples to 
+     * calculate the auto-correct values.
+     */
+    ModuleAutoCorrect moduleAutoCorrect = new ModuleAutoCorrect(0, 1);
+    moduleAutoCorrect.setSource(gen);
+    moduleAutoCorrect.setSamples(10000);
+    moduleAutoCorrect.calculate();
+
+    /**
+     * Inverting brings the range from [0, 1] into [-1, 0]
+     */
+    ModuleInvert moduleInvert = new ModuleInvert();
+    moduleInvert.setSource(moduleAutoCorrect);
+
+    /**
+     * Add 1.0 to bring the range from [-1, 0] back to [0, 1]
+     */
+    ModuleCombiner moduleCombiner = new ModuleCombiner();
+    moduleCombiner.setSource(0, moduleInvert);
+    moduleCombiner.setSource(1, 1.0);
+    moduleCombiner.setType(ModuleCombiner.CombinerType.ADD);
+
+    canvas.updateImage(
+        "source", moduleAutoCorrect,
+        "invert", moduleInvert,
+        "corrected invert", moduleCombiner
+    );
+  }
+
+...
+```
 
 ### ModulePow
+
+<img src="/assets/examples/module/pow.png" class="img-responsive">
+
+The pow module raises the sampled value to the power given.
 
 ```
 y = x^pow
 ```
 
-<img src="/assets/examples/module/pow.png" class="img-responsive">
+#### Example Code
+
+Here is a snippet from the example:
+
+```java
+...
+
+  @Override
+  protected void run(SplitCanvas canvas) {
+
+    ModuleFractal source = new ModuleFractal();
+    source.setAllSourceBasisTypes(ModuleBasisFunction.BasisType.SIMPLEX);
+    source.setAllSourceInterpolationTypes(ModuleBasisFunction.InterpolationType.CUBIC);
+    source.setNumOctaves(5);
+    source.setFrequency(2.34);
+    source.setType(ModuleFractal.FractalType.RIDGEMULTI);
+    source.setSeed(42);
+
+    /**
+     * We auto-correct into the range [0, 1], performing 10,000 samples to 
+     * calculate the auto-correct values.
+     */
+    ModuleAutoCorrect moduleAutoCorrect = new ModuleAutoCorrect(0, 1);
+    moduleAutoCorrect.setSource(source);
+    moduleAutoCorrect.setSamples(10000);
+    moduleAutoCorrect.calculate();
+
+    ModulePow modulePow = new ModulePow();
+    modulePow.setSource(moduleAutoCorrect);
+    modulePow.setPower(2.0);
+
+    canvas.updateImage(
+        "source", moduleAutoCorrect,
+        "pow", modulePow
+    );
+  }
+
+...
+```
 
 ### ModuleSin
+
+<img src="/assets/examples/module/sin.png" class="img-responsive">
+
+The sine module passes the sampled value through a sine function.
 
 ```
 y = sin(x)
 ```
 
-<img src="/assets/examples/module/sin.png" class="img-responsive">
+#### Example Code
 
+Here is a snippet from the example:
+
+```java
+...
+
+  @Override
+  protected void run(SplitCanvas canvas) {
+
+    ModuleFractal source = new ModuleFractal();
+    source.setAllSourceBasisTypes(ModuleBasisFunction.BasisType.SIMPLEX);
+    source.setAllSourceInterpolationTypes(ModuleBasisFunction.InterpolationType.CUBIC);
+    source.setNumOctaves(5);
+    source.setFrequency(2.34);
+    source.setType(ModuleFractal.FractalType.RIDGEMULTI);
+    source.setSeed(42);
+
+    /**
+     * We auto-correct into the range [0, 1], performing 10,000 samples to 
+     * calculate the auto-correct values.
+     */
+    ModuleAutoCorrect moduleAutoCorrect = new ModuleAutoCorrect(0, 1);
+    moduleAutoCorrect.setSource(source);
+    moduleAutoCorrect.setSamples(10000);
+    moduleAutoCorrect.calculate();
+
+    ModuleSin moduleSin = new ModuleSin();
+    moduleSin.setSource(moduleAutoCorrect);
+
+    canvas.updateImage(
+        "source", moduleAutoCorrect,
+        "moduleSin", moduleSin
+    );
+  }
+
+...
+```
 
 ## Complex Manipulators
 
