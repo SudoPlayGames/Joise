@@ -10,6 +10,6 @@ cache:
 
 jdk:
   - oraclejdk8
-  - oraclejdk7
-  - openjdk8
-  - openjdk7
+
+install:
+  - ./gradlew assemble -x signArchives
