@@ -2,10 +2,7 @@ package com.sudoplay.joise.examples.module;
 
 import com.sudoplay.joise.examples.AbstractSplitExample;
 import com.sudoplay.joise.examples.SplitCanvas;
-import com.sudoplay.joise.module.ModuleAutoCorrect;
-import com.sudoplay.joise.module.ModuleCellGen;
-import com.sudoplay.joise.module.ModuleCellular;
-import com.sudoplay.joise.module.ModuleScaleDomain;
+import com.sudoplay.joise.module.*;
 
 /**
  * Created by codetaylor on 1/9/2017.
@@ -32,11 +29,11 @@ public class ModuleCellGenExample extends
         "F1 = 1", getSource(moduleCellGen, 1, 0, 0, 0),
         "F2 = 1", getSource(moduleCellGen, 0, 1, 0, 0),
         "F1 = 1, F2 = -1", getSource(moduleCellGen, 1, -1, 0, 0),
-        "F1 = -1, F2 = 1", getSource(moduleCellGen, -1, 1, 0, 0)
+        "F4 = 1", getSource(moduleCellGen, 0, 0, 0, 1)
     );
   }
 
-  private ModuleAutoCorrect getSource(ModuleCellGen moduleCellGen, int a, int b, int c, int d) {
+  private Module getSource(ModuleCellGen moduleCellGen, int a, int b, int c, int d) {
     ModuleCellular moduleCellular = new ModuleCellular();
     moduleCellular.setCellularSource(moduleCellGen);
     moduleCellular.setCoefficients(a, b, c, d);
