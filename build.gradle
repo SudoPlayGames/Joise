@@ -37,17 +37,12 @@ signing {
     sign configurations.archives
 }
 
-def getVersionName = { String workTree ->
-    def stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', "--git-dir=\"${workTree}/.git\"", "--work-tree=\"${workTree}\"", 'describe', '--tags'
-        standardOutput = stdout
-    }
-    return stdout.toString().trim()
+def getVersionName() {
+    return new File("${project.projectDir}/project.version").text
 }
 
 group = 'com.sudoplay.joise'
-version = getVersionName("${project.projectDir}")
+version = getVersionName()
 archivesBaseName = 'joise'
 
 def isReleaseBuild() {
