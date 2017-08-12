@@ -33,55 +33,90 @@ artifacts {
 }
 
 signing {
-	sign configurations.archives
+    required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
+    sign configurations.archives
+}
+
+def getVersionName = { String workTree ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', "--git-dir=\"${workTree}/.git\"", "--work-tree=\"${workTree}\"", 'describe', '--tags'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
 }
 
 group = 'com.sudoplay.joise'
-version = '1.1.0-RC3'
+version = getVersionName("${project.projectDir}")
 archivesBaseName = 'joise'
 
+def isReleaseBuild() {
+    return version.contains("SNAPSHOT") == false;
+}
+
+def getReleaseRepositoryUrl() {
+    return hasProperty('RELEASE_REPOSITORY_URL') ? RELEASE_REPOSITORY_URL
+            : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+}
+
+def getSnapshotRepositoryUrl() {
+    return hasProperty('SNAPSHOT_REPOSITORY_URL') ? SNAPSHOT_REPOSITORY_URL
+            : "https://oss.sonatype.org/content/repositories/snapshots/"
+}
+
+def getRepositoryUsername() {
+    return hasProperty('NEXUS_USERNAME') ? NEXUS_USERNAME : ""
+}
+
+def getRepositoryPassword() {
+    return hasProperty('NEXUS_PASSWORD') ? NEXUS_PASSWORD : ""
+}
+
+//noinspection GroovyAssignabilityCheck
 uploadArchives {
-	repositories {
-		mavenDeployer {
-			beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-			repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-				authentication(userName: ossrhUsername, password: ossrhPassword)
-			}
+            pom.groupId = group
+            pom.artifactId = archivesBaseName
+            pom.version = version
 
-			snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-				authentication(userName: ossrhUsername, password: ossrhPassword)
-			}
+            repository(url: getReleaseRepositoryUrl()) {
+                authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
+            }
+            snapshotRepository(url: getSnapshotRepositoryUrl()) {
+                authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
+            }
 
-			pom.project {
-				name 'Joise'
-				packaging 'jar'
-				// optionally artifactId can be defined here
-				description 'Joise is a 2D, 3D, 4D and 6D modular noise library written in Java.'
-				url 'https://github.com/SudoPlayGames/Joise'
+            pom.project {
+                name POM_NAME
+                packaging POM_PACKAGING
+                description POM_DESCRIPTION
+                url POM_URL
 
-				scm {
-					connection 'scm:git:git@github.com:SudoPlayGames/Joise.git'
-					developerConnection 'scm:git:git@github.com:SudoPlayGames/Joise.git'
-					url 'git@github.com:SudoPlayGames/Joise.git'
-				}
+                scm {
+                    url POM_SCM_URL
+                    connection POM_SCM_CONNECTION
+                    developerConnection POM_SCM_DEV_CONNECTION
+                }
 
-				licenses {
-					license {
-						name 'The Apache License, Version 2.0'
-						url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-					}
-				}
+                licenses {
+                    license {
+                        name POM_LICENSE_NAME
+                        url POM_LICENSE_URL
+                    }
+                }
 
-				developers {
-					developer {
-						name 'Jason Taylor'
-						email 'jason@sudoplaygames.com'
-						organization 'SudoPlay Games'
-						organizationUrl 'http://www.sudoplaygames.com'
-					}
-				}
-			}
-		}
-	}
+                developers {
+                    developer {
+                        name POM_DEVELOPER_NAME
+                        email POM_DEVELOPER_EMAIL
+                        organization POM_DEVELOPER_ORGANIZATION
+                        organizationUrl POM_DEVELOPER_ORGANIZATION_URL
+                    }
+                }
+            }
+        }
+    }
 }
