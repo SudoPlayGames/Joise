@@ -67,7 +67,7 @@ The following packages are provided separately to reduce dependencies:
 
 ## Examples
 
-###Chaining Modules
+### Chaining Modules
 Most modules accept one or more sources. Sources can either be a module or a double value.
 ```java
 ModuleBasisFunction basis = new ModuleBasisFunction();
@@ -83,7 +83,7 @@ scaleDomain.setSource(correct);
 scaleDomain.setScaleX(4.0);
 scaleDomain.setScaleY(4.0);
 ```
-###Sampling Chained Modules
+### Sampling Chained Modules
 A module chain can be sampled in either two, three, four or six dimensions. Four and six dimensional noise is used for creating seamless two and three dimensional noise, respectively.
 ```java
 lastModuleInChain.get(x, y);
@@ -91,7 +91,7 @@ lastModuleInChain.get(x, y, z);
 lastModuleInChain.get(x, y, z, w);
 lastModuleInChain.get(x, y, z, w, u, v);
 ```
-###Exporting a Module Chain
+### Exporting a Module Chain
 Module chains can be converted to and from a `ModuleMap`. This is convenient for serializing module chains because converting a chain to a `ModuleMap` will flatten the module chain tree.
 ```java
 // convert to a ModuleMap
@@ -101,7 +101,7 @@ Module module = new ModuleChainBuilder().build(moduleMap);
 // sample the resulting chain
 module.get(x, y, z);
 ```
-###Naming Seeds
+### Naming Seeds
 Seeds can be named. This is convenient if you want to load a module chain from an external format, and set seeds programatically.
 ```java
 ModuleBasisFunction basis = new ModuleBasisFunction();
@@ -115,6 +115,6 @@ ModuleMap moduleMap = basis.getModuleMap();
 Module module = new ModuleChainBuilder().build(loadedModuleMap);
 module.setSeed("worldseed", 42);
 ```
-##License
+## License
 
 Copyright (C) 2016 Jason Taylor. Released as open-source under [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
