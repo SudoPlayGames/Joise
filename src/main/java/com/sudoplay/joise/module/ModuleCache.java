@@ -1,0 +1,138 @@
+/*
+ * Copyright (C) 2016 Jason Taylor.
+ * Released as open-source under the Apache License, Version 2.0.
+ * 
+ * ============================================================================
+ * | Joise
+ * ============================================================================
+ * 
+ * Copyright (C) 2016 Jason Taylor
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ * ============================================================================
+ * | Accidental Noise Library
+ * | --------------------------------------------------------------------------
+ * | Joise is a derivative work based on Josua Tippetts' C++ library:
+ * | http://accidentalnoise.sourceforge.net/index.html
+ * ============================================================================
+ * 
+ * Copyright (C) 2011 Joshua Tippetts
+ * 
+ *   This software is provided 'as-is', without any express or implied
+ *   warranty.  In no event will the authors be held liable for any damages
+ *   arising from the use of this software.
+ * 
+ *   Permission is granted to anyone to use this software for any purpose,
+ *   including commercial applications, and to alter it and redistribute it
+ *   freely, subject to the following restrictions:
+ * 
+ *   1. The origin of this software must not be misrepresented; you must not
+ *      claim that you wrote the original software. If you use this software
+ *      in a product, an acknowledgment in the product documentation would be
+ *      appreciated but is not required.
+ *   2. Altered source versions must be plainly marked as such, and must not be
+ *      misrepresented as being the original software.
+ *   3. This notice may not be removed or altered from any source distribution.
+ */
+
+package com.sudoplay.joise.module;
+
+import com.sudoplay.joise.ModuleInstanceMap;
+import com.sudoplay.joise.ModuleMap;
+import com.sudoplay.joise.ModulePropertyMap;
+
+public class ModuleCache extends
+    SourcedModule {
+
+  private class Cache {
+    double x, y, z, w, u, v;
+    double val;
+    boolean valid = false;
+  }
+
+  private Cache c2 = new Cache();
+  private Cache c3 = new Cache();
+  private Cache c4 = new Cache();
+  private Cache c6 = new Cache();
+
+  @Override
+  public double get(double x, double y) {
+
+    if (!this.c2.valid || this.c2.x != x || this.c2.y != y) {
+      this.c2.x = x;
+      this.c2.y = y;
+      this.c2.valid = true;
+      this.c2.val = this.source.get(x, y);
+    }
+    return this.c2.val;
+  }
+
+  @Override
+  public double get(double x, double y, double z) {
+
+    if (!this.c3.valid || this.c3.x != x || this.c3.y != y || this.c3.z != z) {
+      this.c3.x = x;
+      this.c3.y = y;
+      this.c3.z = z;
+      this.c3.valid = true;
+      this.c3.val = this.source.get(x, y, z);
+    }
+    return this.c3.val;
+  }
+
+  @Override
+  public double get(double x, double y, double z, double w) {
+
+    if (!this.c4.valid || this.c4.x != x || this.c4.y != y || this.c4.z != z || this.c4.w != w) {
+      this.c4.x = x;
+      this.c4.y = y;
+      this.c4.z = z;
+      this.c4.w = w;
+      this.c4.valid = true;
+      this.c4.val = this.source.get(x, y, z, w);
+    }
+    return this.c4.val;
+  }
+
+  @Override
+  public double get(double x, double y, double z, double w, double u, double v) {
+
+    if (!this.c6.valid || this.c6.x != x || this.c6.y != y || this.c6.z != z || this.c6.w != w
+        || this.c6.u != u || this.c6.v != v) {
+      this.c6.x = x;
+      this.c6.y = y;
+      this.c6.z = z;
+      this.c6.w = w;
+      this.c6.u = u;
+      this.c6.v = v;
+      this.c6.valid = true;
+      this.c6.val = this.source.get(x, y, z, w, u, v);
+    }
+    return this.c6.val;
+  }
+
+  @Override
+  public void writeToMap(ModuleMap moduleMap) {
+    ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
+    modulePropertyMap.writeScalar("source", this.source, moduleMap);
+    moduleMap.put(this.getId(), modulePropertyMap);
+  }
+
+  @Override
+  public Module buildFromPropertyMap(ModulePropertyMap modulePropertyMap, ModuleInstanceMap moduleInstanceMap) {
+    this.setSource(modulePropertyMap.readScalar("source", moduleInstanceMap));
+    return this;
+  }
+
+}

@@ -1,0 +1,213 @@
+#!/bin/bash
+
+# Initialize a string with dashes.
+printf -v fill "%80s" ""
+fill="${fill// /-}"
+
+# Function for printing headers.
+printfmt() { printf '%s%0.'$(( 80 - ${#1} - ${#2} ))'s%s\n' "$1" "$fill" "$2"; }
+
+# Common header formatting.
+header() {
+  echo ""; printfmt "+" "[ $1 ]"
+}
+
+pushd() {
+    command pushd "$@" > /dev/null
+}
+
+popd() {
+    command popd "$@" > /dev/null
+}
+
+# Function to display error message, usage, and exit with code 1.
+die() { echo -e "$*\n"; usage; exit 1; } >&2
+
+# Will die if file does not exist.
+assertFile() {
+  local file="$1"
+  shift 1
+  if [[ ! -f "${file}" ]]; then
+    if [[ "$#" -ne 0 ]]; then
+      die "$@"
+    else
+      die "Missing file: ${file}"
+    fi
+  else
+    echo "   [OK] File: ${file}"
+  fi
+}
+
+# Function to test for element in array.
+containsElement() {
+  local e
+  for e in "${@:2}"; do [[ "$e" == "$1" ]] && return 0; done
+  return 1
+}
+
+file="project.version"
+com="get"
+val=""
+push=true
+
+usage() {
+  echo "usage: version [get|set <version>] [--file=<filename>] [--help] [--no-push]"
+  echo ""
+  echo "  Commands:"
+  echo "    get                displays the project version"
+  echo "    set <version>      sets the project version"
+  echo ""
+  echo "  Options:"
+  echo "    --file=<filename>  specify version file, default=project.version"
+  echo "    --help             display usage"
+  echo "    --no-push          suppress push at each phase"
+}
+
+verbose() {
+  if $verbose; then
+    echo "$@"
+  fi
+}
+
+assertExitCode() {
+  if [ $? -ne 0 ]; then
+    echo "    [!!] Aborting on non-zero exit code."
+    exit $?
+  fi
+}
+
+displayVerify() {
+  printf "   %-16s %-29s %-29s\n" "$1" "$2" "$3"
+}
+
+apply() {
+  pushd "."
+  if [[ "${com}" == "get" ]]; then
+    version get --file="${file}"
+
+  elif [[ "${com}" == "set" ]]; then
+    if $push; then
+      version set "${val}" --file="${file}"
+    else
+      version set "${val}" --file="${file}" --no-push
+    fi
+  fi
+  popd
+}
+
+if [[ "$1" == "--help" ]]; then
+  usage
+  exit 0
+fi
+
+if [[ "$#" -eq 0 || "$1" == "get" ]]; then
+  com="get"
+  shift 1
+
+elif [[ "$1" == "set" ]]; then
+  com="set"
+  val="$2"
+  shift 2
+
+else
+  die "Unknown command: [$1]"
+fi
+
+while [[ $# > 0 ]]; do
+  key="$1"
+  case $key in
+    --file=*)
+      file="${key#*=}"
+      shift 1
+      ;;
+    --help)
+      usage
+      exit 0
+      ;;
+    --no-push)
+      push=false
+      shift 1
+      ;;
+    *)
+      die "Unknown command: [${key}]"
+  esac
+done
+
+if [[ "${com}" == "get" ]]; then
+  if [[ -f "${file}" ]]; then
+    fileContents=`cat "${file}"`
+  else
+    fileContents="0.0.0"
+  fi
+  displayVerify "[--] Tag:" `git describe --tags`
+  displayVerify "[--] File:" "${fileContents}"
+
+elif [[ "${com}" == "set" ]]; then
+  header "Verification"
+
+  if [[ -f "${file}" ]]; then
+    fileContents=`cat "${file}"`
+  else
+    fileContents="0.0.0"
+  fi
+
+  echo ""
+  displayVerify "" "Old" "New"
+  displayVerify "" "-----------------------------" "-----------------------------"
+  displayVerify "[--] Tag:" `git describe --tags` "${val}"
+  displayVerify "[--] File:" "${fileContents}" "${val}"
+
+  echo ""
+  echo "   [--] File:"
+  echo "          git add ${file}"
+  echo "          git commit -m \"bumped version to ${val}\""
+  $push && echo "          git push"
+  echo ""
+  echo "   [--] Tag Version:"
+  echo "          git tag -a ${val} -m \"version ${val}\""
+  $push && echo "          git push origin refs/tags/${val}"
+  echo ""
+
+  read -p "   [??] Does this look right to you [y/N]? " -n 1 -r
+  echo ""
+  case $REPLY in
+    y)
+      echo "   [OK] Process validated by user"
+      ;;
+    *)
+      echo "   [!!] Process halted by user"
+      exit 1
+  esac
+
+  header "Write File"
+  echo -n "${val}" > "${file}"
+  result=`cat "${file}"`
+  if [[ ! "${result}" == "${val}" ]]; then
+    die "   [!!] Unable to write [${val}] to [${file}]"
+  else
+    echo "   [OK] [${result}] saved to [${file}]"
+  fi
+
+  header "File"
+  git add "${file}"
+  assertExitCode
+  git commit -m "bumped version to ${val}"
+  assertExitCode
+  git push
+  assertExitCode
+
+  header "Tag Version"
+  git tag -a "${val}" -m "version ${val}"
+  assertExitCode
+  git push origin refs/tags/"${val}"
+  assertExitCode
+fi
+
+# Notes:
+#
+# Lists and counts all revisions.
+# revision=`git rev-list HEAD | wc -l | tr -d " "`
+#
+# Lists and counts all revisions since last tag.
+# tag=`git describe --tags --abbrev=0`
+# revision=`git log "${tag}"..HEAD --oneline | wc -l | tr -d " "`
