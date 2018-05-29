@@ -7,9 +7,9 @@ permalink: /modules/
 
 All of the illustrations below are from examples that can be found in the source in the following location:
 
-```
+~~~
 /src/examples/java/com/sudoplay/joise/examples/
-```
+~~~
 
 These are the core modules of the Joise library. All modules have been ported from <a href="http://accidentalnoise.sourceforge.net/implicit.html" target="_blank">Joshua Tippetts' C++ Accidental Noise Library</a>.
 
@@ -55,7 +55,7 @@ White noise generates no coherent pattern whatsoever.
 
 Here is a snippet from the example:
 
-```java
+~~~java
 ...
 
   protected Module createModuleBasisFunction(
@@ -88,7 +88,7 @@ Here is a snippet from the example:
   }
 
 ...
-```
+~~~
 
 
 ## ModuleCellGen
@@ -120,7 +120,7 @@ Here is an excerpt from <a href="http://www.rhythmiccanvas.com/research/papers/w
 
 Here is a snippet from the example:
 
-```java
+~~~java
 ...
 
   @Override
@@ -161,7 +161,7 @@ Here is a snippet from the example:
   }
 
 ...
-```
+~~~
 
 ## ModuleFractal
 
@@ -314,7 +314,7 @@ The white noise basis types for `ModuleFractal` have been grouped below for visu
 
 Here is a snippet from the example:
 
-```java
+~~~java
 ...
 
   @Override
@@ -355,7 +355,7 @@ Here is a snippet from the example:
   }
 
 ...
-```
+~~~
 
 
 ## ModuleGradient
@@ -368,7 +368,7 @@ The `ModuleGradient` generates a linear gradient with output values ranging from
 
 Here is a snippet from the example:
 
-```java
+~~~java
 ...
 
   @Override
@@ -387,7 +387,7 @@ Here is a snippet from the example:
   }
 
 ...
-```
+~~~
 
 ## ModuleSphere
 
@@ -399,7 +399,7 @@ The `ModuleSphere` generates a spherical gradient with output values ranging fro
 
 Here is a snippet from the example:
 
-```java
+~~~java
 ...
 
   @Override
@@ -416,7 +416,7 @@ Here is a snippet from the example:
   }
 
 ...
-```
+~~~
 
 
 ## Simple Manipulators
@@ -431,15 +431,15 @@ The absolute value module returns the absolute value of the sampled value.
 
 Negative values are displayed in red for clarity.
 
-```
+~~~
 y = |x|
-```
+~~~
 
 #### Example Code
 
 Here is a snippet from the example:
 
-```java
+~~~java
 ...
 
   @Override
@@ -475,7 +475,7 @@ Here is a snippet from the example:
   }
 
 ...
-```
+~~~
 
 ### ModuleClamp
 
@@ -483,15 +483,15 @@ Here is a snippet from the example:
 
 The clamp module restricts the sampled value to the range `[lo,hi]`.
 
-```
+~~~
 y = min(hi, max(lo, x))
-```
+~~~
 
 #### Example Code
 
 Here is a snippet from the example:
 
-```java
+~~~java
 ...
 
   @Override
@@ -526,7 +526,7 @@ Here is a snippet from the example:
   }
 
 ...
-```
+~~~
 
 ### ModuleCos
 
@@ -534,15 +534,15 @@ Here is a snippet from the example:
 
 The cosine module passes the sampled value through a cosine function.
 
-```
+~~~
 y = cos(x)
-```
+~~~
 
 #### Example Code
 
 Here is a snippet from the example:
 
-```java
+~~~java
 ...
 
   @Override
@@ -575,7 +575,7 @@ Here is a snippet from the example:
   }
 
 ...
-```
+~~~
 
 ### ModuleFloor
 
@@ -587,15 +587,15 @@ In this example, the original source is multiplied by 8, `y = 8x`, before applyi
 
 Values above 1 are displayed in blue for clarity.
 
-```
+~~~
 y = floor(x)
-```
+~~~
 
 #### Example Code
 
 Here is a snippet from the example:
 
-```java
+~~~java
 ...
 
   @Override
@@ -648,7 +648,7 @@ Here is a snippet from the example:
   }
 
 ...
-```
+~~~
 
 ### ModuleInvert
 
@@ -658,15 +658,15 @@ The invert module changes positive values to negative and negative values to pos
 
 Negative values are displayed in red for clarity.
 
-```
+~~~
 y = -x
-```
+~~~
 
 #### Example Code
 
 Here is a snippet from the example:
 
-```java
+~~~java
 ...
 
   @Override
@@ -711,7 +711,7 @@ Here is a snippet from the example:
   }
 
 ...
-```
+~~~
 
 ### ModulePow
 
@@ -719,15 +719,15 @@ Here is a snippet from the example:
 
 The pow module raises the sampled value to the power given.
 
-```
+~~~
 y = x^pow
-```
+~~~
 
 #### Example Code
 
 Here is a snippet from the example:
 
-```java
+~~~java
 ...
 
   @Override
@@ -761,7 +761,7 @@ Here is a snippet from the example:
   }
 
 ...
-```
+~~~
 
 ### ModuleSin
 
@@ -769,15 +769,15 @@ Here is a snippet from the example:
 
 The sine module passes the sampled value through a sine function.
 
-```
+~~~
 y = sin(x)
-```
+~~~
 
 #### Example Code
 
 Here is a snippet from the example:
 
-```java
+~~~java
 ...
 
   @Override
@@ -810,7 +810,7 @@ Here is a snippet from the example:
   }
 
 ...
-```
+~~~
 
 ## Complex Manipulators
 

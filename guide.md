@@ -80,14 +80,29 @@ The repo contains the following packages:
 
 Joise uses Gradle for its build system.
 
-  1. Clone the repository using one of the following methods:
-    * SSH `git clone git@github.com:SudoPlayGames/Joise.git` or
-    * HTTPS `git clone https://github.com/SudoPlayGames/Joise.git`.
-  2. After cloning, navigate to the project folder: `cd Joise`.
-  3. Next, checkout the version you want to compile, ie. `git checkout tags/{{ site.joise_version }}`.
-    * You can list the version tags using `git tag -l`.
-  4. Finally, compile by running `gradlew build`.
-    * The compiled source will be located in `<project folder>/build/libs`.
+First, clone the repository using one of the following methods:
+
+SSH: 
+
+~~~
+git clone git@github.com:SudoPlayGames/Joise.git
+~~~
+
+HTTPS 
+
+~~~
+git clone https://github.com/SudoPlayGames/Joise.git
+~~~
+
+After cloning, navigate to the project folder: `cd Joise`.
+  
+Next, checkout the version you want to compile, ie. `git checkout tags/{{ site.joise_version }}`.
+  
+  * You can list the version tags using `git tag -l`.
+
+Finally, compile by running `gradlew build`.
+  
+  * The compiled source will be located in `<project folder>/build/libs`.
 
 ## Sampling
 
@@ -97,7 +112,7 @@ Joise works by chaining stand-alone mathematical functions together to create mo
 
 Most modules accept one or more sources. Sources can either be a module or a double value.
 
-```java
+~~~java
 ModuleBasisFunction basis = new ModuleBasisFunction();
 basis.setType(BasisType.SIMPLEX);
 basis.setSeed(42);
@@ -110,7 +125,7 @@ ModuleScaleDomain scaleDomain = new ModuleScaleDomain();
 scaleDomain.setSource(correct);
 scaleDomain.setScaleX(4.0);
 scaleDomain.setScaleY(4.0);
-```
+~~~
 
 ### Sampling noise
 
@@ -118,16 +133,16 @@ scaleDomain.setScaleY(4.0);
 
 Four and six dimensional noise is used for creating seamless two and three dimensional noise, respectively.
 
-```java
+~~~java
 lastModuleInChain.get(x, y);
 lastModuleInChain.get(x, y, z);
 lastModuleInChain.get(x, y, z, w);
 lastModuleInChain.get(x, y, z, w, u, v);
-```
+~~~
 
 Here is an example that demonstrates sampling a module chain with two modules:
 
-```java
+~~~java
 ModuleBasisFunction basis = new ModuleBasisFunction();
 basis.setType(BasisType.SIMPLEX);
 basis.setSeed(42);
@@ -142,13 +157,13 @@ for (int x = 0; x < 256; x++) {
     // ... do something with sampledValue here
   }
 }
-```
+~~~
 
 The loop at the bottom samples 65,536 values. The 256 by 256 square that is sampled is actually a 1 by 1 square, with values ranging from 0 (inclusive) to 1 (exclusive). The range is converted by division on this line:
 
-```java
+~~~java
 double sampledValue = correct.get(x / 256.0, y / 256.0);
-```
+~~~
 
 ### Sampling an infinite range
 
@@ -158,7 +173,7 @@ Joise does not require the sampled coordinate range to be `[0,1)`. As long as th
 
 Here is an example of sampling coordinates in the range `[0,16)`:
 
-```java
+~~~java
 ...
 
 for (int x = 0; x < 4096; x++) {
@@ -167,11 +182,11 @@ for (int x = 0; x < 4096; x++) {
     // ... do something with sampledValue here
   }
 }
-```
+~~~
 
 If you are generating a large amount of noise, perhaps a large terrain heightmap, you will most likely encounter performance issues. To work around this limitation, sample just a subsection, or chunk, of noise.
 
-```java
+~~~java
 // let's say you're generating in chunks and chunk position (0,0), (0,1), (1,-1), etc.. (X,Y)
 float[] generate(int chunkPositionX, int chunkPositionY) {
 
@@ -201,7 +216,7 @@ float[] generate(int chunkPositionX, int chunkPositionY) {
 
     return result;
 }
-```
+~~~
 
 ### Sampling seamless noise
 
@@ -282,7 +297,7 @@ The following table describes the differences between mapping modes for `Mapping
 
 Here is a snippet illustrating how to use the Mapping class:
 
-```java
+~~~java
 ...
 
 int width = 640;
@@ -306,7 +321,7 @@ Mapping.map2D(
 // do something with the resulting data object here ...
 
 ...
-```
+~~~
 
 This example uses the `Mapping` class to sample noise in the range [-1,1] and map it to an array in the range [640,480]. The method called samples the noise in 3D and uses the last parameter, the 0.5 double, to indicate where to slice a 2D cross section out of the 3D noise. This value could, for example, be incremented in each frame of an animation to essentially move the 2D slice through the 3D noise, animating the noise in a visually coherent fashion.
 
@@ -360,7 +375,7 @@ Module chains can be converted to a `ModuleMap` by calling `ModuleMap#getModuleM
 
 It is advised to first convert a module chain to a `ModuleMap` and then serialize the module map as opposed to serializing the module chain directly.
 
-```java
+~~~java
 // convert to a ModuleMap
 ModuleMap moduleMap = lastModuleInChain.getModuleMap();
 
@@ -369,11 +384,11 @@ Module module = new ModuleChainBuilder().build(moduleMap);
 
 // sample the resulting chain
 module.get(x, y, z);
-```
+~~~
 
 Custom modules, modules that you've created that aren't packaged with Joise, need to have an implementation of `IModuleFactory` registered with the instance of `ModuleChainBuilder` before calling `build(ModuleMap)`. The `IModuleFactory` simply creates a new instance of the module.
 
-```java
+~~~java
 ModuleCustom moduleCustom = new ModuleCustom();
 
 ModuleMap moduleMap = moduleCustom.getModuleMap();
@@ -387,7 +402,7 @@ moduleChainBuilder.registerModuleFactory(ModuleCustom.class, new IModuleFactory<
 });
 
 Module newModule = moduleChainBuilder.build(moduleMap);
-```
+~~~
 
 ## Creating custom modules
 
@@ -404,7 +419,7 @@ All modules extend one of three classes: `Module`, `SourcedModule`, or `SeededMo
 
 Here is an example of a module that simply returns a predetermined value for all `get` calls:
 
-```java
+~~~java
 package com.sudoplay.joise.examples;
 
 import com.sudoplay.joise.ModuleInstanceMap;
@@ -472,30 +487,30 @@ public class ModuleCustom extends
     return this;
   }
 }
-```
+~~~
 #### Breakdown
 
-```java
+~~~java
 @Override
 public void setSeed(String seedName, long seed) {
   //
 }
-```
+~~~
 
 This method is used to do two things: set the module's seed if its seed name matches and pass the call up the chain to any sources the module may have. Here it doesn't do anything because this module doesn't have a seed, nor does it have any source modules.
 
-```java
+~~~java
 @Override
 public void writeToMap(ModuleMap moduleMap) {
   ModulePropertyMap modulePropertyMap = new ModulePropertyMap(this);
   modulePropertyMap.writeDouble("value", this.value);
   moduleMap.put(this.getId(), modulePropertyMap);
 }
-```
+~~~
 
 A `ModulePropertyMap` defines a module in a `ModuleMap`, which defines a module chain. This method is used to create a new `ModulePropertyMap`, write values to the property map, then add the property map to the provided `ModuleMap`.
 
-```java
+~~~java
 @Override
 public Module buildFromPropertyMap(
     ModulePropertyMap modulePropertyMap, 
@@ -504,7 +519,7 @@ public Module buildFromPropertyMap(
   this.setValue(modulePropertyMap.readDouble("value"));
   return this;
 }
-```
+~~~
 
 This method is used to read values from the provided `ModulePropertyMap` and `ModuleInstanceMap`.
 
@@ -514,7 +529,7 @@ This method is used to read values from the provided `ModulePropertyMap` and `Mo
 
 Here is the `ModuleAbs` class as an example of a simple `SourcedModule`:
 
-```java
+~~~java
 package com.sudoplay.joise.module;
 
 import com.sudoplay.joise.ModuleInstanceMap;
@@ -560,18 +575,18 @@ public class ModuleAbs extends
     return this;
   }
 }
-```
+~~~
 
 The `SourcedModule` class overrides the `setSeed(String, long)` method so it doesn't need to be overridden in subclasses unless the subclass has more than one source. If the subclass had more than one source, be sure to override the method and call each source's `setSeed(String, long)` method in this overridden method:
 
-```java
+~~~java
 @Override
 public void setSeed(String seedName, long seed) {
   super.setSeed(seedName, seed);
   this.source2.setSeed(seedName, seed);
   this.source3.setSeed(seedName, seed);
 }
-```
+~~~
 
 ### SeededModule
 
@@ -579,7 +594,7 @@ public void setSeed(String seedName, long seed) {
 
 The following is an example class to demonstrate a `SeededModule` subclass:
 
-```java
+~~~java
 package com.sudoplay.joise.examples;
 
 import com.sudoplay.joise.ModuleInstanceMap;
@@ -643,14 +658,14 @@ public class ModuleCustomSeeded extends
     return this;
   }
 }
-```
+~~~
 
 The `SeededModule` class contains two convenience methods: 
 
-```java
+~~~java
 protected void readSeed(ModulePropertyMap modulePropertyMap);
 protected void writeSeed(ModulePropertyMap prmodulePropertyMapops);
-```
+~~~
 
 These methods handle reading and writing both the seed and seed name.
 
@@ -671,9 +686,7 @@ Here are a few things to keep in mind when submitting a PR:
 ### Getting started
 
   1.  Fork the Joise repository.
-  2.  Clone the fork using either:
-    * SSH `git clone git@github.com:<your username>/Joise.git` or
-    * HTTPS `git clone https://github.com/<your username>/Joise.git`.
+  2.  Clone the fork.
   3.  Checkout the `develop` branch using `git checkout develop`.
   4.  Apply your changes.
   5.  Add your changes to git using `git add -A`.

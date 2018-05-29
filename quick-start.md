@@ -21,7 +21,7 @@ Joise works by chaining stand-alone mathematical functions together to create mo
 
 Most modules accept one or more sources. Sources can either be a module or a double value.
 
-```java
+~~~java
 ModuleBasisFunction basis = new ModuleBasisFunction();
 basis.setType(BasisType.SIMPLEX);
 basis.setSeed(42);
@@ -34,19 +34,19 @@ ModuleScaleDomain scaleDomain = new ModuleScaleDomain();
 scaleDomain.setSource(correct);
 scaleDomain.setScaleX(4.0);
 scaleDomain.setScaleY(4.0);
-```
+~~~
 
 
 ## Sampling chained modules
 
 A module chain can be sampled in either two, three, four or six dimensions. Four and six dimensional noise is used for creating seamless two and three dimensional noise, respectively.
 
-```java
+~~~java
 lastModuleInChain.get(x, y);
 lastModuleInChain.get(x, y, z);
 lastModuleInChain.get(x, y, z, w);
 lastModuleInChain.get(x, y, z, w, u, v);
-```
+~~~
 
 
 ## Exporting a module chain
@@ -55,7 +55,7 @@ Module chains can be converted to a `ModuleMap` by calling `ModuleMap#getModuleM
 
 It is advised to first convert a module chain to a `ModuleMap` and then serialize the module map as opposed to serializing the module chain directly.
 
-```java
+~~~java
 // convert to a ModuleMap
 ModuleMap moduleMap = lastModuleInChain.getModuleMap();
 
@@ -64,14 +64,14 @@ Module module = new ModuleChainBuilder().build(moduleMap);
 
 // sample the resulting chain
 module.get(x, y, z);
-```
+~~~
 
 
 ## Naming seeds
 
 Seeds can be named by calling `SeededModule#setSeedName(String)`. This is convenient if you want to load a module chain from an external format, and set seeds programatically.
 
-```java
+~~~java
 ModuleBasisFunction basis = new ModuleBasisFunction();
 basis.setSeedName("worldseed");
 ModuleMap moduleMap = basis.getModuleMap();
@@ -82,4 +82,4 @@ ModuleMap moduleMap = basis.getModuleMap();
 
 Module module = new ModuleChainBuilder().build(loadedModuleMap);
 module.setSeed("worldseed", 42);
-```
+~~~

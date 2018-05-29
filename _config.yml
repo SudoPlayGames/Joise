@@ -8,9 +8,6 @@ twitter_username: sudoplaygames
 github_username:  sudoplaygames
 
 # Build settings
-markdown: redcarpet
-redcarpet:
-  extensions: ["tables"]
 permalink: /blog/:year/:month/:day/:title.html
 
 joise_version: "1.1.0"
