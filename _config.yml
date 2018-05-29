@@ -1,6 +1,6 @@
 # Site settings
 title: SudoPlay Games
-email: business@sudoplaygames.com
+email: joise@sudoplaygames.com
 description: "SudoPlay Games is a small, independent game studio located in Oregon, USA."
 baseurl: ""
 url: "http://www.sudoplaygames.com"
@@ -13,4 +13,4 @@ redcarpet:
   extensions: ["tables"]
 permalink: /blog/:year/:month/:day/:title.html
 
-joise_version: "1.1.0-RC3"
+joise_version: "1.1.0"

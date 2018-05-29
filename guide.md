@@ -13,18 +13,22 @@ permalink: /guide/
   <div class="col-sm-6">
     <p class="lead download">Joise</p>
     <p>Compiled code with sources and JavaDoc.</p>
-    <button type="button" class="btn btn-outline btn-default btn-lg">
-      <i class="fa fa-download fa-lg" aria-hidden="true"></i>
-      Download Joise
-    </button>
+    <a class="" href="http://central.maven.org/maven2/com/sudoplay/joise/joise/{{ site.joise_version }}/" target="_blank">
+      <button type="button" class="btn btn-outline btn-default btn-lg">
+        <i class="fa fa-download fa-lg" aria-hidden="true"></i>
+        Download Joise
+      </button>
+    </a>
   </div>
   <div class="col-sm-6">
     <p class="lead download">Source code</p>
     <p>Just the source code.</p>
-    <button type="button" class="btn btn-outline btn-default btn-lg">
-      <i class="fa fa-download fa-lg" aria-hidden="true"></i>
-      Download source
-    </button>
+    <a class="" href="https://github.com/SudoPlayGames/Joise/releases/tag/{{ site.joise_version }}" target="_blank">
+      <button type="button" class="btn btn-outline btn-default btn-lg">
+        <i class="fa fa-download fa-lg" aria-hidden="true"></i>
+        Download source
+      </button>
+    </a>
   </div>
 </div>
 

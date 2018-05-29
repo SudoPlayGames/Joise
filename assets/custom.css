@@ -13,8 +13,8 @@ pre {
 }
 
 .navbar {
-  border-top: #53b5b5 solid 4px;
-  border-color: #53b5b5;
+  border-top: #4362a8 solid 4px;
+  border-color: #4362a8;
 }
 
 .navbar .container {
@@ -31,7 +31,7 @@ pre {
   line-height: 50px;
   font-size: 42px;
   letter-spacing: 1px;
-  color: #000;
+  color: #4362a8;
   padding-left: 100px;
 }
 
@@ -41,15 +41,19 @@ pre {
 }
 
 .navbar-default .brand-text:hover {
-  color: #53b5b5;
+  color: #000;
+}
+
+.navbar-default .navbar-nav>li>a {
+    color: #4362a8;
 }
 
 .navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:hover {
-  background-color: #53b5b5;
+  background-color: #4362a8;
   color: #fff;
   font-weight: bold;
   height: 50px;
-  border-bottom: #7fd7d7 solid 3px;
+  border-bottom: #b9caf1 solid 3px;
 }
 
 .nav>li>a {
@@ -226,7 +230,7 @@ code {
 
 .btn-outline {
   border-color: #4362A8;
-  background-color: #E8EEFC;
+  background-color: #FFFFFF;
   color: #4362A8;
 }
 
@@ -327,6 +331,15 @@ code {
 #features .feature-img {
   width: 128px;
   height: 128px;
+}
+
+#features ul.badge-list {
+  list-style: none;
+  margin-top: 16px;
+}
+
+#features ul.badge-list li {
+  list-style: none;
 }
 
 #showcase {
