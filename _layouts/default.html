@@ -7,7 +7,11 @@
 
     {% include header.html %}
 
-    {% if page.url == "/index.html" %}
+    {% if page.url == "/" %}
+
+    {{ content }}
+
+    {% elsif page.url == "/index.html" %}
 
     {{ content }}
 
@@ -17,7 +21,7 @@
       <header class="page-header">
         <div class="wrap row">
           <div class="col-md-12">
-            <h1>{{ page.url }}</h1>
+            <h1>{{ page.title }}</h1>
             <p class="lead">{{ page.description }}</p>
           </div>
         </div>
